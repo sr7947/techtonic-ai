@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cinzel", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  
+  --color-brand-navy-dark: #090d18;
+  --color-brand-navy-deep: #131a2b;
+  --color-brand-navy: #232E4C;
+  --color-brand-navy-light: #2c385b;
+  --color-brand-navy-accent: #3b4b7a;
+  --color-brand-gold: #BD9A76;
+  --color-brand-gold-bright: #e8c29b;
+  --color-brand-gold-dark: #917252;
+  --color-brand-gold-muted: #614c37;
+  --color-brand-gold-glow: rgba(189, 154, 118, 0.15);
+}
+
+/* Custom Base Styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #090d18;
+    color: #f1f5f9;
+  }
+  
+  body {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    background-color: #090d18;
+  }
+  
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #090d18;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #2c385b;
+    border-radius: 4px;
+    border: 2px solid #090d18;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #BD9A76;
+  }
+}
+
+/* Custom Utilities / Classes */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #e8c29b 0%, #BD9A76 50%, #917252 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-glow {
+  border: 1px solid rgba(189, 154, 118, 0.15);
+  box-shadow: 0 0 15px rgba(189, 154, 118, 0.03);
+  transition: all 0.3s ease;
+}
+
+.gold-border-glow:hover {
+  border: 1px solid rgba(189, 154, 118, 0.45);
+  box-shadow: 0 0 25px rgba(189, 154, 118, 0.12);
+}
+
+.glass-panel {
+  background: rgba(19, 26, 43, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(189, 154, 118, 0.1);
+}
+
+.glow-orb {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(189, 154, 118, 0.06) 0%, rgba(189, 154, 118, 0) 70%);
+  pointer-events: none;
+  filter: blur(50px);
+}
