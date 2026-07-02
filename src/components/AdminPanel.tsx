@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Plus, Copy, Check, Info } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface AdminPanelProps {
   onClose: () => void;
@@ -22,6 +23,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 }) => {
   const [activeForm, setActiveForm] = useState<'update' | 'resource' | 'video'>('update');
   const [copied, setCopied] = useState(false);
+
+  // Supabase states
+  const [publishing, setPublishing] = useState(false);
+  const [publishStatus, setPublishStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const isSupabaseConfigured = !!(
+    import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
+  );
 
   // Form states - Update
   const [upTitle, setUpTitle] = useState('');
@@ -53,74 +63,209 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleAddUpdateSubmit = (e: React.FormEvent) => {
+  const handleAddUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!upTitle || !upSummary) return;
 
-    const newUpdate = {
-      id: `upd-${Date.now()}`,
+    const rawData = {
       title: upTitle,
       category: upCategory,
       date: new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }),
       source: upSource || 'TechTonic AI Curation',
       summary: upSummary,
       url: upUrl || '#',
-      readTime: '3 min read',
+      read_time: '3 min read',
       tag: upTag || upCategory
     };
 
-    onAddUpdate(newUpdate);
-    // Reset Form
-    setUpTitle('');
-    setUpSource('');
-    setUpSummary('');
-    setUpUrl('');
-    setUpTag('');
+    if (isSupabaseConfigured) {
+      setPublishing(true);
+      setPublishStatus('idle');
+      try {
+        const { data, error } = await supabase
+          .from('ai_updates')
+          .insert([rawData])
+          .select();
+
+        if (error) throw error;
+
+        if (data && data[0]) {
+          onAddUpdate({
+            id: data[0].id,
+            title: data[0].title,
+            category: data[0].category,
+            date: data[0].date,
+            source: data[0].source,
+            summary: data[0].summary,
+            url: data[0].url,
+            readTime: data[0].read_time,
+            tag: data[0].tag
+          });
+        }
+        setPublishStatus('success');
+        // Reset form fields
+        setUpTitle('');
+        setUpSource('');
+        setUpSummary('');
+        setUpUrl('');
+        setUpTag('');
+      } catch (err: any) {
+        console.error("Supabase insert error:", err);
+        setPublishStatus('error');
+        setErrorMessage(err.message || 'Failed to publish to Supabase.');
+      } finally {
+        setPublishing(false);
+      }
+    } else {
+      // Local preview fallback
+      onAddUpdate({
+        id: `upd-${Date.now()}`,
+        ...rawData,
+        readTime: rawData.read_time
+      });
+      // Reset form fields
+      setUpTitle('');
+      setUpSource('');
+      setUpSummary('');
+      setUpUrl('');
+      setUpTag('');
+    }
   };
 
-  const handleAddResourceSubmit = (e: React.FormEvent) => {
+  const handleAddResourceSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!resCompany || !resTool || !resDesc) return;
 
-    const newResource = {
-      id: `res-${Date.now()}`,
+    const rawData = {
       company: resCompany,
-      toolName: resTool,
+      tool_name: resTool,
       description: resDesc,
-      useCase: resUseCase || 'General development and testing',
+      use_case: resUseCase || 'General development and testing',
       category: resCategory,
-      docsUrl: resDocs || '#',
-      learnUrl: resLearn || '#'
+      docs_url: resDocs || '#',
+      learn_url: resLearn || '#'
     };
 
-    onAddResource(newResource);
-    // Reset Form
-    setResCompany('');
-    setResTool('');
-    setResDesc('');
-    setResUseCase('');
-    setResDocs('');
-    setResLearn('');
+    if (isSupabaseConfigured) {
+      setPublishing(true);
+      setPublishStatus('idle');
+      try {
+        const { data, error } = await supabase
+          .from('learning_resources')
+          .insert([rawData])
+          .select();
+
+        if (error) throw error;
+
+        if (data && data[0]) {
+          onAddResource({
+            id: data[0].id,
+            company: data[0].company,
+            toolName: data[0].tool_name,
+            description: data[0].description,
+            useCase: data[0].use_case,
+            category: data[0].category,
+            docsUrl: data[0].docs_url,
+            learnUrl: data[0].learn_url
+          });
+        }
+        setPublishStatus('success');
+        // Reset form fields
+        setResCompany('');
+        setResTool('');
+        setResDesc('');
+        setResUseCase('');
+        setResDocs('');
+        setResLearn('');
+      } catch (err: any) {
+        console.error("Supabase insert error:", err);
+        setPublishStatus('error');
+        setErrorMessage(err.message || 'Failed to publish to Supabase.');
+      } finally {
+        setPublishing(false);
+      }
+    } else {
+      // Local preview fallback
+      onAddResource({
+        id: `res-${Date.now()}`,
+        company: resCompany,
+        toolName: resTool,
+        description: resDesc,
+        useCase: rawData.use_case,
+        category: resCategory,
+        docsUrl: rawData.docs_url,
+        learnUrl: rawData.learn_url
+      });
+      // Reset form fields
+      setResCompany('');
+      setResTool('');
+      setResDesc('');
+      setResUseCase('');
+      setResDocs('');
+      setResLearn('');
+    }
   };
 
-  const handleAddVideoSubmit = (e: React.FormEvent) => {
+  const handleAddVideoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!vidTitle || !vidId) return;
 
-    const newVideo = {
-      id: `yt-${Date.now()}`,
+    const rawData = {
       title: vidTitle,
       duration: vidDuration || '15:00',
       category: vidCategory,
-      publishDate: vidPublish,
-      youtubeId: vidId
+      publish_date: vidPublish,
+      youtube_id: vidId
     };
 
-    onAddVideo(newVideo);
-    // Reset Form
-    setVidTitle('');
-    setVidDuration('');
-    setVidId('');
+    if (isSupabaseConfigured) {
+      setPublishing(true);
+      setPublishStatus('idle');
+      try {
+        const { data, error } = await supabase
+          .from('youtube_videos')
+          .insert([rawData])
+          .select();
+
+        if (error) throw error;
+
+        if (data && data[0]) {
+          onAddVideo({
+            id: data[0].id,
+            title: data[0].title,
+            duration: data[0].duration,
+            category: data[0].category,
+            publishDate: data[0].publish_date,
+            youtubeId: data[0].youtube_id
+          });
+        }
+        setPublishStatus('success');
+        // Reset form fields
+        setVidTitle('');
+        setVidDuration('');
+        setVidId('');
+      } catch (err: any) {
+        console.error("Supabase insert error:", err);
+        setPublishStatus('error');
+        setErrorMessage(err.message || 'Failed to publish to Supabase.');
+      } finally {
+        setPublishing(false);
+      }
+    } else {
+      // Local preview fallback
+      onAddVideo({
+        id: `yt-${Date.now()}`,
+        title: vidTitle,
+        duration: vidDuration || '15:00',
+        category: vidCategory,
+        publishDate: vidPublish,
+        youtubeId: vidId
+      });
+      // Reset form fields
+      setVidTitle('');
+      setVidDuration('');
+      setVidId('');
+    }
   };
 
   // Generate updated typescript code block
@@ -152,7 +297,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           </div>
           <button 
             onClick={onClose}
-            className="p-2 rounded-xl bg-brand-navy-light/20 hover:bg-brand-gold/15 text-slate-400 hover:text-brand-gold-bright transition-all"
+            className="p-2 rounded-xl bg-brand-navy-light/20 hover:bg-brand-gold/15 text-slate-400 hover:text-brand-gold-bright transition-all cursor-pointer"
             aria-label="Close Admin Panel"
           >
             <X className="w-5 h-5" />
@@ -162,8 +307,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Tab Selector */}
         <div className="flex border-b border-brand-gold/10 pb-3 mb-6 gap-2 sm:gap-4 overflow-x-auto">
           <button
-            onClick={() => setActiveForm('update')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap ${
+            onClick={() => {
+              setActiveForm('update');
+              setPublishStatus('idle');
+            }}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
               activeForm === 'update'
                 ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
                 : 'text-slate-400 hover:text-slate-200'
@@ -172,8 +320,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             Latest updates
           </button>
           <button
-            onClick={() => setActiveForm('resource')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap ${
+            onClick={() => {
+              setActiveForm('resource');
+              setPublishStatus('idle');
+            }}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
               activeForm === 'resource'
                 ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
                 : 'text-slate-400 hover:text-slate-200'
@@ -182,8 +333,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             Learning Resources
           </button>
           <button
-            onClick={() => setActiveForm('video')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap ${
+            onClick={() => {
+              setActiveForm('video');
+              setPublishStatus('idle');
+            }}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
               activeForm === 'video'
                 ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
                 : 'text-slate-400 hover:text-slate-200'
@@ -277,12 +431,40 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   />
                 </div>
 
+                {/* Database Connection Banner */}
+                <div className="flex items-center gap-2 text-xs py-1">
+                  {isSupabaseConfigured ? (
+                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      Connected to Supabase Cloud Database
+                    </span>
+                  ) : (
+                    <span className="text-amber-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                      Fallback Static Mode (No Database Configured)
+                    </span>
+                  )}
+                </div>
+
+                {publishStatus === 'success' && (
+                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Published Live successfully!
+                  </div>
+                )}
+                
+                {publishStatus === 'error' && (
+                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Failed to publish: {errorMessage}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all"
+                  disabled={publishing}
+                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
                 >
                   <Plus className="w-4 h-4" />
-                  PREVIEW & ADD UPDATE
+                  {publishing ? 'PUBLISHING LIVE...' : isSupabaseConfigured ? 'PUBLISH LIVE TO DATABASE' : 'PREVIEW & ADD UPDATE'}
                 </button>
               </form>
             )}
@@ -377,12 +559,40 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   />
                 </div>
 
+                {/* Database Connection Banner */}
+                <div className="flex items-center gap-2 text-xs py-1">
+                  {isSupabaseConfigured ? (
+                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      Connected to Supabase Cloud Database
+                    </span>
+                  ) : (
+                    <span className="text-amber-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                      Fallback Static Mode (No Database Configured)
+                    </span>
+                  )}
+                </div>
+
+                {publishStatus === 'success' && (
+                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Published Live successfully!
+                  </div>
+                )}
+                
+                {publishStatus === 'error' && (
+                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Failed to publish: {errorMessage}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all"
+                  disabled={publishing}
+                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
                 >
                   <Plus className="w-4 h-4" />
-                  PREVIEW & ADD RESOURCE
+                  {publishing ? 'PUBLISHING LIVE...' : isSupabaseConfigured ? 'PUBLISH LIVE TO DATABASE' : 'PREVIEW & ADD RESOURCE'}
                 </button>
               </form>
             )}
@@ -454,12 +664,40 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
                 </div>
 
+                {/* Database Connection Banner */}
+                <div className="flex items-center gap-2 text-xs py-1">
+                  {isSupabaseConfigured ? (
+                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      Connected to Supabase Cloud Database
+                    </span>
+                  ) : (
+                    <span className="text-amber-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                      Fallback Static Mode (No Database Configured)
+                    </span>
+                  )}
+                </div>
+
+                {publishStatus === 'success' && (
+                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Published Live successfully!
+                  </div>
+                )}
+                
+                {publishStatus === 'error' && (
+                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Failed to publish: {errorMessage}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all"
+                  disabled={publishing}
+                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
                 >
                   <Plus className="w-4 h-4" />
-                  PREVIEW & ADD VIDEO
+                  {publishing ? 'PUBLISHING LIVE...' : isSupabaseConfigured ? 'PUBLISH LIVE TO DATABASE' : 'PREVIEW & ADD VIDEO'}
                 </button>
               </form>
             )}
