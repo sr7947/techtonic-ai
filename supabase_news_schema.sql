@@ -67,7 +67,7 @@ insert into ai_sources (name, feed_url, site_url, category, logo_color) values
 on conflict (name) do nothing;
 
 insert into ai_sources (name, feed_url, site_url, category, logo_color) values
-('Anthropic', 'https://raw.githubusercontent.com/leontloveless/ai-rss-feeds/main/feeds/anthropic-news.xml', 'https://www.anthropic.com', 'Models', 'from-[#D97706] to-[#B45309]')
+('Anthropic', 'https://raw.githubusercontent.com/leontloveless/ai-rss-feeds/main/feeds/anthropic.xml', 'https://www.anthropic.com', 'Models', 'from-[#D97706] to-[#B45309]')
 on conflict (name) do nothing;
 
 insert into ai_sources (name, feed_url, site_url, category, logo_color) values
@@ -75,11 +75,11 @@ insert into ai_sources (name, feed_url, site_url, category, logo_color) values
 on conflict (name) do nothing;
 
 insert into ai_sources (name, feed_url, site_url, category, logo_color) values
-('Google DeepMind', 'https://raw.githubusercontent.com/leontloveless/ai-rss-feeds/main/feeds/google-deepmind-blog.xml', 'https://deepmind.google', 'Research', 'from-[#4285F4] to-[#0f9d58]')
+('Google DeepMind', 'https://raw.githubusercontent.com/leontloveless/ai-rss-feeds/main/feeds/deepmind-blog.xml', 'https://deepmind.google', 'Research', 'from-[#4285F4] to-[#0f9d58]')
 on conflict (name) do nothing;
 
 insert into ai_sources (name, feed_url, site_url, category, logo_color) values
-('Microsoft AI', 'https://blogs.microsoft.com/ai/feed/', 'https://blogs.microsoft.com/ai', 'Enterprise AI', 'from-[#00A4EF] to-[#0078D7]')
+('Microsoft AI', 'https://blogs.microsoft.com/feed/', 'https://blogs.microsoft.com/ai', 'Enterprise AI', 'from-[#00A4EF] to-[#0078D7]')
 on conflict (name) do nothing;
 
 insert into ai_sources (name, feed_url, site_url, category, logo_color) values
@@ -87,7 +87,7 @@ insert into ai_sources (name, feed_url, site_url, category, logo_color) values
 on conflict (name) do nothing;
 
 insert into ai_sources (name, feed_url, site_url, category, logo_color) values
-('NVIDIA DL Blog', 'https://blogs.nvidia.com/category/deep-learning/feed/', 'https://blogs.nvidia.com/category/deep-learning', 'Hardware & AI', 'from-[#76B900] to-[#5C9000]')
+('NVIDIA DL Blog', 'https://blogs.nvidia.com/blog/category/deep-learning/feed/', 'https://blogs.nvidia.com/category/deep-learning', 'Hardware & AI', 'from-[#76B900] to-[#5C9000]')
 on conflict (name) do nothing;
 
 insert into ai_sources (name, feed_url, site_url, category, logo_color) values

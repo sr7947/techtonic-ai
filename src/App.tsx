@@ -3,6 +3,7 @@ import { ThreeBackground } from './components/ThreeBackground';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { UpdatesSection } from './components/UpdatesSection';
+import { ModelsHub } from './components/ModelsHub';
 import { LeadersSection } from './components/LeadersSection';
 import { LearningHub } from './components/LearningHub';
 import { YouTubeSection } from './components/YouTubeSection';
@@ -49,6 +50,21 @@ function App() {
       localStorage.removeItem('techtonic_user');
     }
   }, [user]);
+
+  // Handle scroll to hash after content loads and layout stabilizes
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const timer = setTimeout(() => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [updates, articles, resources, videos]);
 
   // Load data from Supabase if configured, otherwise fall back to static data
   useEffect(() => {
@@ -165,6 +181,7 @@ function App() {
       <main className="relative z-10">
         <Hero />
         <UpdatesSection updates={updates} articles={articles} />
+        <ModelsHub />
         <LeadersSection />
         <LearningHub resources={resources} />
         <YouTubeSection videos={videos} />

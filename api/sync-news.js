@@ -26,7 +26,6 @@ export default async function handler(req, res) {
   }
 
   const startTime = new Date();
-  const summaryLogs = [];
 
   try {
     // 1. Fetch active sources from Supabase
@@ -35,54 +34,59 @@ export default async function handler(req, res) {
       .select('*');
 
     if (sourceErr || !sources) {
-      throw new Error(`Failed to load sources from Supabase: ${sourceErr?.message}`);
+      throw new Error(`Failed to load sources from Supabase: ${sourceErr?.message || 'Empty response'}`);
     }
 
-    // 2. Loop through each source and ingest
-    for (const source of sources) {
+    // 2. Process all sources in parallel (safeguards against Vercel 10s serverless timeout)
+    const promises = sources.map(async (source) => {
       const sourceStart = new Date();
       let fetchStatus = 'success';
       let articlesCount = 0;
       let errorMsg = null;
 
       try {
-        console.log(`Starting fetch for ${source.name} from ${source.feed_url}`);
-        
-        // Fetch XML feed
-        const feed = await parser.parseURL(source.feed_url);
-        
-        // Loop through feed items
+        // Individual 6-second timeout using AbortController to prevent slow feeds from blocking the function
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+        const response = await fetch(source.feed_url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const xmlText = await response.text();
+        const feed = await parser.parseString(xmlText);
+        const articlesPayload = [];
+
         for (const item of feed.items) {
           const articleUrl = item.link || item.guid;
           if (!articleUrl) continue;
 
-          // Generate hash to help with quick deduplication checks
+          // Deduplication hash
           const contentHash = crypto
             .createHash('md5')
             .update(articleUrl)
             .digest('hex');
 
-          // Extract summary/description
-          let rawSummary = item.contentSnippet || item.summary || item.contentEncoded || '';
-          
           // Clean HTML tags and truncate summary
+          let rawSummary = item.contentSnippet || item.summary || item.contentEncoded || '';
           let cleanSummary = rawSummary
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace(/\s+/g, ' ')
             .trim();
-            
+
           if (cleanSummary.length > 280) {
             cleanSummary = cleanSummary.substring(0, 277) + '...';
           }
 
-          // Build published date
           let publishedAt = new Date();
           if (item.pubDate || item.isoDate) {
             publishedAt = new Date(item.pubDate || item.isoDate);
           }
 
-          // Prepare article insertion payload matching DB table columns
-          const payload = {
+          articlesPayload.push({
             source_id: source.id,
             source_name: source.name,
             source_type: 'RSS',
@@ -94,45 +98,55 @@ export default async function handler(req, res) {
             category: source.category,
             content_hash: contentHash,
             fetched_at: new Date().toISOString()
-          };
+          });
+        }
 
-          // Upsert to Supabase (using ON CONFLICT DO NOTHING by utilizing upsert with ignoreDuplicates)
+        // Perform bulk upsert for all articles in this feed (reduces Supabase roundtrips from 400 down to 8!)
+        if (articlesPayload.length > 0) {
           const { error: insertErr } = await supabase
             .from('ai_articles')
-            .upsert(payload, { onConflict: 'article_url', ignoreDuplicates: true });
+            .upsert(articlesPayload, { onConflict: 'article_url', ignoreDuplicates: true });
 
           if (!insertErr) {
-            articlesCount++;
+            articlesCount = articlesPayload.length;
+          } else {
+            throw new Error(`Supabase bulk insert error: ${insertErr.message}`);
           }
         }
       } catch (err) {
         console.error(`Error fetching source ${source.name}:`, err);
         fetchStatus = 'error';
-        errorMsg = err.message || 'Unknown network parsing error';
+        errorMsg = err.name === 'AbortError' ? 'Fetch timeout exceeded (6s)' : err.message;
       }
 
-      // Log fetch job details to Supabase
-      await supabase.from('ai_fetch_logs').insert({
-        source_name: source.name,
-        status: fetchStatus,
-        articles_fetched: articlesCount,
-        error_message: errorMsg,
-        started_at: sourceStart.toISOString(),
-        completed_at: new Date().toISOString()
-      });
+      // Log results to Supabase audit tables
+      try {
+        await supabase.from('ai_fetch_logs').insert({
+          source_name: source.name,
+          status: fetchStatus,
+          articles_fetched: articlesCount,
+          error_message: errorMsg,
+          started_at: sourceStart.toISOString(),
+          completed_at: new Date().toISOString()
+        });
+      } catch (logErr) {
+        console.error("Failed to write to ai_fetch_logs:", logErr);
+      }
 
-      summaryLogs.push({
+      return {
         source: source.name,
         status: fetchStatus,
         inserted: articlesCount,
         error: errorMsg
-      });
-    }
+      };
+    });
+
+    const results = await Promise.all(promises);
 
     return res.status(200).json({
       success: true,
       timeTakenMs: new Date() - startTime,
-      logs: summaryLogs
+      logs: results
     });
 
   } catch (globalErr) {
