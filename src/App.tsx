@@ -3,16 +3,23 @@ import { ThreeBackground } from './components/ThreeBackground';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { UpdatesSection } from './components/UpdatesSection';
-import { ModelsHub } from './components/ModelsHub';
 import { LeadersSection } from './components/LeadersSection';
 import { LearningHub } from './components/LearningHub';
 import { YouTubeSection } from './components/YouTubeSection';
-import { TrendingTopics } from './components/TrendingTopics';
 import { CommunitySection } from './components/CommunitySection';
 import { Footer } from './components/Footer';
 import { AdminPanel } from './components/AdminPanel';
 import { LATEST_UPDATES, LEARNING_RESOURCES, YOUTUBE_VIDEOS } from './data/content';
 import { supabase } from './lib/supabase';
+
+// Page Imports
+import { ModelsHubPage } from './pages/ModelsHubPage';
+import { TrendingPage } from './pages/TrendingPage';
+import { DeveloperStudioPage } from './pages/DeveloperStudioPage';
+import { McpPage } from './pages/McpPage';
+import { SkillsPage } from './pages/SkillsPage';
+import { FrameworksPage } from './pages/FrameworksPage';
+import { InfrastructurePage } from './pages/InfrastructurePage';
 
 interface UserProfile {
   name: string;
@@ -41,6 +48,29 @@ function App() {
 
   // Admin Modal Overlay State
   const [adminOpen, setAdminOpen] = useState(false);
+
+  // Client-side SPA Router State
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('pushstate', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('pushstate', handleLocationChange);
+    };
+  }, []);
+
+  const navigate = (href: string) => {
+    window.history.pushState({}, '', href);
+    window.dispatchEvent(new Event('pushstate'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Synchronize authentication status with LocalStorage
   useEffect(() => {
@@ -175,18 +205,30 @@ function App() {
         onSignIn={setUser} 
         onSignOut={() => setUser(null)} 
         onOpenAdmin={() => setAdminOpen(true)}
+        currentPath={currentPath}
+        navigate={navigate}
       />
 
       {/* Main Content Layout */}
       <main className="relative z-10">
-        <Hero />
-        <UpdatesSection updates={updates} articles={articles} />
-        <ModelsHub />
-        <LeadersSection />
-        <LearningHub resources={resources} />
-        <YouTubeSection videos={videos} />
-        <TrendingTopics />
-        <CommunitySection />
+        {currentPath === '/' && (
+          <>
+            <Hero />
+            <UpdatesSection updates={updates} articles={articles} />
+            <LeadersSection />
+            <LearningHub resources={resources} />
+            <YouTubeSection videos={videos} />
+            <CommunitySection />
+          </>
+        )}
+
+        {currentPath === '/models-hub' && <ModelsHubPage />}
+        {currentPath === '/trending' && <TrendingPage />}
+        {currentPath === '/technologies/developer-studio' && <DeveloperStudioPage />}
+        {currentPath === '/technologies/mcp' && <McpPage />}
+        {currentPath === '/technologies/skills' && <SkillsPage />}
+        {currentPath === '/technologies/frameworks' && <FrameworksPage />}
+        {currentPath === '/technologies/infrastructure' && <InfrastructurePage />}
       </main>
 
       {/* Platform Footer */}

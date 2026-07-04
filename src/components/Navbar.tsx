@@ -6,6 +6,8 @@ interface NavbarProps {
   onSignIn: (user: { name: string; email: string; picture: string }) => void;
   onSignOut: () => void;
   onOpenAdmin: () => void;
+  currentPath?: string;
+  navigate?: (path: string) => void;
 }
 
 const YoutubeIcon = ({ className }: { className?: string }) => (
@@ -27,7 +29,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   user,
   onSignIn,
   onSignOut,
-  onOpenAdmin
+  onOpenAdmin,
+  currentPath = '/',
+  navigate = (path) => { window.location.pathname = path; }
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -128,14 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     setShowLoginModal(false);
   };
 
-  const navLinks = [
-    { name: 'Latest Updates', href: '#updates', id: 'updates' },
-    { name: 'Models Hub', href: '#models', id: 'models' },
-    { name: 'AI Leaders', href: '#leaders', id: 'leaders' },
-    { name: 'Learning Hub', href: '#learning', id: 'learning' },
-    { name: 'Videos', href: '#videos', id: 'videos' },
-    { name: 'Trending', href: '#trending', id: 'trending' },
-  ];
+
 
   return (
     <>
@@ -165,23 +162,78 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
-              {navLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.href}
-                  className={`text-sm font-medium tracking-wide transition-all duration-300 relative py-1 focus:outline-none focus:text-brand-gold focus:ring-1 focus:ring-brand-gold/30 rounded px-1 ${
-                    activeSection === link.id
-                      ? 'text-brand-gold-bright'
-                      : 'text-slate-300 hover:text-brand-gold'
+            <div className="hidden md:flex items-center gap-5">
+              
+              {/* Home-scroll Sections */}
+              {[
+                { id: 'updates', label: 'Latest Updates' },
+                { id: 'leaders', label: 'AI Leaders' },
+                { id: 'learning', label: 'Learning Hub' },
+                { id: 'videos', label: 'Videos' }
+              ].map((sect) => (
+                <button
+                  key={sect.id}
+                  onClick={() => {
+                    if (currentPath === '/') {
+                      document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      navigate('/');
+                      setTimeout(() => {
+                        document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
+                      }, 200);
+                    }
+                  }}
+                  className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                    currentPath === '/' && activeSection === sect.id ? 'text-brand-gold-bright' : 'text-slate-300'
                   }`}
                 >
-                  {link.name}
-                  <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-brand-gold transition-transform duration-300 origin-left ${
-                    activeSection === link.id ? 'scale-x-100' : 'scale-x-0 hover:scale-x-100'
-                  }`} />
-                </a>
+                  {sect.label}
+                </button>
               ))}
+
+              {/* Dedicated Subpages */}
+              <button
+                onClick={() => navigate('/models-hub')}
+                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                  currentPath === '/models-hub' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
+                }`}
+              >
+                Models Hub
+              </button>
+
+              <button
+                onClick={() => navigate('/trending')}
+                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                  currentPath === '/trending' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
+                }`}
+              >
+                Trending
+              </button>
+
+              {/* Technologies Dropdown */}
+              <div className="relative group">
+                <button className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-brand-gold transition-all py-1 focus:outline-none cursor-pointer">
+                  Technologies
+                  <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="absolute left-0 mt-2 w-52 rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  {[
+                    { name: 'Developer Studio', path: '/technologies/developer-studio' },
+                    { name: 'MCP (Model Context)', path: '/technologies/mcp' },
+                    { name: 'Skills & Tools', path: '/technologies/skills' },
+                    { name: 'Agent Frameworks', path: '/technologies/frameworks' },
+                    { name: 'AI Infrastructure', path: '/technologies/infrastructure' },
+                  ].map((tech) => (
+                    <button
+                      key={tech.name}
+                      onClick={() => navigate(tech.path)}
+                      className="w-full text-left px-4 py-2.5 text-xs font-semibold rounded-xl text-slate-300 hover:text-brand-navy-dark hover:bg-brand-gold transition-all duration-200 cursor-pointer"
+                    >
+                      {tech.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div className="h-5 w-[1px] bg-brand-gold/20 mx-2" />
 
@@ -282,20 +334,77 @@ export const Navbar: React.FC<NavbarProps> = ({
           isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="px-2 pt-2 pb-4 space-y-1.5 bg-brand-navy-dark/95 border-b border-brand-gold/10 shadow-2xl backdrop-blur-lg">
-            {navLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-                  activeSection === link.id
-                    ? 'bg-brand-gold/10 text-brand-gold-bright border-l-2 border-brand-gold'
-                    : 'text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold'
-                }`}
+            {/* Home scroll sections */}
+            {[
+              { id: 'updates', label: 'Latest Updates' },
+              { id: 'leaders', label: 'AI Leaders' },
+              { id: 'learning', label: 'Learning Hub' },
+              { id: 'videos', label: 'Videos' }
+            ].map((sect) => (
+              <button
+                key={sect.id}
+                onClick={() => {
+                  setIsOpen(false);
+                  if (currentPath === '/') {
+                    document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    navigate('/');
+                    setTimeout(() => {
+                      document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
+                    }, 200);
+                  }
+                }}
+                className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
               >
-                {link.name}
-              </a>
+                {sect.label}
+              </button>
             ))}
+
+            {/* Dedicated subpages */}
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/models-hub');
+              }}
+              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
+            >
+              Models Hub
+            </button>
+
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/trending');
+              }}
+              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
+            >
+              Trending
+            </button>
+
+            {/* Technologies Accordion */}
+            <div className="border-t border-brand-gold/10 pt-2 mt-2">
+              <span className="block px-4 py-1 text-[10px] uppercase font-bold text-slate-500 tracking-widest">
+                Technologies Hub
+              </span>
+              {[
+                { name: 'Developer Studio', path: '/technologies/developer-studio' },
+                { name: 'MCP (Model Context)', path: '/technologies/mcp' },
+                { name: 'Skills & Tools', path: '/technologies/skills' },
+                { name: 'Agent Frameworks', path: '/technologies/frameworks' },
+                { name: 'AI Infrastructure', path: '/technologies/infrastructure' },
+              ].map((tech) => (
+                <button
+                  key={tech.name}
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate(tech.path);
+                  }}
+                  className="w-full text-left block px-6 py-2 text-sm font-medium text-slate-400 hover:text-brand-gold cursor-pointer"
+                >
+                  - {tech.name}
+                </button>
+              ))}
+            </div>
 
             <div className="border-t border-brand-gold/10 pt-4 mt-2 px-4 space-y-3">
               {user ? (

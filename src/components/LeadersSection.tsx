@@ -1,19 +1,35 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { AI_LEADERS } from '../data/content';
-import { ExternalLink, Terminal, Lightbulb, Link2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LEADER_PROFILES } from '../data/leadersData';
+import type { AILeaderData } from '../data/leadersData';
+import { ExternalLink, Lightbulb, Link2, ChevronDown, Building, Cpu, Globe, Code } from 'lucide-react';
 
-export const LeadersSection: React.FC = () => {
+interface LeadersSectionProps {
+  leaders?: AILeaderData[];
+}
+
+export const LeadersSection: React.FC<LeadersSectionProps> = ({
+  leaders = LEADER_PROFILES
+}) => {
+  const [selectedLeaderId, setSelectedLeaderId] = useState<string>('google');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const activeLeader = leaders.find((l) => l.id === selectedLeaderId) || leaders[0];
+
   return (
     <section id="leaders" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-deep/80">
       
       {/* Decorative ambient elements */}
-      <div className="glow-orb top-1/3 right-10" />
+      <div className="glow-orb top-1/3 right-10 pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center md:text-left max-w-3xl mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-brand-gold-bright text-xs font-bold tracking-wider uppercase">
+            <Building className="w-3.5 h-3.5 animate-pulse" />
+            AI Directories
+          </div>
           <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
             Major AI <span className="gold-gradient-text">Industry Leaders</span>
           </h2>
@@ -23,97 +39,156 @@ export const LeadersSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Leaders Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {AI_LEADERS.map((leader, index) => (
-            <motion.div
-              key={leader.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.6, delay: (index % 3) * 0.1 }}
-              className="flex flex-col justify-between p-6 rounded-2xl glass-panel relative group overflow-hidden border border-brand-gold/10 hover:border-brand-gold/30 transition-all duration-500 hover:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
+        {/* Dropdown Selector */}
+        <div className="mb-12 relative flex flex-col items-center md:items-start select-none">
+          <label className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-3 flex items-center gap-2">
+            <Building className="w-3.5 h-3.5 text-brand-gold" />
+            Select an AI Leader
+          </label>
+          
+          <div className="relative w-72">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="w-full flex items-center justify-between bg-brand-navy-light/10 border border-brand-gold/20 hover:border-brand-gold/50 rounded-2xl px-5 py-3.5 text-slate-200 text-sm font-semibold tracking-wide transition-all duration-300 outline-none backdrop-blur-md cursor-pointer"
             >
-              
-              {/* Top border brand color band */}
-              <div className={`absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r ${leader.logoColor}`} />
-
-              <div className="space-y-6">
-                
-                {/* Header: Name and Logo indicator */}
-                <div className="flex items-center justify-between">
-                  <h3 className="font-serif text-xl md:text-2xl font-bold tracking-wider text-slate-100 group-hover:text-brand-gold-bright transition-colors duration-300">
-                    {leader.name}
-                  </h3>
-                  <div className={`w-3.5 h-3.5 rounded-full bg-gradient-to-r ${leader.logoColor} shadow-md shadow-black/50`} />
-                </div>
-
-                {/* Description */}
-                <p className="text-slate-400 text-sm leading-relaxed min-h-[64px]">
-                  {leader.shortDesc}
-                </p>
-
-                {/* Key products */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-brand-gold">
-                    <Terminal className="w-3.5 h-3.5" />
-                    Core Platform / Models
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {leader.keyProducts.map((prod) => (
-                      <span
-                        key={prod}
-                        className="px-2.5 py-1 rounded-md text-[11px] font-medium tracking-wide bg-brand-navy-light/25 border border-brand-gold/10 text-slate-300"
-                      >
-                        {prod}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Highlights list */}
-                <div className="space-y-2.5 pt-2">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-brand-gold">
-                    <Lightbulb className="w-3.5 h-3.5" />
-                    Latest Update Highlights
-                  </div>
-                  <ul className="space-y-2 text-xs text-slate-400">
-                    {leader.latestHighlights.map((hl, i) => (
-                      <li key={i} className="flex items-start gap-2 leading-relaxed">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-gold/60 mt-1.5 flex-shrink-0" />
-                        <span>{hl}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
+              <div className="flex items-center gap-2.5">
+                <span className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${activeLeader.logoColor} shadow-sm`} />
+                <span>{activeLeader.name}</span>
               </div>
+              <ChevronDown className={`w-4 h-4 text-brand-gold transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-3 mt-8 pt-4 border-t border-brand-gold/5">
-                <a
-                  href={leader.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium text-slate-300 hover:text-brand-gold-bright bg-brand-navy-light/10 hover:bg-brand-navy-light/30 border border-brand-gold/10 hover:border-brand-gold/30 transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-brand-gold/20"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  Official Site
-                </a>
-                <a
-                  href={leader.docsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium text-brand-gold-bright hover:text-brand-navy-dark bg-brand-gold/5 hover:bg-brand-gold border border-brand-gold/20 hover:border-brand-gold transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-brand-gold/20"
-                >
-                  <Link2 className="w-3.5 h-3.5" />
-                  Docs & Blog
-                </a>
+            {/* Dropdown Card */}
+            {dropdownOpen && (
+              <div className="absolute left-0 mt-2.5 w-full rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2 shadow-2xl z-40 max-h-72 overflow-y-auto">
+                {leaders.map((leader) => (
+                  <button
+                    key={leader.id}
+                    onClick={() => {
+                      setSelectedLeaderId(leader.id);
+                      setDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-xs font-semibold rounded-xl text-left transition-all duration-200 cursor-pointer ${
+                      selectedLeaderId === leader.id
+                        ? 'bg-brand-gold text-brand-navy-dark'
+                        : 'text-slate-300 hover:bg-brand-navy-light/20 hover:text-slate-100'
+                    }`}
+                  >
+                    <span className={`w-2 h-2 rounded-full ${selectedLeaderId === leader.id ? 'bg-brand-navy-dark' : 'bg-gradient-to-r ' + leader.logoColor}`} />
+                    <span>{leader.name}</span>
+                  </button>
+                ))}
               </div>
-
-            </motion.div>
-          ))}
+            )}
+          </div>
         </div>
+
+        {/* Structured Info Panel */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeLeader.id}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35 }}
+            className="rounded-3xl p-8 md:p-10 glass-panel border border-brand-gold/15 relative overflow-hidden bg-gradient-to-br from-brand-navy-deep/60 via-brand-navy/35 to-brand-navy-deep/60 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+          >
+            {/* Top brand color band */}
+            <div className={`absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r ${activeLeader.logoColor}`} />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+              
+              {/* Left Column: Overview & Platforms */}
+              <div className="lg:col-span-8 space-y-6">
+                <div>
+                  <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block mb-2">Company Overview</span>
+                  <h3 className="font-serif text-2xl md:text-3xl font-extrabold text-slate-100 leading-snug">
+                    {activeLeader.name}
+                  </h3>
+                  <p className="text-slate-400 text-sm md:text-base leading-relaxed mt-4">
+                    {activeLeader.overview}
+                  </p>
+                </div>
+
+                {/* Core platforms / models */}
+                <div className="space-y-3">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Core Platforms & Flagship Models</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {activeLeader.corePlatforms.map((platform) => (
+                      <div
+                        key={platform}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-brand-navy-light/10 border border-brand-gold/10 text-xs text-slate-300 font-semibold"
+                      >
+                        <Cpu className="w-4 h-4 text-brand-gold flex-shrink-0" />
+                        <span>{platform}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Site & Technical Links */}
+              <div className="lg:col-span-4 space-y-6 border-t lg:border-t-0 lg:border-l border-brand-gold/10 pt-6 lg:pt-0 lg:pl-8">
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Official Channels</span>
+                
+                <div className="flex flex-col gap-3 text-xs font-semibold">
+                  <a
+                    href={activeLeader.officialSite}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3.5 rounded-xl bg-brand-navy-light/15 hover:bg-brand-navy-light/25 border border-brand-gold/10 hover:border-brand-gold/30 text-slate-300 hover:text-brand-gold-bright transition-all"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Globe className="w-4 h-4 text-brand-gold" />
+                      <span>Official AI Website</span>
+                    </div>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                  </a>
+
+                  <a
+                    href={activeLeader.docsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3.5 rounded-xl bg-brand-navy-light/15 hover:bg-brand-navy-light/25 border border-brand-gold/10 hover:border-brand-gold/30 text-slate-300 hover:text-brand-gold-bright transition-all"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Link2 className="w-4 h-4 text-brand-gold" />
+                      <span>Developer Docs Portal</span>
+                    </div>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                  </a>
+
+                  <a
+                    href={activeLeader.blogUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3.5 rounded-xl bg-brand-navy-light/15 hover:bg-brand-navy-light/25 border border-brand-gold/10 hover:border-brand-gold/30 text-slate-300 hover:text-brand-gold-bright transition-all"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Lightbulb className="w-4 h-4 text-brand-gold" />
+                      <span>Technical Blog & Newsroom</span>
+                    </div>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                  </a>
+
+                  <a
+                    href={activeLeader.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3.5 rounded-xl bg-brand-navy-light/15 hover:bg-brand-navy-light/25 border border-brand-gold/10 hover:border-brand-gold/30 text-slate-300 hover:text-brand-gold-bright transition-all"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Code className="w-4 h-4 text-brand-gold" />
+                      <span>GitHub Organization</span>
+                    </div>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Micro-UX Navigation Helpers */}
         <div className="mt-12 flex items-center justify-between border-t border-brand-gold/10 pt-8 text-[11px] sm:text-xs">
@@ -134,3 +209,4 @@ export const LeadersSection: React.FC = () => {
     </section>
   );
 };
+export default LeadersSection;

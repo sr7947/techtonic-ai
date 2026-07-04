@@ -143,6 +143,19 @@ export default async function handler(req, res) {
 
     const results = await Promise.all(promises);
 
+    // Prune articles older than 7 days to maintain 7-day retention policy
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    const { error: purgeErr } = await supabase
+      .from('ai_articles')
+      .delete()
+      .lt('published_at', sevenDaysAgo.toISOString());
+
+    if (purgeErr) {
+      console.error("Failed to prune old articles:", purgeErr);
+    }
+
     return res.status(200).json({
       success: true,
       timeTakenMs: new Date() - startTime,

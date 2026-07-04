@@ -21,7 +21,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   currentResources,
   currentVideos,
 }) => {
-  const [activeForm, setActiveForm] = useState<'update' | 'resource' | 'video'>('update');
+  const [activeForm, setActiveForm] = useState<'update' | 'resource' | 'video' | 'tweet'>('update');
   const [copied, setCopied] = useState(false);
 
   // Supabase states
@@ -40,6 +40,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [upSummary, setUpSummary] = useState('');
   const [upUrl, setUpUrl] = useState('');
   const [upTag, setUpTag] = useState('');
+  const [upCompany, setUpCompany] = useState('openai');
 
   // Form states - Resource
   const [resCompany, setResCompany] = useState('');
@@ -56,6 +57,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [vidCategory, setVidCategory] = useState('Agentic AI');
   const [vidPublish, setVidPublish] = useState('Just now');
   const [vidId, setVidId] = useState('');
+
+  // Form states - Tweet
+  const [tweetUrl, setTweetUrl] = useState('');
+  const [tweetTag, setTweetTag] = useState('');
 
   const triggerCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -75,7 +80,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       summary: upSummary,
       url: upUrl || '#',
       read_time: '3 min read',
-      tag: upTag || upCategory
+      tag: upTag || upCategory,
+      company: upCompany
     };
 
     if (isSupabaseConfigured) {
@@ -99,7 +105,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             summary: data[0].summary,
             url: data[0].url,
             readTime: data[0].read_time,
-            tag: data[0].tag
+            tag: data[0].tag,
+            company: data[0].company
           });
         }
         setPublishStatus('success');
@@ -109,6 +116,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         setUpSummary('');
         setUpUrl('');
         setUpTag('');
+        setUpCompany('openai');
       } catch (err: any) {
         console.error("Supabase insert error:", err);
         setPublishStatus('error');
@@ -268,14 +276,60 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   };
 
+  const handleAddTweetSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tweetUrl || !tweetTag) return;
+
+    // Extract the status URL if the user pasted the entire HTML embed code block
+    const urlMatch = tweetUrl.match(/https?:\/\/(?:twitter|x)\.com\/[a-zA-Z0-9_]+\/status\/\d+/i);
+    const targetUrl = urlMatch ? urlMatch[0] : tweetUrl.trim();
+
+    let formattedTag = tweetTag.trim();
+    if (!formattedTag.startsWith('#')) {
+      formattedTag = '#' + formattedTag;
+    }
+    formattedTag = formattedTag.replace(/\s+/g, '').toUpperCase();
+
+    const rawData = {
+      tag: formattedTag,
+      tweet_url: targetUrl
+    };
+
+    if (isSupabaseConfigured) {
+      setPublishing(true);
+      setPublishStatus('idle');
+      try {
+        const { error } = await supabase
+          .from('trending_tweets')
+          .insert([rawData])
+          .select();
+
+        if (error) throw error;
+
+        setPublishStatus('success');
+        setTweetUrl('');
+      } catch (err: any) {
+        console.error("Supabase insert error:", err);
+        setPublishStatus('error');
+        setErrorMessage(err.message || 'Failed to publish tweet to Supabase.');
+      } finally {
+        setPublishing(false);
+      }
+    } else {
+      alert("Supabase not configured. Tweet cannot be saved in local preview mode.");
+    }
+  };
+
   // Generate updated typescript code block
   const generateCodeConfig = () => {
     if (activeForm === 'update') {
       return `export const LATEST_UPDATES: AIUpdate[] = ${JSON.stringify(currentUpdates, null, 2)};`;
     } else if (activeForm === 'resource') {
       return `export const LEARNING_RESOURCES: LearningResource[] = ${JSON.stringify(currentResources, null, 2)};`;
-    } else {
+    } else if (activeForm === 'video') {
       return `export const YOUTUBE_VIDEOS: YouTubeVideo[] = ${JSON.stringify(currentVideos, null, 2)};`;
+    } else {
+      return `/* Copy the SQL schema from supabase_tweets_schema.sql to create the table, then add tweets via Admin Panel */`;
     }
   };
 
@@ -345,6 +399,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           >
             YouTube Videos
           </button>
+          <button
+            onClick={() => {
+              setActiveForm('tweet');
+              setPublishStatus('idle');
+            }}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
+              activeForm === 'tweet'
+                ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            Trending Tweets
+          </button>
         </div>
 
         {/* Form & Code Split Layout */}
@@ -382,6 +449,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <option>Developer Tools</option>
                       <option>Enterprise AI</option>
                       <option>Startups</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Company Group</label>
+                    <select
+                      value={upCompany}
+                      onChange={(e) => setUpCompany(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
+                    >
+                      <option value="google">Google</option>
+                      <option value="openai">OpenAI</option>
+                      <option value="anthropic">Anthropic</option>
+                      <option value="meta">Meta</option>
+                      <option value="microsoft">Microsoft</option>
+                      <option value="amazon">Amazon</option>
+                      <option value="nvidia">NVIDIA</option>
+                      <option value="other">Others</option>
                     </select>
                   </div>
                   <div className="space-y-1">
@@ -698,6 +782,71 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 >
                   <Plus className="w-4 h-4" />
                   {publishing ? 'PUBLISHING LIVE...' : isSupabaseConfigured ? 'PUBLISH LIVE TO DATABASE' : 'PREVIEW & ADD VIDEO'}
+                </button>
+              </form>
+            )}
+
+            {/* Form: Trending Tweet */}
+            {activeForm === 'tweet' && (
+              <form onSubmit={handleAddTweetSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Twitter/X Tweet URL or Embed Code *</label>
+                  <input
+                    type="text"
+                    required
+                    value={tweetUrl}
+                    onChange={(e) => setTweetUrl(e.target.value)}
+                    placeholder="Paste tweet link or full HTML blockquote embed code"
+                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Hashtag Category *</label>
+                  <input
+                    type="text"
+                    required
+                    value={tweetTag}
+                    onChange={(e) => setTweetTag(e.target.value)}
+                    placeholder="e.g. #LLM or #NextJS"
+                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
+                  />
+                </div>
+
+                {/* Database Connection Banner */}
+                <div className="flex items-center gap-2 text-xs py-1">
+                  {isSupabaseConfigured ? (
+                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      Connected to Supabase Cloud Database
+                    </span>
+                  ) : (
+                    <span className="text-red-400 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-red-400" />
+                      Database configuration missing in .env
+                    </span>
+                  )}
+                </div>
+
+                {publishStatus === 'success' && (
+                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Tweet linked successfully! It will now appear on your Trending page.
+                  </div>
+                )}
+                
+                {publishStatus === 'error' && (
+                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
+                    Failed to publish: {errorMessage}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={publishing || !isSupabaseConfigured}
+                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
+                >
+                  <Plus className="w-4 h-4" />
+                  {publishing ? 'PUBLISHING...' : 'PUBLISH TWEET LINK LIVE'}
                 </button>
               </form>
             )}
