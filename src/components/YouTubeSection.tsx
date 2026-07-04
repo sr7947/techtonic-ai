@@ -15,7 +15,7 @@ interface YouTubeSectionProps {
 
 export const YouTubeSection: React.FC<YouTubeSectionProps> = ({ videos = YOUTUBE_VIDEOS }) => {
   return (
-    <section id="videos" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark">
+    <section id="videos" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-deep/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

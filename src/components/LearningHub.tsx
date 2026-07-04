@@ -24,7 +24,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ resources = LEARNING_R
     : resources.filter(r => r.category === activeCategory);
 
   return (
-    <section id="learning" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark/30">
+    <section id="learning" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         

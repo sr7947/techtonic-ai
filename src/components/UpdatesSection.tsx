@@ -77,7 +77,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
   };
 
   return (
-    <section id="updates" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark/40">
+    <section id="updates" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-deep/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

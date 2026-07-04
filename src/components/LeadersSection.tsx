@@ -5,7 +5,7 @@ import { ExternalLink, Terminal, Lightbulb, Link2 } from 'lucide-react';
 
 export const LeadersSection: React.FC = () => {
   return (
-    <section id="leaders" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark">
+    <section id="leaders" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-deep/80">
       
       {/* Decorative ambient elements */}
       <div className="glow-orb top-1/3 right-10" />
@@ -115,6 +115,21 @@ export const LeadersSection: React.FC = () => {
           ))}
         </div>
 
+        {/* Micro-UX Navigation Helpers */}
+        <div className="mt-12 flex items-center justify-between border-t border-brand-gold/10 pt-8 text-[11px] sm:text-xs">
+          <a
+            href="#home"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-navy-light/10 border border-brand-gold/10 hover:border-brand-gold/40 text-slate-400 hover:text-brand-gold-bright transition-all font-semibold tracking-wider uppercase cursor-pointer"
+          >
+            ↑ Back to Top
+          </a>
+          <a
+            href="#learning"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-gold/10 border border-brand-gold/25 hover:bg-brand-gold hover:text-brand-navy-dark text-brand-gold-bright hover:shadow-[0_0_15px_rgba(189,154,118,0.25)] transition-all font-bold tracking-wider uppercase cursor-pointer"
+          >
+            Jump to Learning Hub ↓
+          </a>
+        </div>
       </div>
     </section>
   );

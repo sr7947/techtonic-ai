@@ -5,7 +5,7 @@ import { TrendingUp, Hash } from 'lucide-react';
 
 export const TrendingTopics: React.FC = () => {
   return (
-    <section id="trending" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark/30">
+    <section id="trending" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark">
       
       {/* Decorative Blur Orb */}
       <div className="glow-orb top-10 left-1/3" />

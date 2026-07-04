@@ -21,7 +21,7 @@ export const CommunitySection: React.FC = () => {
   };
 
   return (
-    <section id="subscribe" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-dark">
+    <section id="subscribe" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-deep/80">
       
       {/* Decorative Orbs */}
       <div className="glow-orb top-1/4 right-0" style={{ transform: 'translateX(30%)' }} />
