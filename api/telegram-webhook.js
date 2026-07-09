@@ -1,0 +1,169 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl || '', supabaseKey || '');
+
+export default async function handler(req, res) {
+  // Telegram webhooks send callbacks in body
+  const { callback_query } = req.body || {};
+  
+  if (!callback_query) {
+    console.log("Received non-callback request on webhook.");
+    return res.status(200).send('OK');
+  }
+
+  const { data, message, id: queryId } = callback_query;
+  const messageId = message.message_id;
+  const chatId = message.chat.id;
+
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const deployHook = process.env.VERCEL_DEPLOY_HOOK;
+
+  if (!botToken) {
+    console.error("Missing TELEGRAM_BOT_TOKEN environment variable.");
+    return res.status(500).send('Bot token missing');
+  }
+
+  try {
+    // 1. Answer Callback Query to stop loading animation in Telegram
+    await fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ callback_query_id: queryId })
+    });
+
+    if (data.startsWith('accept_')) {
+      const pendingId = data.replace('accept_', '');
+      console.log(`Callback Accept received for ID: ${pendingId}`);
+
+      // Fetch staging article details
+      const { data: article, error: fetchErr } = await supabase
+        .from('pending_articles')
+        .select('*')
+        .eq('id', pendingId)
+        .maybeSingle();
+
+      if (fetchErr || !article) {
+        console.warn("Could not find pending article details:", fetchErr?.message);
+        
+        await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            message_id: messageId,
+            text: `⚠️ *Error*: This pending article has already been processed or deleted.`,
+            parse_mode: 'Markdown'
+          })
+        });
+        return res.status(200).send('OK');
+      }
+
+      // Insert into production ai_articles table
+      const { error: insertErr } = await supabase
+        .from('ai_articles')
+        .insert([{
+          title: article.title,
+          summary: article.summary,
+          article_url: article.article_url,
+          source_name: article.source_name,
+          published_at: article.published_at,
+          category: 'Models' // Default category
+        }]);
+
+      if (insertErr) {
+        console.error("Failed to insert into ai_articles:", insertErr.message);
+        throw insertErr;
+      }
+
+      // Delete from pending table
+      await supabase
+        .from('pending_articles')
+        .delete()
+        .eq('id', pendingId);
+
+      // Edit Telegram message to show confirmation
+      await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          message_id: messageId,
+          text: `✅ *Article Accepted & Saved Live!*\n\n*Source*: ${article.source_name}\n*Title*: ${article.title}\n\nThe news feed has been updated successfully.`,
+          parse_mode: 'Markdown'
+        })
+      });
+
+    } else if (data.startsWith('deploy_')) {
+      const pendingId = data.replace('deploy_', '');
+      console.log(`Callback Go Live/Deploy received for ID: ${pendingId}`);
+
+      if (!deployHook) {
+        console.error("Missing VERCEL_DEPLOY_HOOK in environment.");
+        
+        await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            message_id: messageId,
+            text: `⚠️ *Error*: VERCEL_DEPLOY_HOOK env variable is missing on Vercel.`,
+            parse_mode: 'Markdown'
+          })
+        });
+        return res.status(200).send('OK');
+      }
+
+      // 1. Process ingestion first if article is still in pending staging
+      const { data: article } = await supabase
+        .from('pending_articles')
+        .select('*')
+        .eq('id', pendingId)
+        .maybeSingle();
+
+      let articleTitle = 'staged updates';
+      if (article) {
+        articleTitle = article.title;
+        // Save to live DB
+        await supabase.from('ai_articles').insert([{
+          title: article.title,
+          summary: article.summary,
+          article_url: article.article_url,
+          source_name: article.source_name,
+          published_at: article.published_at,
+          category: 'Models'
+        }]);
+        // Remove from pending
+        await supabase.from('pending_articles').delete().eq('id', pendingId);
+      }
+
+      // 2. Trigger Vercel deploy hook HTTP POST
+      console.log("Triggering Vercel rebuild...");
+      const deployRes = await fetch(deployHook, { method: 'POST' });
+      if (!deployRes.ok) {
+        const deployErr = await deployRes.text();
+        console.error("Deploy hook failed:", deployErr);
+        throw new Error("Failed to contact Vercel build trigger.");
+      }
+
+      // Edit Telegram message to show confirmation
+      await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          message_id: messageId,
+          text: `🚀 *Ingested & Production Deploy Triggered!*\n\n*Article*: ${articleTitle}\n\nThe Vercel build is now compiling. Your update will go live in 1-2 minutes!`,
+          parse_mode: 'Markdown'
+        })
+      });
+    }
+
+    return res.status(200).send('OK');
+
+  } catch (error) {
+    console.error("Webhook processing error:", error);
+    return res.status(500).send(`Error: ${error.message}`);
+  }
+}
