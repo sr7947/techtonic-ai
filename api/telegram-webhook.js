@@ -35,13 +35,17 @@ export default async function handler(req, res) {
         })
       });
 
-      // Fire-and-forget the YouTube ingestion script asynchronously
+      // Await the YouTube ingestion script to prevent Vercel from freezing the container
       const host = req.headers['x-forwarded-host'] || req.headers.host;
-      fetch(`https://${host}/api/process-youtube`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: youtubeUrl, chat_id: chatId })
-      }).catch(err => console.error("Process YouTube trigger failed:", err.message));
+      try {
+        await fetch(`https://${host}/api/process-youtube`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: youtubeUrl, chat_id: chatId })
+        });
+      } catch (err) {
+        console.error("Process YouTube trigger failed:", err.message);
+      }
 
       return res.status(200).send('OK');
     }
