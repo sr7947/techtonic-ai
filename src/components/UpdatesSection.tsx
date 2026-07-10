@@ -339,7 +339,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                       if (!summaryText) return null;
                       if (summaryText.includes('•') || summaryText.includes('\n-') || summaryText.startsWith('-')) {
                         const points = summaryText
-                          .split(/[\n\r]*[•\-]\s*/)
+                          .split('•')
                           .map((p: string) => p.trim())
                           .filter(Boolean);
                         return (
