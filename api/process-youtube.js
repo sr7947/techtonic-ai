@@ -1,4 +1,3 @@
-import { YoutubeTranscript } from 'youtube-transcript';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createClient } from '@supabase/supabase-js';
 
@@ -12,31 +11,7 @@ function getYouTubeId(url) {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
-async function getYouTubeMetadata(videoId) {
-  try {
-    const res = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
-      }
-    });
-    if (!res.ok) return null;
-    const html = await res.text();
-    
-    const titleMatch = html.match(/<meta name="title" content="([^"]+)"/i) || html.match(/<title>([^<]+)<\/title>/i);
-    const descMatch = html.match(/<meta name="description" content="([^"]+)"/i) || html.match(/<meta property="og:description" content="([^"]+)"/i);
-    
-    return {
-      title: titleMatch ? titleMatch[1] : 'YouTube Video',
-      description: descMatch ? descMatch[1] : ''
-    };
-  } catch (e) {
-    console.error("Failed to fetch metadata:", e.message);
-    return null;
-  }
-}
-
 export default async function handler(req, res) {
-  // Allow POST requests (e.g. from our webhook) or GET (for browser tests)
   const { url, chat_id } = req.method === 'POST' ? req.body : req.query;
 
   if (!url) {
@@ -64,14 +39,26 @@ export default async function handler(req, res) {
     let transcriptText = "";
     let fetchedMetadata = null;
 
-    // 1. Try to fetch YouTube transcript first
+    // 1. Fetch transcript from unblocked public API (bypasses YouTube serverless IP blocks)
     try {
-      console.log(`Fetching transcript for videoId: ${videoId}`);
-      const transcript = await YoutubeTranscript.fetchTranscript(videoId);
-      transcriptText = transcript.map(entry => entry.text).join(' ');
+      console.log(`Fetching transcript from public API for videoId: ${videoId}`);
+      const transcriptRes = await fetch(`https://youtube-transcript.ai/transcript/${videoId}.txt`);
+      if (transcriptRes.ok) {
+        const rawText = await transcriptRes.text();
+        const lines = rawText.split('\n');
+        // Extract text after the header metadata
+        transcriptText = lines.slice(8).join('\n');
+        console.log(`Transcript fetched successfully! Length: ${transcriptText.length} characters.`);
+      } else {
+        throw new Error(`Public transcript API returned status: ${transcriptRes.status}`);
+      }
     } catch (err) {
-      console.warn("Transcript fetch failed, falling back to page metadata scraping:", err.message);
-      fetchedMetadata = await getYouTubeMetadata(videoId);
+      console.warn("Transcript extraction failed, falling back to official oEmbed metadata:", err.message);
+      // Fallback to official oEmbed metadata API (does not block datacenter IPs)
+      const oembedRes = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+      if (oembedRes.ok) {
+        fetchedMetadata = await oembedRes.json();
+      }
     }
 
     if (!transcriptText && !fetchedMetadata) {
@@ -96,12 +83,11 @@ Respond ONLY with a valid JSON object matching this exact schema:
 Do not write any markdown code blocks, backticks, or intro/outro text. Just return the raw JSON string.
 
 Transcript:
-${transcriptText.slice(0, 10000)} // Slice to prevent token limit issues
+${transcriptText.slice(0, 15000)}
 `;
     } else {
       prompt = `You are a professional AI news editor and tech analyst. 
-Based on the following YouTube video metadata, extract the most important AI announcements, tools, news, or developer insights.
-Generate a compelling news article title and a 2-3 sentence summary explaining the core message.
+Based on the following YouTube video title, generate a compelling news article title and a 2-3 sentence summary explaining what the video is about.
 Respond ONLY with a valid JSON object matching this exact schema:
 {
   "title": "A short, catchy, professional title describing the news",
@@ -110,7 +96,7 @@ Respond ONLY with a valid JSON object matching this exact schema:
 Do not write any markdown code blocks, backticks, or intro/outro text. Just return the raw JSON string.
 
 Video Title: ${fetchedMetadata.title}
-Video Description: ${fetchedMetadata.description}
+Channel Author: ${fetchedMetadata.author_name}
 `;
     }
 
@@ -143,7 +129,6 @@ Video Description: ${fetchedMetadata.description}
       .maybeSingle();
 
     if (exists) {
-      // Notify user that it is already live
       await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -156,7 +141,7 @@ Video Description: ${fetchedMetadata.description}
       return res.status(200).json({ success: true, message: "Duplicate skipped." });
     }
 
-    // Upsert or insert into pending staging
+    // Insert into pending staging
     const { data: saved, error: stageErr } = await supabase
       .from('pending_articles')
       .insert([{
@@ -199,7 +184,6 @@ Video Description: ${fetchedMetadata.description}
   } catch (error) {
     console.error("YouTube analysis failed:", error.message);
     
-    // Notify the user on Telegram that analysis failed
     await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
