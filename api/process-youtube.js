@@ -141,21 +141,47 @@ Channel Author: ${fetchedMetadata.author_name}
       return res.status(200).json({ success: true, message: "Duplicate skipped." });
     }
 
-    // Insert into pending staging
-    const { data: saved, error: stageErr } = await supabase
+    // Check if it already exists in pending staging
+    const { data: pendingExists } = await supabase
       .from('pending_articles')
-      .insert([{
-        title: parsedNews.title,
-        summary: parsedNews.summary,
-        article_url: videoUrl,
-        source_name: 'YouTube',
-        published_at: new Date().toISOString()
-      }])
-      .select()
-      .single();
+      .select('id')
+      .eq('article_url', videoUrl)
+      .maybeSingle();
 
-    if (stageErr) {
-      throw new Error(`Failed to save pending article: ${stageErr.message}`);
+    let savedId = pendingExists?.id;
+
+    if (!pendingExists) {
+      // Insert into pending staging
+      const { data: saved, error: stageErr } = await supabase
+        .from('pending_articles')
+        .insert([{
+          title: parsedNews.title,
+          summary: parsedNews.summary,
+          article_url: videoUrl,
+          source_name: 'YouTube',
+          published_at: new Date().toISOString()
+        }])
+        .select()
+        .single();
+
+      if (stageErr) {
+        throw new Error(`Failed to save pending article: ${stageErr.message}`);
+      }
+      savedId = saved.id;
+    } else {
+      // Update existing pending entry
+      const { error: updateErr } = await supabase
+        .from('pending_articles')
+        .update({
+          title: parsedNews.title,
+          summary: parsedNews.summary,
+          published_at: new Date().toISOString()
+        })
+        .eq('id', savedId);
+
+      if (updateErr) {
+        throw new Error(`Failed to update pending article: ${updateErr.message}`);
+      }
     }
 
     // 6. Send the Telegram CMS message with action buttons
@@ -171,8 +197,8 @@ Channel Author: ${fetchedMetadata.author_name}
         reply_markup: {
           inline_keyboard: [
             [
-              { text: '✅ Accept & Save to DB', callback_data: `accept_${saved.id}` },
-              { text: '🚀 Go Live (Deploy)', callback_data: `deploy_${saved.id}` }
+              { text: '✅ Accept & Save to DB', callback_data: `accept_${savedId}` },
+              { text: '🚀 Go Live (Deploy)', callback_data: `deploy_${savedId}` }
             ]
           ]
         }
