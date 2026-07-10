@@ -334,9 +334,31 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                       {activeLeader.title}
                     </h3>
 
-                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed border-t border-brand-gold/5 pt-4 whitespace-pre-line">
-                      {activeLeader.summary}
-                    </p>
+                    {(() => {
+                      const summaryText = activeLeader.summary;
+                      if (!summaryText) return null;
+                      if (summaryText.includes('•') || summaryText.includes('\n-') || summaryText.startsWith('-')) {
+                        const points = summaryText
+                          .split(/[\n\r]*[•\-]\s*/)
+                          .map((p: string) => p.trim())
+                          .filter(Boolean);
+                        return (
+                          <ul className="space-y-3.5 text-slate-300 text-sm sm:text-base leading-relaxed border-t border-brand-gold/5 pt-4">
+                            {points.map((point: string, index: number) => (
+                              <li key={index} className="flex items-start gap-3">
+                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold mt-2 shrink-0 shadow-[0_0_8px_rgba(189,154,118,0.7)]" />
+                                <span className="flex-1 text-slate-300">{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      }
+                      return (
+                        <p className="text-slate-300 text-sm sm:text-base leading-relaxed border-t border-brand-gold/5 pt-4 whitespace-pre-line">
+                          {summaryText}
+                        </p>
+                      );
+                    })()}
 
                     <div className="pt-6 mt-6 border-t border-brand-gold/5 flex justify-end">
                       <a
