@@ -334,7 +334,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                       {activeLeader.title}
                     </h3>
 
-                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed border-t border-brand-gold/5 pt-4">
+                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed border-t border-brand-gold/5 pt-4 whitespace-pre-line">
                       {activeLeader.summary}
                     </p>
 

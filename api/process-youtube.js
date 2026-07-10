@@ -74,11 +74,11 @@ export default async function handler(req, res) {
     if (transcriptText) {
       prompt = `You are a professional AI news editor and tech analyst. 
 Based on the following transcript of a YouTube video, extract the most important AI announcements, tools, news, or developer insights.
-Generate a compelling news article title and a 2-3 sentence summary explaining the core message.
+Generate a compelling news article title and a summary formatted as 3-4 key bullet points using the '•' character and newlines.
 Respond ONLY with a valid JSON object matching this exact schema:
 {
   "title": "A short, catchy, professional title describing the news",
-  "summary": "A 2-3 sentence overview explaining what is new, why it matters, and the core details."
+  "summary": "• First key point about what is new.\\n• Second key point about why it matters.\\n• Third key point with specific details."
 }
 Do not write any markdown code blocks, backticks, or intro/outro text. Just return the raw JSON string.
 
@@ -87,11 +87,11 @@ ${transcriptText.slice(0, 15000)}
 `;
     } else {
       prompt = `You are a professional AI news editor and tech analyst. 
-Based on the following YouTube video title, generate a compelling news article title and a 2-3 sentence summary explaining what the video is about.
+Based on the following YouTube video title, generate a compelling news article title and a summary formatted as 3-4 key bullet points using the '•' character and newlines.
 Respond ONLY with a valid JSON object matching this exact schema:
 {
   "title": "A short, catchy, professional title describing the news",
-  "summary": "A 2-3 sentence overview explaining what is new, why it matters, and the core details."
+  "summary": "• First key point about what is new.\\n• Second key point about why it matters.\\n• Third key point with specific details."
 }
 Do not write any markdown code blocks, backticks, or intro/outro text. Just return the raw JSON string.
 
