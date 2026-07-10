@@ -14,15 +14,7 @@ const parser = new Parser({
   }
 });
 
-const FEEDS = {
-  'Google AI': 'https://blog.google/technology/ai/rss/',
-  'OpenAI': 'https://openai.com/news/rss.xml',
-  'NVIDIA': 'https://blogs.nvidia.com/feed/',
-  'Anthropic': 'https://www.anthropic.com/news/rss.xml'
-};
-
 export default async function handler(req, res) {
-  // Verify token and chat id exist
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -32,15 +24,25 @@ export default async function handler(req, res) {
   }
 
   try {
+    // 1. Fetch all active sources dynamically from Supabase (exactly like sync-news does)
+    const { data: sources, error: sourceErr } = await supabase
+      .from('ai_sources')
+      .select('*');
+
+    if (sourceErr || !sources) {
+      throw new Error(`Failed to load sources from Supabase: ${sourceErr?.message || 'Empty'}`);
+    }
+
     const alertsSent = [];
 
-    for (const [source, url] of Object.entries(FEEDS)) {
-      console.log(`Checking RSS feed: ${source} at ${url}`);
+    // 2. Loop through each live source
+    for (const source of sources) {
+      console.log(`Checking RSS feed: ${source.name} at ${source.feed_url}`);
       let feed;
       try {
-        feed = await parser.parseURL(url);
+        feed = await parser.parseURL(source.feed_url);
       } catch (err) {
-        console.warn(`Failed to parse feed for ${source}:`, err.message);
+        console.warn(`Failed to parse feed for ${source.name}:`, err.message);
         continue;
       }
 
@@ -66,14 +68,14 @@ export default async function handler(req, res) {
         if (!exists && !pendingExists) {
           console.log(`Staging new article: "${item.title}"`);
           
-          // 1. Stage in pending_articles table
+          // Stage in pending_articles table
           const { data: saved, error: stageErr } = await supabase
             .from('pending_articles')
             .insert([{
               title: item.title || 'Untitled Article',
               summary: item.contentSnippet || item.summary || 'No summary available.',
               article_url: articleUrl,
-              source_name: source,
+              source_name: source.name,
               published_at: item.pubDate || new Date().toISOString()
             }])
             .select()
@@ -84,9 +86,9 @@ export default async function handler(req, res) {
             continue;
           }
 
-          // 2. Format interactive buttons markup
+          // Format interactive buttons markup
           const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
-          const text = `🔔 *New AI Update Found!*\n\n*Source*: ${source}\n*Title*: ${item.title || 'Untitled'}\n\nIngest this article to your live database?`;
+          const text = `🔔 *New AI Update Found!*\n\n*Source*: ${source.name}\n*Title*: ${item.title || 'Untitled'}\n\nIngest this article to your live database?`;
           
           const payload = {
             chat_id: chatId,
@@ -102,7 +104,7 @@ export default async function handler(req, res) {
             }
           };
 
-          // 3. Send notification payload
+          // Send notification payload
           const response = await fetch(telegramUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
