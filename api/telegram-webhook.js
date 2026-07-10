@@ -5,9 +5,48 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl || '', supabaseKey || '');
 
 export default async function handler(req, res) {
-  // Telegram webhooks send callbacks in body
-  const { callback_query } = req.body || {};
+  const { callback_query, message: textMessage } = req.body || {};
   
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const deployHook = process.env.VERCEL_DEPLOY_HOOK;
+
+  if (!botToken) {
+    console.error("Missing TELEGRAM_BOT_TOKEN environment variable.");
+    return res.status(500).send('Bot token missing');
+  }
+
+  // Intercept and handle text messages containing YouTube links
+  if (textMessage && textMessage.text) {
+    const text = textMessage.text.trim();
+    const chatId = textMessage.chat.id;
+
+    const urlMatch = text.match(/https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s]+/i);
+    if (urlMatch) {
+      const youtubeUrl = urlMatch[0];
+      
+      // Send processing alert
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: `⏳ *Analyzing YouTube Video...*\nFetching transcript and summarizing with Gemini AI. This will take a few seconds...`,
+          parse_mode: 'Markdown'
+        })
+      });
+
+      // Fire-and-forget the YouTube ingestion script asynchronously
+      const host = req.headers['x-forwarded-host'] || req.headers.host;
+      fetch(`https://${host}/api/process-youtube`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: youtubeUrl, chat_id: chatId })
+      }).catch(err => console.error("Process YouTube trigger failed:", err.message));
+
+      return res.status(200).send('OK');
+    }
+  }
+
   if (!callback_query) {
     console.log("Received non-callback request on webhook.");
     return res.status(200).send('OK');
@@ -16,14 +55,6 @@ export default async function handler(req, res) {
   const { data, message, id: queryId } = callback_query;
   const messageId = message.message_id;
   const chatId = message.chat.id;
-
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const deployHook = process.env.VERCEL_DEPLOY_HOOK;
-
-  if (!botToken) {
-    console.error("Missing TELEGRAM_BOT_TOKEN environment variable.");
-    return res.status(500).send('Bot token missing');
-  }
 
   try {
     // 1. Answer Callback Query to stop loading animation in Telegram
