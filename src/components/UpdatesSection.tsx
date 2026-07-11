@@ -24,7 +24,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
   updates = LATEST_UPDATES,
   articles = []
 }) => {
-  const [feedType, setFeedType] = useState<'curated' | 'live'>('curated');
+  const [feedType, setFeedType] = useState<'curated' | 'live'>('live');
   const [selectedCompany, setSelectedCompany] = useState<string>('All');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -128,17 +128,6 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
           {/* Feed Type Tab Toggle */}
           <div className="flex bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/15 self-center lg:self-auto shadow-inner select-none">
             <button
-              onClick={() => setFeedType('curated')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                feedType === 'curated'
-                  ? 'bg-brand-gold text-brand-navy-dark shadow-md font-bold'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Flame className="w-3.5 h-3.5" />
-              Editor Briefings
-            </button>
-            <button
               onClick={() => setFeedType('live')}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 feedType === 'live'
@@ -148,6 +137,17 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
             >
               <Newspaper className="w-3.5 h-3.5" />
               Live News Feed
+            </button>
+            <button
+              onClick={() => setFeedType('curated')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                feedType === 'curated'
+                  ? 'bg-brand-gold text-brand-navy-dark shadow-md font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Flame className="w-3.5 h-3.5" />
+              Editor Briefings
             </button>
           </div>
         </div>
