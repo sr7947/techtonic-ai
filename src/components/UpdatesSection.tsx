@@ -318,18 +318,19 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.35 }}
-                  className="max-w-3xl mx-auto p-6 md:p-8 rounded-3xl glass-panel border border-brand-gold/20 relative overflow-hidden bg-brand-navy-deep/40 shadow-2xl"
+                  className="max-w-4xl mx-auto rounded-3xl glass-panel border border-brand-gold/20 relative overflow-hidden bg-brand-navy-deep/40 shadow-2xl flex flex-col md:flex-row animate-fade-in"
                 >
-                  <div className="absolute top-0 left-0 w-full h-[3px] bg-brand-gold" />
-                                    <div className="space-y-5">
-                      {activeLeader.imageUrl && (
-                        <div className="w-full h-44 sm:h-64 rounded-2xl overflow-hidden border border-brand-gold/15 relative shadow-inner bg-brand-navy/30 mb-2">
-                          <img src={activeLeader.imageUrl} alt={activeLeader.title} className="w-full h-full object-cover transform hover:scale-102 transition-transform duration-500" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-brand-navy-deep/80 via-transparent to-transparent pointer-events-none" />
-                        </div>
-                      )}
-                      
-                      <div className="flex flex-wrap items-center gap-3">
+                  <div className="absolute top-0 left-0 w-full h-[3px] bg-brand-gold z-10" />
+                  
+                  {activeLeader.imageUrl && (
+                    <div className="w-full md:w-[35%] h-48 md:h-auto min-h-[220px] relative overflow-hidden bg-brand-navy/30 shrink-0 border-b md:border-b-0 md:border-r border-brand-gold/10">
+                      <img src={activeLeader.imageUrl} alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-brand-navy-deep/90 via-transparent to-transparent pointer-events-none" />
+                    </div>
+                  )}
+
+                  <div className="flex-1 p-6 md:p-8 space-y-5">
+                    <div className="flex flex-wrap items-center gap-3">
                       <span className="px-2.5 py-1 rounded-lg bg-brand-gold/10 border border-brand-gold/20 text-brand-gold-bright text-[10px] font-bold uppercase tracking-wider">
                         {feedType === 'live' ? activeLeader.sourceName : activeLeader.tag}
                       </span>

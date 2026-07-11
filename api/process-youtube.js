@@ -75,10 +75,12 @@ export default async function handler(req, res) {
       prompt = `You are a professional AI news editor and tech analyst. 
 Based on the following transcript of a YouTube video, extract the most important AI announcements, tools, news, or developer insights.
 Generate a compelling news article title and a summary formatted as 3-4 key bullet points using the '•' character and newlines.
+Also generate a short 6-8 word prompt for an AI image generator describing a clean, modern, copyright-free high-tech illustration related to this topic.
 Respond ONLY with a valid JSON object matching this exact schema:
 {
   "title": "A short, catchy, professional title describing the news",
-  "summary": "• First key point about what is new.\\n• Second key point about why it matters.\\n• Third key point with specific details."
+  "summary": "• First key point about what is new.\\n• Second key point about why it matters.\\n• Third key point with specific details.",
+  "image_prompt": "A short, descriptive, copyright-free tech illustration concept prompt"
 }
 Do not write any markdown code blocks, backticks, or intro/outro text. Just return the raw JSON string.
 
@@ -88,10 +90,12 @@ ${transcriptText.slice(0, 15000)}
     } else {
       prompt = `You are a professional AI news editor and tech analyst. 
 Based on the following YouTube video title, generate a compelling news article title and a summary formatted as 3-4 key bullet points using the '•' character and newlines.
+Also generate a short 6-8 word prompt for an AI image generator describing a clean, modern, copyright-free high-tech illustration related to this topic.
 Respond ONLY with a valid JSON object matching this exact schema:
 {
   "title": "A short, catchy, professional title describing the news",
-  "summary": "• First key point about what is new.\\n• Second key point about why it matters.\\n• Third key point with specific details."
+  "summary": "• First key point about what is new.\\n• Second key point about why it matters.\\n• Third key point with specific details.",
+  "image_prompt": "A short, descriptive, copyright-free tech illustration concept prompt"
 }
 Do not write any markdown code blocks, backticks, or intro/outro text. Just return the raw JSON string.
 
@@ -117,6 +121,12 @@ Channel Author: ${fetchedMetadata.author_name}
       console.error("Failed to parse Gemini output as JSON. Output was:", responseText);
       throw new Error("AI analysis did not return a valid JSON payload.");
     }
+
+    // Generate a beautiful, copyright-free high-tech illustration based on Gemini's image_prompt
+    const cleanPrompt = (parsedNews.image_prompt || parsedNews.title || 'futuristic artificial intelligence concept')
+      .replace(/[^\w\s-]/g, '')
+      .trim();
+    const generatedImageUrl = `https://image.pollinations.ai/p/${encodeURIComponent(cleanPrompt + ', premium high-tech concept illustration, dark cyber navy and gold theme, minimalist 3d render')}?width=800&height=450&nologo=true`;
 
     // 5. Stage in pending_articles table
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -159,7 +169,7 @@ Channel Author: ${fetchedMetadata.author_name}
           summary: parsedNews.summary,
           article_url: videoUrl,
           source_name: 'YouTube',
-          image_url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+          image_url: generatedImageUrl,
           published_at: new Date().toISOString()
         }])
         .select()
@@ -176,7 +186,7 @@ Channel Author: ${fetchedMetadata.author_name}
         .update({
           title: parsedNews.title,
           summary: parsedNews.summary,
-          image_url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+          image_url: generatedImageUrl,
           published_at: new Date().toISOString()
         })
         .eq('id', savedId);
