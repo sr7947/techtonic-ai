@@ -360,18 +360,20 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                       );
                     })()}
 
-                    <div className="pt-6 mt-6 border-t border-brand-gold/5 flex justify-end">
-                      <a
-                        href={activeLeader.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold tracking-widest text-brand-gold-bright hover:text-brand-gold transition-colors duration-300 cursor-pointer uppercase"
-                      >
-                        <BookOpen className="w-4 h-4" />
-                        Explore Research Source
-                        <ArrowUpRight className="w-4.5 h-4.5" />
-                      </a>
-                    </div>
+                    {activeLeader.sourceName !== 'YouTube' && (
+                      <div className="pt-6 mt-6 border-t border-brand-gold/5 flex justify-end">
+                        <a
+                          href={activeLeader.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold tracking-widest text-brand-gold-bright hover:text-brand-gold transition-colors duration-300 cursor-pointer uppercase"
+                        >
+                          <BookOpen className="w-4 h-4" />
+                          Explore Research Source
+                          <ArrowUpRight className="w-4.5 h-4.5" />
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
