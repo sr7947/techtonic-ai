@@ -47,8 +47,8 @@ export default async function handler(req, res) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: chatId,
-            text: `❌ *Analysis Failed*:\nUnable to summarize the YouTube video. Details: ${err.message}`,
-            parse_mode: 'Markdown'
+            text: `❌ <b>Analysis Failed</b>:\nUnable to summarize the YouTube video. Details: ${err.message}`,
+            parse_mode: 'HTML'
           })
         });
       }
@@ -132,8 +132,8 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           chat_id: chatId,
           message_id: messageId,
-          text: `✅ *Article Accepted & Saved Live!*\n\n*Source*: ${article.source_name}\n*Title*: ${article.title}\n\nThe news feed has been updated successfully.`,
-          parse_mode: 'Markdown'
+          text: `✅ <b>Article Accepted & Saved Live!</b>\n\n<b>Source</b>: ${article.source_name}\n<b>Title</b>: ${article.title}\n\nThe news feed has been updated successfully.`,
+          parse_mode: 'HTML'
         })
       });
 
@@ -197,8 +197,8 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           chat_id: chatId,
           message_id: messageId,
-          text: `🚀 *Ingested & Production Deploy Triggered!*\n\n*Article*: ${articleTitle}\n\nThe Vercel build is now compiling. Your update will go live in 1-2 minutes!`,
-          parse_mode: 'Markdown'
+          text: `🚀 <b>Ingested & Production Deploy Triggered!</b>\n\n<b>Article</b>: ${articleTitle}\n\nThe Vercel build is now compiling. Your update will go live in 1-2 minutes!`,
+          parse_mode: 'HTML'
         })
       });
     }

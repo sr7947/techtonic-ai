@@ -134,8 +134,8 @@ Channel Author: ${fetchedMetadata.author_name}
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: chatId,
-        text: `ℹ️ *Duplicate Skipped*:\nThis YouTube video ("${parsedNews.title}") is already present in your live database.`,
-        parse_mode: 'Markdown'
+        text: `ℹ️ <b>Duplicate Skipped</b>:\nThis YouTube video ("${parsedNews.title}") is already present in your live database.`,
+        parse_mode: 'HTML'
       })
     });
     return parsedNews;
@@ -188,8 +188,8 @@ Channel Author: ${fetchedMetadata.author_name}
     }
   }
 
-  // 6. Send the Telegram CMS message with action buttons
-  const text = `🔔 *New YouTube AI Analysis!*\n\n*Source*: YouTube\n*Video Link*: ${url}\n\n*Title*: ${parsedNews.title}\n*Summary*: ${parsedNews.summary}\n\nPublish this video summary to the live portal?`;
+  // 6. Send the Telegram CMS message with action buttons using HTML formatting
+  const text = `🔔 <b>New YouTube AI Analysis!</b>\n\n<b>Source</b>: YouTube\n<b>Video Link</b>: ${url}\n\n<b>Title</b>: ${parsedNews.title}\n<b>Summary</b>:\n${parsedNews.summary}\n\nPublish this video summary to the live portal?`;
   
   await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
     method: 'POST',
@@ -197,7 +197,7 @@ Channel Author: ${fetchedMetadata.author_name}
     body: JSON.stringify({
       chat_id: chatId,
       text,
-      parse_mode: 'Markdown',
+      parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: [
           [
