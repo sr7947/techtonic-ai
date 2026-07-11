@@ -188,8 +188,18 @@ Channel Author: ${fetchedMetadata.author_name}
     }
   }
 
+  // Prepare transcript preview (first 400 chars)
+  const cleanTranscript = (transcriptText || '')
+    .replace(/<[^>]*>/g, '') // remove HTML tags if any
+    .replace(/[&<>]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[tag] || tag)) // escape HTML special chars
+    .trim();
+
+  const transcriptPreview = cleanTranscript 
+    ? `${cleanTranscript.slice(0, 400)}...` 
+    : `<i>(No transcript transcriptText available - fell back to video metadata)</i>`;
+
   // 6. Send the Telegram CMS message with action buttons using HTML formatting
-  const text = `🔔 <b>New YouTube AI Analysis!</b>\n\n<b>Source</b>: YouTube\n<b>Video Link</b>: ${url}\n\n<b>Title</b>: ${parsedNews.title}\n<b>Summary</b>:\n${parsedNews.summary}\n\nPublish this video summary to the live portal?`;
+  const text = `🔔 <b>New YouTube AI Analysis!</b>\n\n<b>Source</b>: YouTube\n<b>Video Link</b>: ${url}\n\n<b>Title</b>: ${parsedNews.title}\n<b>Summary</b>:\n${parsedNews.summary}\n\n📝 <b>Transcript Preview</b>:\n"${transcriptPreview}"\n\nPublish this video summary to the live portal?`;
   
   await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
     method: 'POST',
