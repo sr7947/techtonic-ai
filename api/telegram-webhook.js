@@ -209,6 +209,33 @@ export default async function handler(req, res) {
           parse_mode: 'HTML'
         })
       });
+    } else if (data.startsWith('reject_')) {
+      const pendingId = data.replace('reject_', '');
+      console.log(`Callback Reject received for ID: ${pendingId}`);
+
+      const { data: article } = await supabase
+        .from('pending_articles')
+        .select('title')
+        .eq('id', pendingId)
+        .maybeSingle();
+
+      const articleTitle = article?.title || 'staged updates';
+
+      await supabase
+        .from('pending_articles')
+        .delete()
+        .eq('id', pendingId);
+
+      await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          message_id: messageId,
+          text: `❌ <b>Article Rejected & Discarded</b>\n\n<b>Title</b>: ${articleTitle}\n\nThis summary has been removed from staging.`,
+          parse_mode: 'HTML'
+        })
+      });
     }
 
     return res.status(200).send('OK');

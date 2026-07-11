@@ -213,6 +213,9 @@ Channel Author: ${fetchedMetadata.author_name}
           [
             { text: '✅ Accept & Save to DB', callback_data: `accept_${savedId}` },
             { text: '🚀 Go Live (Deploy)', callback_data: `deploy_${savedId}` }
+          ],
+          [
+            { text: '❌ Reject & Discard', callback_data: `reject_${savedId}` }
           ]
         ]
       }
