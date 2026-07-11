@@ -14,6 +14,33 @@ const parser = new Parser({
   }
 });
 
+function extractImageUrl(item) {
+  // 1. Check enclosure
+  if (item.enclosure && item.enclosure.url && item.enclosure.type && item.enclosure.type.startsWith('image/')) {
+    return item.enclosure.url;
+  }
+  if (item.enclosure && item.enclosure.url && /\.(jpg|jpeg|png|gif|webp|svg)/i.test(item.enclosure.url)) {
+    return item.enclosure.url;
+  }
+  
+  // 2. Check standard media:content tag in rss-parser representation
+  if (item.mediaContent && item.mediaContent.$ && item.mediaContent.$.url) {
+    return item.mediaContent.$.url;
+  }
+  
+  // 3. Search in HTML body (contentEncoded or content) for img tags
+  const htmlContent = item.contentEncoded || item.content || '';
+  if (htmlContent) {
+    const imgMatch = htmlContent.match(/<img[^>]+src="([^">]+)"/i);
+    if (imgMatch && imgMatch[1]) {
+      if (!imgMatch[1].includes('statcounter') && !imgMatch[1].includes('analytics') && imgMatch[1].startsWith('http')) {
+        return imgMatch[1];
+      }
+    }
+  }
+  return null;
+}
+
 export default async function handler(req, res) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -76,6 +103,7 @@ export default async function handler(req, res) {
               summary: item.contentSnippet || item.summary || 'No summary available.',
               article_url: articleUrl,
               source_name: source.name,
+              image_url: extractImageUrl(item),
               published_at: item.pubDate || new Date().toISOString()
             }])
             .select()

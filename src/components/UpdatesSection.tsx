@@ -269,9 +269,16 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                           </span>
                         </div>
 
-                        <h3 className="font-serif text-sm sm:text-base font-bold leading-snug text-slate-200 line-clamp-3">
-                          {update.title}
-                        </h3>
+                          <div className="flex gap-3.5 items-start">
+                            {update.imageUrl && (
+                              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden shrink-0 border border-brand-gold/15 shadow-md bg-brand-navy/60">
+                                <img src={update.imageUrl} alt="" className="w-full h-full object-cover" />
+                              </div>
+                            )}
+                            <h3 className="font-serif text-xs sm:text-sm font-bold leading-snug text-slate-200 line-clamp-3 flex-1">
+                              {update.title}
+                            </h3>
+                          </div>
                       </div>
 
                       <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium">
@@ -314,9 +321,15 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                   className="max-w-3xl mx-auto p-6 md:p-8 rounded-3xl glass-panel border border-brand-gold/20 relative overflow-hidden bg-brand-navy-deep/40 shadow-2xl"
                 >
                   <div className="absolute top-0 left-0 w-full h-[3px] bg-brand-gold" />
-                  
-                  <div className="space-y-5">
-                    <div className="flex flex-wrap items-center gap-3">
+                                    <div className="space-y-5">
+                      {activeLeader.imageUrl && (
+                        <div className="w-full h-44 sm:h-64 rounded-2xl overflow-hidden border border-brand-gold/15 relative shadow-inner bg-brand-navy/30 mb-2">
+                          <img src={activeLeader.imageUrl} alt={activeLeader.title} className="w-full h-full object-cover transform hover:scale-102 transition-transform duration-500" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-brand-navy-deep/80 via-transparent to-transparent pointer-events-none" />
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-wrap items-center gap-3">
                       <span className="px-2.5 py-1 rounded-lg bg-brand-gold/10 border border-brand-gold/20 text-brand-gold-bright text-[10px] font-bold uppercase tracking-wider">
                         {feedType === 'live' ? activeLeader.sourceName : activeLeader.tag}
                       </span>

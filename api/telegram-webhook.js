@@ -104,6 +104,7 @@ export default async function handler(req, res) {
           article_url: article.article_url,
           source_name: article.source_name,
           published_at: article.published_at,
+          image_url: article.image_url,
           category: 'Models' // Default category
         }]);
 
@@ -167,6 +168,7 @@ export default async function handler(req, res) {
           article_url: article.article_url,
           source_name: article.source_name,
           published_at: article.published_at,
+          image_url: article.image_url,
           category: 'Models'
         }]);
         // Remove from pending

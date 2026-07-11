@@ -143,7 +143,8 @@ function App() {
             sourceName: item.source_name,
             author: item.author || item.source_name,
             readTime: '3 min read',
-            tag: item.source_name
+            tag: item.source_name,
+            imageUrl: item.image_url
           })));
         }
 

@@ -159,6 +159,7 @@ Channel Author: ${fetchedMetadata.author_name}
           summary: parsedNews.summary,
           article_url: videoUrl,
           source_name: 'YouTube',
+          image_url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
           published_at: new Date().toISOString()
         }])
         .select()
@@ -175,6 +176,7 @@ Channel Author: ${fetchedMetadata.author_name}
         .update({
           title: parsedNews.title,
           summary: parsedNews.summary,
+          image_url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
           published_at: new Date().toISOString()
         })
         .eq('id', savedId);
