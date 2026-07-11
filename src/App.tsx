@@ -112,7 +112,10 @@ function App() {
 
         if (rawUpdates && !errUpdates) {
           if (rawUpdates.length > 0) {
-            setUpdates(rawUpdates.map((item: any) => ({
+            const filteredUpdates = rawUpdates.filter((item: any) => 
+              !(item.title || '').toLowerCase().includes('echtonic ai portal connects')
+            );
+            setUpdates(filteredUpdates.map((item: any) => ({
               id: item.id,
               title: item.title,
               category: item.category,
