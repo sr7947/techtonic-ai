@@ -39,10 +39,17 @@ export default async function handler(req, res) {
     let transcriptText = "";
     let fetchedMetadata = null;
 
-    // 1. Fetch transcript from unblocked public API (bypasses YouTube serverless IP blocks)
+    // 1. Fetch transcript from unblocked public API with a 4-second timeout
     try {
       console.log(`Fetching transcript from public API for videoId: ${videoId}`);
-      const transcriptRes = await fetch(`https://youtube-transcript.ai/transcript/${videoId}.txt`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+      const transcriptRes = await fetch(`https://youtube-transcript.ai/transcript/${videoId}.txt`, {
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
       if (transcriptRes.ok) {
         const rawText = await transcriptRes.text();
         const lines = rawText.split('\n');
@@ -53,7 +60,7 @@ export default async function handler(req, res) {
         throw new Error(`Public transcript API returned status: ${transcriptRes.status}`);
       }
     } catch (err) {
-      console.warn("Transcript extraction failed, falling back to official oEmbed metadata:", err.message);
+      console.warn("Transcript extraction failed or timed out, falling back to official oEmbed metadata:", err.message);
       // Fallback to official oEmbed metadata API (does not block datacenter IPs)
       const oembedRes = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
       if (oembedRes.ok) {
