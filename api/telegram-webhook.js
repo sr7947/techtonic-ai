@@ -101,6 +101,10 @@ export default async function handler(req, res) {
         return res.status(200).send('OK');
       }
 
+      const parts = (article.source_name || '').split('::');
+      const sourceName = parts[0] || 'YouTube';
+      const categoryName = parts[1] || 'Models';
+
       // Insert into production ai_articles table
       const { error: insertErr } = await supabase
         .from('ai_articles')
@@ -108,10 +112,10 @@ export default async function handler(req, res) {
           title: article.title,
           summary: article.summary,
           article_url: article.article_url,
-          source_name: article.source_name,
+          source_name: sourceName,
           published_at: article.published_at,
           image_url: article.image_url,
-          category: article.category || 'Models'
+          category: categoryName
         }]);
 
       if (insertErr) {
@@ -167,15 +171,19 @@ export default async function handler(req, res) {
       let articleTitle = 'staged updates';
       if (article) {
         articleTitle = article.title;
+        const parts = (article.source_name || '').split('::');
+        const sourceName = parts[0] || 'YouTube';
+        const categoryName = parts[1] || 'Models';
+
         // Save to live DB
         await supabase.from('ai_articles').insert([{
           title: article.title,
           summary: article.summary,
           article_url: article.article_url,
-          source_name: article.source_name,
+          source_name: sourceName,
           published_at: article.published_at,
           image_url: article.image_url,
-          category: article.category || 'Models'
+          category: categoryName
         }]);
         // Remove from pending
         await supabase.from('pending_articles').delete().eq('id', pendingId);

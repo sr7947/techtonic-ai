@@ -158,9 +158,8 @@ Channel Author: ${fetchedMetadata.author_name}
         title: parsedNews.title,
         summary: parsedNews.summary,
         article_url: videoUrl,
-        source_name: 'YouTube',
+        source_name: `YouTube::${parsedNews.company || 'Models'}`,
         image_url: generatedImageUrl,
-        category: parsedNews.company || 'Models',
         published_at: new Date().toISOString()
       }])
       .select()
@@ -178,7 +177,7 @@ Channel Author: ${fetchedMetadata.author_name}
         title: parsedNews.title,
         summary: parsedNews.summary,
         image_url: generatedImageUrl,
-        category: parsedNews.company || 'Models',
+        source_name: `YouTube::${parsedNews.company || 'Models'}`,
         published_at: new Date().toISOString()
       })
       .eq('id', savedId);
