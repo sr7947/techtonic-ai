@@ -116,7 +116,8 @@ Channel Author: ${fetchedMetadata.author_name}
   const cleanPrompt = (parsedNews.image_prompt || parsedNews.title || 'futuristic artificial intelligence concept')
     .replace(/[^\w\s-]/g, '')
     .trim();
-  const generatedImageUrl = `https://image.pollinations.ai/p/${encodeURIComponent(cleanPrompt + ', modern graphic design, minimalist 3d render, vector logo art, clean dark cyber navy and gold theme')}?width=800&height=450&nologo=true`;
+  const compBrand = parsedNews.company || 'AI Tech';
+  const generatedImageUrl = `https://image.pollinations.ai/p/${encodeURIComponent(cleanPrompt + `, cinematic lighting, futuristic ${compBrand} tech illustration, dark navy and gold corporate theme, minimalist digital art`)}?width=800&height=450&nologo=true`;
 
   // 5. Stage in pending_articles table
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;

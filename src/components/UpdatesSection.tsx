@@ -51,6 +51,19 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
     return 'other';
   };
 
+  // Get SVG/image logo URL for each company
+  const getCompanyLogo = (compKey: string): string | null => {
+    const key = (compKey || '').toLowerCase();
+    if (key.includes('openai')) return 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg';
+    if (key.includes('google') || key.includes('deepmind')) return 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg';
+    if (key.includes('anthropic')) return 'https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg';
+    if (key.includes('meta')) return 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg';
+    if (key.includes('microsoft')) return 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg';
+    if (key.includes('aws') || key.includes('amazon')) return 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg';
+    if (key.includes('nvidia')) return 'https://upload.wikimedia.org/wikipedia/commons/2/21/Nvidia_logo.svg';
+    return null;
+  };
+
   // Filter based on selected company
   const filteredUpdates = activeList.filter((update) => {
     const companyField = (update as any).company || '';
@@ -271,8 +284,20 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
                           <div className="flex gap-3.5 items-start">
                             {update.imageUrl && (
-                              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden shrink-0 border border-brand-gold/15 shadow-md bg-brand-navy/60">
+                              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden shrink-0 border border-brand-gold/15 shadow-md bg-brand-navy/60 relative">
                                 <img src={update.imageUrl} alt="" className="w-full h-full object-cover" />
+                                {/* Brand Logo Overlay */}
+                                {(() => {
+                                  const compField = (update as any).company || '';
+                                  const compKey = compField ? compField.toLowerCase() : getCompanyKey(update.sourceName || '', update.tag || '', update.source || '');
+                                  const logoUrl = getCompanyLogo(compKey);
+                                  if (!logoUrl) return null;
+                                  return (
+                                    <div className="absolute bottom-1 right-1 bg-brand-navy-deep/95 border border-brand-gold/20 p-0.5 rounded-md flex items-center justify-center shadow-md z-10">
+                                      <img src={logoUrl} alt="" className="w-3.5 h-3.5 object-contain filter brightness-110" />
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             )}
                             <h3 className="font-serif text-xs sm:text-sm font-bold leading-snug text-slate-200 line-clamp-3 flex-1">
@@ -326,6 +351,18 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                     <div className="w-full md:w-[35%] h-48 md:h-auto min-h-[220px] relative overflow-hidden bg-brand-navy/30 shrink-0 border-b md:border-b-0 md:border-r border-brand-gold/10">
                       <img src={activeLeader.imageUrl} alt="" className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-brand-navy-deep/90 via-transparent to-transparent pointer-events-none" />
+                      {/* Floating Brand Badge */}
+                      {(() => {
+                        const compField = (activeLeader as any).company || '';
+                        const compKey = compField ? compField.toLowerCase() : getCompanyKey(activeLeader.sourceName || '', activeLeader.tag || '', activeLeader.source || '');
+                        const logoUrl = getCompanyLogo(compKey);
+                        if (!logoUrl) return null;
+                        return (
+                          <div className="absolute top-4 left-4 bg-brand-navy-deep/90 backdrop-blur-md border border-brand-gold/30 p-2 rounded-xl flex items-center justify-center shadow-lg z-10">
+                            <img src={logoUrl} alt={`${compKey} Logo`} className="w-6 h-6 object-contain filter brightness-110" />
+                          </div>
+                        );
+                      })()}
                     </div>
                   )}
 
