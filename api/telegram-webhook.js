@@ -105,7 +105,7 @@ export default async function handler(req, res) {
           source_name: article.source_name,
           published_at: article.published_at,
           image_url: article.image_url,
-          category: 'Models' // Default category
+          category: article.category || 'Models'
         }]);
 
       if (insertErr) {
@@ -169,7 +169,7 @@ export default async function handler(req, res) {
           source_name: article.source_name,
           published_at: article.published_at,
           image_url: article.image_url,
-          category: 'Models'
+          category: article.category || 'Models'
         }]);
         // Remove from pending
         await supabase.from('pending_articles').delete().eq('id', pendingId);
