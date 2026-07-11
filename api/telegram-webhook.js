@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { analyzeAndStageYoutubeVideo } from './_youtube-analyzer.js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -35,16 +36,21 @@ export default async function handler(req, res) {
         })
       });
 
-      // Await the YouTube ingestion script to prevent Vercel from freezing the container
-      const host = req.headers['x-forwarded-host'] || req.headers.host;
+      // Directly call YouTube analyzer logic to avoid self-HTTP routing delays and Vercel container freezing
+      const geminiKey = process.env.GEMINI_API_KEY;
       try {
-        await fetch(`https://${host}/api/process-youtube`, {
+        await analyzeAndStageYoutubeVideo(youtubeUrl, chatId, botToken, geminiKey);
+      } catch (err) {
+        console.error("Direct YouTube analysis failed:", err.message);
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: youtubeUrl, chat_id: chatId })
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `❌ *Analysis Failed*:\nUnable to summarize the YouTube video. Details: ${err.message}`,
+            parse_mode: 'Markdown'
+          })
         });
-      } catch (err) {
-        console.error("Process YouTube trigger failed:", err.message);
       }
 
       return res.status(200).send('OK');
