@@ -47,7 +47,8 @@ const CATEGORIES = [
   { id: 'Research', name: 'Research' },
   { id: 'Enterprise AI', name: 'Enterprise AI' },
   { id: 'Media', name: 'Tech Media' },
-  { id: 'Developer Tools', name: 'Developer Tools' }
+  { id: 'Developer Tools', name: 'Developer Tools' },
+  { id: 'YouTube', name: 'YouTube Videos' }
 ];
 
 export const UpdatesSection: React.FC<UpdatesSectionProps> = ({ 
@@ -96,6 +97,9 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
   // Maps items to dynamic categories
   const getItemCategory = (item: any): string => {
+    const source = (item.sourceName || item.source || item.tag || '').toLowerCase();
+    if (source.includes('youtube')) return 'YouTube';
+
     const cat = (item.category || '').toLowerCase();
     if (cat.includes('model') || cat.includes('labs') || cat.includes('openai') || cat.includes('anthropic')) return 'Labs';
     if (cat.includes('research') || cat.includes('deepmind') || cat.includes('google')) return 'Research';
@@ -103,7 +107,6 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
     if (cat.includes('media') || cat.includes('techcrunch') || cat.includes('venture') || cat.includes('review')) return 'Media';
     if (cat.includes('developer') || cat.includes('tool') || cat.includes('hugging')) return 'Developer Tools';
 
-    const source = (item.sourceName || item.source || item.tag || '').toLowerCase();
     if (source.includes('openai') || source.includes('anthropic')) return 'Labs';
     if (source.includes('deepmind') || source.includes('google') || source.includes('mit')) return 'Research';
     if (source.includes('microsoft') || source.includes('aws') || source.includes('amazon')) return 'Enterprise AI';
@@ -114,12 +117,12 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
   // Filter based on selected category & freshness
   const filteredUpdates = activeList.filter((update) => {
-    // 1. Freshness filter for Live News Feed
-    if (feedType === 'live') {
+    // 1. Freshness filter for Live News Feed (Capped at 48 hours by default, full history shown when showOlder is true)
+    if (feedType === 'live' && !showOlder) {
       const publishedDate = new Date(update.publishedAt || update.date || new Date());
       const ageHours = (new Date().getTime() - publishedDate.getTime()) / (1000 * 60 * 60);
       
-      const maxAge = showOlder ? 168 : 48; // 48h limit by default, 7 days if showOlder is true
+      const maxAge = 48; // 48h limit by default
       if (ageHours > maxAge) {
         return false;
       }
@@ -483,7 +486,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-200">No Recent Updates Found</h3>
               <p className="text-slate-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
                 {feedType === 'live'
-                  ? `There are no new AI news releases in the last ${showOlder ? '7 days' : '48 hours'} for this category.`
+                  ? `There are no new AI news releases in the last ${showOlder ? 'month' : '48 hours'} for this category.`
                   : 'No curated editor briefings are available under this category.'}
               </p>
             </div>
@@ -492,7 +495,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                 onClick={() => setShowOlder(true)}
                 className="px-6 py-3 rounded-xl bg-brand-gold text-brand-navy-dark hover:bg-brand-gold-bright transition-all text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
-                View Older Stories (Last 7 Days)
+                View Older Stories
               </button>
             )}
           </div>
@@ -506,7 +509,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-gold/15 hover:border-brand-gold/40 text-slate-400 hover:text-slate-200 transition-all text-xs font-bold uppercase tracking-wider cursor-pointer bg-brand-navy-deep/30"
             >
               <Clock className="w-3.5 h-3.5 text-brand-gold" />
-              Looking for more? View older stories (Last 7 Days)
+              Looking for more? View older stories
             </button>
           </div>
         )}
