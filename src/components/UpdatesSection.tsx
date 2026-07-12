@@ -8,6 +8,39 @@ interface UpdatesSectionProps {
   articles?: any[];
 }
 
+const SafeImage: React.FC<{ src: string; alt: string; className: string }> = ({ src, alt, className }) => {
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  if (error || !src) {
+    return (
+      <div className={`${className} bg-gradient-to-br from-brand-navy-light/40 to-brand-navy-deep flex items-center justify-center border border-brand-gold/10`}>
+        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">TechTonic AI</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full">
+      {loading && (
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-navy-light/40 to-brand-navy-deep flex items-center justify-center border border-brand-gold/10 animate-pulse">
+          <div className="text-[9px] text-slate-500 font-mono">LOADING...</div>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        onLoad={() => setLoading(false)}
+        onError={() => {
+          setError(true);
+          setLoading(false);
+        }}
+      />
+    </div>
+  );
+};
+
 const CATEGORIES = [
   { id: 'All', name: 'All Updates' },
   { id: 'Labs', name: 'AI Labs & Models' },
@@ -295,7 +328,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                           <div className="flex gap-3.5 items-start">
                             {update.imageUrl && (
                               <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden shrink-0 border border-brand-gold/15 shadow-md bg-brand-navy/60 relative">
-                                <img src={update.imageUrl} alt="" className="w-full h-full object-cover" />
+                                <SafeImage src={update.imageUrl} alt="" className="w-full h-full object-cover" />
                                 {/* Brand Logo Overlay */}
                                 {(() => {
                                   const compField = (update as any).company || '';
@@ -359,7 +392,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                   
                   {activeLeader.imageUrl && (
                     <div className="w-full md:w-[35%] h-48 md:h-auto min-h-[220px] relative overflow-hidden bg-brand-navy/30 shrink-0 border-b md:border-b-0 md:border-r border-brand-gold/10">
-                      <img src={activeLeader.imageUrl} alt="" className="w-full h-full object-cover" />
+                      <SafeImage src={activeLeader.imageUrl} alt={activeLeader.title} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-brand-navy-deep/90 via-transparent to-transparent pointer-events-none" />
                       {/* Floating Brand Badge */}
                       {(() => {

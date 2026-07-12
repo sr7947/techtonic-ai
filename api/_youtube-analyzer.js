@@ -119,6 +119,11 @@ Channel Author: ${fetchedMetadata.author_name}
   const compBrand = parsedNews.company || 'AI Tech';
   const generatedImageUrl = `https://image.pollinations.ai/p/${encodeURIComponent(cleanPrompt + `, cinematic lighting, futuristic ${compBrand} tech illustration, dark navy and gold corporate theme, minimalist digital art`)}?width=800&height=450&nologo=true`;
 
+  // Pre-trigger image generation in background to cache in Pollinations AI CDN
+  try {
+    fetch(generatedImageUrl).catch(() => {});
+  } catch (e) {}
+
   // 5. Stage in pending_articles table
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
   
