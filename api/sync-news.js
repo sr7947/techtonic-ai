@@ -2,6 +2,13 @@ import Parser from 'rss-parser';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
+function generateThemedImageUrl(title) {
+  const cleanTitle = (title || 'futuristic artificial intelligence concept')
+    .replace(/[^\w\s-]/g, '')
+    .trim();
+  return `https://image.pollinations.ai/p/${encodeURIComponent(cleanTitle + ', premium high-tech concept illustration, dark cyber navy and gold theme, minimalist 3d render')}?width=800&height=450&nologo=true`;
+}
+
 // Initialize Supabase client
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -91,6 +98,21 @@ export default async function handler(req, res) {
       (recentArticles || []).map(a => (a.title || '').toLowerCase().trim())
     );
 
+    // Fetch existing URLs from both tables to avoid double staging or duplicate publishing
+    const { data: recentUrlsLive } = await supabase
+      .from('ai_articles')
+      .select('article_url')
+      .gt('published_at', sevenDaysAgo.toISOString());
+
+    const { data: recentUrlsPending } = await supabase
+      .from('pending_articles')
+      .select('article_url');
+
+    const recentUrlsSet = new Set([
+      ...(recentUrlsLive || []).map(a => a.article_url),
+      ...(recentUrlsPending || []).map(a => a.article_url)
+    ]);
+
     // 3. Process all sources in parallel
     const promises = sources.map(async (source) => {
       const sourceStart = new Date();
@@ -120,7 +142,7 @@ export default async function handler(req, res) {
 
           // Title-based case-insensitive deduplication
           const lowerTitle = (item.title || '').toLowerCase().trim();
-          if (recentTitlesSet.has(lowerTitle)) {
+          if (recentTitlesSet.has(lowerTitle) || recentUrlsSet.has(articleUrl)) {
             continue;
           }
 
@@ -191,16 +213,73 @@ export default async function handler(req, res) {
           });
         }
 
-        // Perform bulk upsert for all matched articles in this feed
+        // Perform ingestion based on curation mode settings
         if (articlesPayload.length > 0) {
-          const { error: insertErr } = await supabase
-            .from('ai_articles')
-            .upsert(articlesPayload, { onConflict: 'article_url', ignoreDuplicates: true });
+          if (process.env.CURATION_MODE !== 'false') {
+            // Curation mode: stage in pending_articles and send Telegram notifications
+            for (const article of articlesPayload) {
+              const { data: saved, error: stageErr } = await supabase
+                .from('pending_articles')
+                .insert([{
+                  title: article.title,
+                  summary: article.summary,
+                  article_url: article.article_url,
+                  source_name: `${article.source_name}::${article.category}`,
+                  image_url: generateThemedImageUrl(article.title),
+                  published_at: article.published_at
+                }])
+                .select()
+                .single();
 
-          if (!insertErr) {
+              if (stageErr || !saved) {
+                console.error("Failed to stage pending article:", stageErr?.message);
+                continue;
+              }
+
+              const token = process.env.TELEGRAM_BOT_TOKEN;
+              const chatId = process.env.TELEGRAM_CHAT_ID;
+              if (token && chatId) {
+                const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
+                const text = `🔔 *New AI Update Found!*\n\n*Source*: ${article.source_name}\n*Title*: ${article.title || 'Untitled'}\n\nIngest this article to your live database?`;
+                
+                const payload = {
+                  chat_id: chatId,
+                  text,
+                  parse_mode: 'Markdown',
+                  reply_markup: {
+                    inline_keyboard: [
+                      [
+                        { text: '✅ Accept & Save to DB', callback_data: `accept_${saved.id}` },
+                        { text: '🚀 Go Live (Deploy)', callback_data: `deploy_${saved.id}` }
+                      ]
+                    ]
+                  }
+                };
+
+                const teleRes = await fetch(telegramUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+
+                if (!teleRes.ok) {
+                  const errBody = await teleRes.text();
+                  console.error(`Telegram message failed: ${teleRes.status}`, errBody);
+                }
+              }
+            }
             articlesCount = articlesPayload.length;
           } else {
-            throw new Error(`Supabase bulk insert error: ${insertErr.message}`);
+            // Auto-post mode: insert directly into ai_articles
+            const { error: insertErr } = await supabase
+              .from('ai_articles')
+              .upsert(articlesPayload, { onConflict: 'article_url', ignoreDuplicates: true });
+
+            if (!insertErr) {
+              articlesCount = articlesPayload.length;
+            } else {
+              throw new Error(`Supabase bulk insert error: ${insertErr.message}`);
+            }
           }
         }
       } catch (err) {
