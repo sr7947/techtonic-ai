@@ -20,6 +20,7 @@ import { McpPage } from './pages/McpPage';
 import { SkillsPage } from './pages/SkillsPage';
 import { FrameworksPage } from './pages/FrameworksPage';
 import { InfrastructurePage } from './pages/InfrastructurePage';
+import { CompanyHubPage } from './pages/CompanyHubPage';
 
 interface UserProfile {
   name: string;
@@ -233,6 +234,10 @@ function App() {
         {currentPath === '/technologies/skills' && <SkillsPage />}
         {currentPath === '/technologies/frameworks' && <FrameworksPage />}
         {currentPath === '/technologies/infrastructure' && <InfrastructurePage />}
+        {currentPath === '/leaders/google-deepmind' && <CompanyHubPage companyId="google-deepmind" navigate={navigate} />}
+        {currentPath === '/leaders/openai' && <CompanyHubPage companyId="openai" navigate={navigate} />}
+        {currentPath === '/leaders/anthropic-claude' && <CompanyHubPage companyId="anthropic-claude" navigate={navigate} />}
+        {currentPath === '/leaders/meta-llama' && <CompanyHubPage companyId="meta-llama" navigate={navigate} />}
       </main>
 
       {/* Platform Footer */}

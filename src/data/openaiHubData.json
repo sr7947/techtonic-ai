@@ -1,0 +1,430 @@
+{
+  "company": {
+    "id": "openai",
+    "name": "OpenAI",
+    "tagline": "Pioneering artificial general intelligence to empower developers with frontier cognitive reasoning.",
+    "overview": "OpenAI is at the forefront of generative artificial intelligence, establishing foundational standards for large language models, streaming speech APIs, and autonomous reasoning agents. Their API-first ecosystem enables developers to construct advanced multimodal applications and integrate deep reasoning workflows into production architectures.",
+    "official_site_url": "https://openai.com",
+    "theme_color": "#0d7c60"
+  },
+  "llms": [
+    {
+      "id": "gpt-5-6-sol",
+      "name": "GPT-5.6 (Sol / Terra / Luna)",
+      "family": "GPT-5.6",
+      "modality": "multimodal",
+      "type": "frontier-cloud",
+      "tier": "flagship",
+      "short_tagline": "Flagship multimodal LLMs optimized for high-intelligence applications.",
+      "description": "GPT-5.6 Sol represents OpenAI's flagship frontier model family, combining visual, textual, and audio inputs in a single forward pass. Developers leverage Sol and its optimized variants, Terra and Luna, to build high-intelligence conversational agents and complex coding environments operating at minimal latency.",
+      "primary_use_cases": [
+        "High-latency cognitive reasoning",
+        "Interleaved multimodal data extraction",
+        "Frontier autonomous agent backends"
+      ],
+      "docs_url": "https://platform.openai.com/docs/models/gpt-5-6"
+    },
+    {
+      "id": "o-series-reasoning",
+      "name": "o-series (o3 / o4-mini)",
+      "family": "o-series",
+      "modality": "text",
+      "type": "reasoning",
+      "tier": "flagship",
+      "short_tagline": "Heavy reasoning models for complex mathematical and logic tasks.",
+      "description": "The o-series models are engineered for heavy reasoning, utilizing reinforcement learning to generate internal chains of thought before outputting responses. Developers use them to solve advanced mathematical equations, write complex backend code, and execute multi-step logic routines requiring deep cognitive deliberation.",
+      "primary_use_cases": [
+        "Complex mathematical and scientific calculations",
+        "Advanced backend software engineering tasks",
+        "Multi-step reasoning and logic verification"
+      ],
+      "docs_url": "https://platform.openai.com/docs/guides/reasoning"
+    },
+    {
+      "id": "gpt-4o",
+      "name": "GPT-4.1 / GPT-4o",
+      "family": "GPT-4o",
+      "modality": "multimodal",
+      "type": "frontier-cloud",
+      "tier": "fast",
+      "short_tagline": "High-intelligence multimodal models optimized for speed and cost.",
+      "description": "The GPT-4o family offers high-intelligence, multimodal chat capabilities optimized for developer-friendly speeds and cost. These models allow builders to process text and visual inputs simultaneously, powering intelligent assistants, data analytics pipelines, and advanced web-scraping extraction routines at scale.",
+      "primary_use_cases": [
+        "Multimodal user assistants",
+        "Dynamic image and text analysis",
+        "High-throughput data extraction tasks"
+      ],
+      "docs_url": "https://platform.openai.com/docs/models/gpt-4o"
+    },
+    {
+      "id": "gpt-realtime",
+      "name": "GPT-Realtime",
+      "family": "GPT-Realtime",
+      "modality": "audio",
+      "type": "realtime",
+      "tier": "flagship",
+      "short_tagline": "Bi-directional audio streaming for voice agents.",
+      "description": "The GPT-Realtime model family powers low-latency, bi-directional audio and text streaming. Developers integrate these models to construct highly responsive voice agents, real-time translators, and voice-controlled interfaces that process natural speech without intermediate text-to-speech transcoding steps.",
+      "primary_use_cases": [
+        "Low-latency voice assistant agents",
+        "Simultaneous live voice translation",
+        "Natural conversational speech recognition"
+      ],
+      "docs_url": "https://platform.openai.com/docs/guides/realtime"
+    },
+    {
+      "id": "gpt-image-gen",
+      "name": "GPT Image (2 / 1)",
+      "family": "GPT Image",
+      "modality": "image",
+      "type": "frontier-cloud",
+      "tier": "cost-optimized",
+      "short_tagline": "High-fidelity graphic generation and granular editing.",
+      "description": "GPT Image models, including the latest version 2, deliver high-fidelity graphic generation and granular visual editing capabilities. Developers use their APIs to programmatically generate marketing materials, design assets, and edit existing graphics with precise, instruction-aligned textual layout controls.",
+      "primary_use_cases": [
+        "Automated marketing asset generation",
+        "Programmatic graphic design and creation",
+        "Textual instruction-aligned image editing"
+      ],
+      "docs_url": "https://platform.openai.com/docs/guides/images"
+    },
+    {
+      "id": "sora-video",
+      "name": "Sora Video Models",
+      "family": "Sora",
+      "modality": "video",
+      "type": "frontier-cloud",
+      "tier": "research",
+      "short_tagline": "Text-to-video generation with physical consistency.",
+      "description": "Sora video generation models enable developers to programmatically generate cinematic high-definition video clips from text instructions. Perfect for creative applications, developers leverage Sora to automate visual storytelling, generate dynamic ad mockups, and build video editing pipelines with physical scene consistency.",
+      "primary_use_cases": [
+        "Automated video ad creation",
+        "Cinematic video snippet prototyping",
+        "Visual storytelling and storytelling pipelines"
+      ],
+      "docs_url": "https://platform.openai.com/docs/guides/video"
+    },
+    {
+      "id": "openai-embeddings",
+      "name": "Text Embedding Models",
+      "family": "Embedding",
+      "modality": "embedding",
+      "type": "embedding",
+      "tier": "cost-optimized",
+      "short_tagline": "Multilingual dense vectors for search and RAG.",
+      "description": "OpenAI's latest text-embedding-3 models convert text strings into dense vector representations optimized for semantic retrieval. Developers use these cost-efficient embeddings to power high-accuracy RAG search, recommendation algorithms, and document similarity classification in large enterprise databases.",
+      "primary_use_cases": [
+        "Semantic search vector indexing",
+        "Recommendation and matching systems",
+        "Document categorization and similarity"
+      ],
+      "docs_url": "https://platform.openai.com/docs/guides/embeddings"
+    },
+    {
+      "id": "gpt-oss-models",
+      "name": "Open Weights Models (gpt-oss)",
+      "family": "gpt-oss",
+      "modality": "text",
+      "type": "open",
+      "tier": "open-weight",
+      "short_tagline": "Open-weight models for local private edge deployments.",
+      "description": "OpenAI's open-weights model family offers local reasoning capability and custom fine-tuning flexibility for developers. Designed with advanced safety safeguards, these models are used for edge computing, local privacy-restricted text processing, and safety evaluation research.",
+      "primary_use_cases": [
+        "On-device private processing",
+        "Local domain-specific fine-tuning",
+        "AI safety and alignment research"
+      ],
+      "docs_url": "https://github.com/openai/gpt-oss"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "openai-platform-dashboard",
+      "name": "OpenAI Platform & Dashboard",
+      "category": "api-platform",
+      "short_tagline": "Central API administration and usage hub.",
+      "description": "The OpenAI Developer Platform provides tools to manage API keys, configure developer projects, inspect billing, and monitor rate limits. It acts as the command center for administering developer organizations and tracking usage statistics.",
+      "url": "https://platform.openai.com",
+      "ideal_for": [
+        "app devs",
+        "product teams"
+      ],
+      "badges": [
+        "Self-serve",
+        "Enterprise",
+        "Hosted"
+      ]
+    },
+    {
+      "id": "assistants-api-platform",
+      "name": "Assistants API",
+      "category": "agent-platform",
+      "short_tagline": "Serverless agent orchestration and memory platform.",
+      "description": "The Assistants API is a stateful orchestration platform for building agentic workflows. It manages conversation threads, handles vector file indexing, and automatically calls external tools or code interpreters to execute multi-step logic chains.",
+      "url": "https://platform.openai.com/docs/assistants",
+      "ideal_for": [
+        "app devs",
+        "agents"
+      ],
+      "badges": [
+        "Assistants API",
+        "Hosted",
+        "Self-serve"
+      ]
+    },
+    {
+      "id": "realtime-api-platform",
+      "name": "Realtime API",
+      "category": "realtime",
+      "short_tagline": "Bi-directional WebRTC streaming API for audio.",
+      "description": "OpenAI's Realtime API enables bi-directional, low-latency text and audio streaming over WebSocket connections. Developers build highly interactive voice assistants, speech processors, and natural dialog loops without introducing intermediate transcription latency.",
+      "url": "https://platform.openai.com/docs/guides/realtime",
+      "ideal_for": [
+        "app devs",
+        "agents"
+      ],
+      "badges": [
+        "Realtime",
+        "Hosted"
+      ]
+    },
+    {
+      "id": "chatgpt-teams-enterprise",
+      "name": "ChatGPT Teams & Enterprise",
+      "category": "end-user-app",
+      "short_tagline": "Managed collaboration surface with custom models.",
+      "description": "ChatGPT for Teams and Enterprise provides organizations with a secure workspace for collaboration. Administrators deploy custom GPTs, control data sharing policies, share workspaces, and access advanced reasoning features without exposing sensitive corporate data.",
+      "url": "https://chatgpt.com",
+      "ideal_for": [
+        "product teams",
+        "researchers"
+      ],
+      "badges": [
+        "Enterprise",
+        "Self-serve"
+      ]
+    },
+    {
+      "id": "gpts-store",
+      "name": "GPTs & GPT Store",
+      "category": "end-user-app",
+      "short_tagline": "Marketplace for custom-configured chat assistants.",
+      "description": "The GPT Store is a marketplace hosting custom-configured conversational agents built by developers and creators. Users select from specialized assistants that utilize custom prompts, attached files, and specific API actions to automate tasks.",
+      "url": "https://chatgpt.com/gpts",
+      "ideal_for": [
+        "creators",
+        "product teams"
+      ],
+      "badges": [
+        "Low-code",
+        "Self-serve"
+      ]
+    },
+    {
+      "id": "playground-studio",
+      "name": "Playground & Developer Studio",
+      "category": "dev-dashboard",
+      "short_tagline": "Interactive developer playground and debugger.",
+      "description": "The OpenAI Developer Playground is an in-browser sandbox for testing models, prompts, and APIs. Developers experiment with system instructions, prototype tool calls, compare model outputs side-by-side, and inspect JSON payloads before writing code.",
+      "url": "https://platform.openai.com/playground",
+      "ideal_for": [
+        "app devs",
+        "researchers"
+      ],
+      "badges": [
+        "Self-serve",
+        "Hosted"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "openai-guides-docs",
+      "name": "OpenAI Developer Guides",
+      "type": "docs-guides",
+      "short_tagline": "Comprehensive conceptual guides for building with OpenAI.",
+      "description": "OpenAI Developer Guides teach the architectural fundamentals of prompt engineering, function calling, vector file search, fine-tuning, and context safety. Developers follow detailed tutorials to construct production-ready applications.",
+      "url": "https://platform.openai.com/docs/guides",
+      "focus_areas": [
+        "generative-ai",
+        "retrieval",
+        "safety"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "openai-cookbook",
+      "name": "OpenAI Cookbook",
+      "type": "cookbook",
+      "short_tagline": "GitHub repository of executable API recipes.",
+      "description": "The OpenAI Cookbook is a community-driven repository containing executable Jupyter notebooks and code recipes. Developers copy production-ready code examples for RAG pipelines, fine-tuning scripts, and embedding calculations.",
+      "url": "https://github.com/openai/openai-cookbook",
+      "focus_areas": [
+        "generative-ai",
+        "retrieval",
+        "agents"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "openai-examples-gallery",
+      "name": "Official API Examples Gallery",
+      "type": "examples",
+      "short_tagline": "Interactive demos showcasing core API interfaces.",
+      "description": "The Examples Gallery features interactive code examples demonstrating how to implement assistants, realtime audio pipelines, structured outputs, and vision processing. It provides quickstart templates to kickstart projects.",
+      "url": "https://platform.openai.com/docs/examples",
+      "focus_areas": [
+        "generative-ai",
+        "multimodal"
+      ],
+      "level": "beginner"
+    },
+    {
+      "id": "openai-developer-forum",
+      "name": "OpenAI Developer Community",
+      "type": "community",
+      "short_tagline": "Collaborative forum for troubleshooting and Q&A.",
+      "description": "The OpenAI Developer Forum is a collaborative space where builders discuss API integrations, troubleshoot code issues, share custom tools, and receive direct updates from OpenAI developer advocates.",
+      "url": "https://community.openai.com",
+      "focus_areas": [
+        "generative-ai",
+        "agents"
+      ],
+      "level": "all-levels"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "assistants-primitives",
+      "name": "Assistants API Primitives",
+      "type": "tooling",
+      "short_tagline": "Stateful primitives for building persistent agents.",
+      "description": "Assistants API Primitives provide stateful objects like Threads, Run Steps, and Messages. Developers utilize these pre-built blocks to maintain persistent user sessions, run code interpreters, and index files without building custom databases.",
+      "url": "https://platform.openai.com/docs/assistants/overview",
+      "related_platform_ids": [
+        "assistants-api-platform"
+      ]
+    },
+    {
+      "id": "realtime-webrtc-streaming",
+      "name": "Realtime API WebRTC Protocol",
+      "type": "protocol",
+      "short_tagline": "Bi-directional WebRTC connection standard for audio.",
+      "description": "The Realtime WebRTC protocol provides a low-latency connection standard for streaming audio and text data. Developers integrate WebRTC or WebSocket client libraries to sustain persistent bi-directional communication channels with OpenAI's voice models.",
+      "url": "https://platform.openai.com/docs/guides/realtime-webrtc",
+      "related_platform_ids": [
+        "realtime-api-platform"
+      ]
+    },
+    {
+      "id": "function-calling-tools",
+      "name": "Tool Calling & Functions",
+      "type": "feature",
+      "short_tagline": "Model capabilities to call external client APIs.",
+      "description": "Function calling allows developers to describe client-side APIs and functions to models. The model outputs structured JSON arguments, enabling agents to query databases, write files, and integrate tools like search engines dynamically.",
+      "url": "https://platform.openai.com/docs/guides/function-calling",
+      "related_platform_ids": [
+        "openai-platform-dashboard",
+        "playground-studio"
+      ]
+    },
+    {
+      "id": "file-search-rag",
+      "name": "Vector Store & File Search",
+      "type": "feature",
+      "short_tagline": "Integrated vector database search for RAG.",
+      "description": "The File Search tool manages semantic file processing and vector indexing. Developers upload documents, and the Assistants platform handles parsing, chunking, embedding generation, and semantic retrieval to ground agent responses.",
+      "url": "https://platform.openai.com/docs/assistants/tools/file-search",
+      "related_platform_ids": [
+        "assistants-api-platform"
+      ]
+    },
+    {
+      "id": "omni-moderation-api",
+      "name": "Omni Moderation API",
+      "type": "api",
+      "short_tagline": "Multimodal safety classifier for inputs and outputs.",
+      "description": "OpenAI's Moderation API is a multimodal safety classifier that checks inputs and outputs for toxic content. Developers use it to automatically screen text, images, and audio, enforcing security guardrails in production.",
+      "url": "https://platform.openai.com/docs/guides/moderation",
+      "related_platform_ids": [
+        "openai-platform-dashboard"
+      ]
+    },
+    {
+      "id": "gpt-oss-tooling",
+      "name": "gpt-oss Tooling & Safety Scaffolding",
+      "type": "tooling",
+      "short_tagline": "Deployment scripts and safety frameworks for open models.",
+      "description": "The gpt-oss open model tooling provides deployment templates and alignment wrappers for open-weights models. Developers deploy these frameworks locally to implement safety validation layers and manage model parameters.",
+      "url": "https://github.com/openai/gpt-oss-tools",
+      "related_platform_ids": [
+        "openai-platform-dashboard"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "openai-home-portal",
+      "name": "OpenAI Home",
+      "type": "newsroom",
+      "short_tagline": "Main site detailing corporate vision and updates.",
+      "description": "The official landing page covering OpenAI's corporate milestones, safety policies, and model releases.",
+      "url": "https://openai.com",
+      "highlight": true
+    },
+    {
+      "id": "openai-api-docs-home",
+      "name": "API Documentation Home",
+      "type": "docs",
+      "short_tagline": "Central API document catalog and guides.",
+      "description": "The central documentation library containing models lists, integration guides, and API endpoint references.",
+      "url": "https://platform.openai.com/docs",
+      "highlight": true
+    },
+    {
+      "id": "assistants-reference-docs",
+      "name": "Assistants API Reference",
+      "type": "docs",
+      "short_tagline": "Reference guidelines for the Assistants engine.",
+      "description": "Comprehensive reference documentation covering Threads, Messages, Runs, and File Search schemas.",
+      "url": "https://platform.openai.com/docs/api-reference/assistants",
+      "highlight": false
+    },
+    {
+      "id": "openai-research-index",
+      "name": "OpenAI Research Index",
+      "type": "newsroom",
+      "short_tagline": "Chronological archive of academic publications.",
+      "description": "A chronological directory of OpenAI's research papers, publications, and foundational algorithm details.",
+      "url": "https://openai.com/research",
+      "highlight": false
+    },
+    {
+      "id": "openai-safety-policy-hub",
+      "name": "Safety Policy & System Cards",
+      "type": "policy",
+      "short_tagline": "Technical safety audits and system evaluations.",
+      "description": "A repository of safety system cards, policy standards, and evaluation frameworks for responsible AI deployment.",
+      "url": "https://openai.com/safety",
+      "highlight": false
+    },
+    {
+      "id": "openai-updates-blog",
+      "name": "OpenAI Blog",
+      "type": "blog",
+      "short_tagline": "Official technical announcements and news releases.",
+      "description": "The main blog containing developer product announcements, partnership updates, and research reviews.",
+      "url": "https://openai.com/blog",
+      "highlight": true
+    },
+    {
+      "id": "openai-github-organization",
+      "name": "OpenAI GitHub",
+      "type": "github-org",
+      "short_tagline": "Open-source SDKs and community code repositories.",
+      "description": "Access official API client SDKs, tool libraries, cook-book examples, and open-source models.",
+      "url": "https://github.com/openai",
+      "highlight": true
+    }
+  ]
+}

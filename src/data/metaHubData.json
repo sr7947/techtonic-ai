@@ -1,0 +1,342 @@
+{
+  "company": {
+    "id": "meta-llama",
+    "name": "Meta / Llama",
+    "tagline": "Democratizing frontier AI through open-weight model architectures and accessible developer ecosystems.",
+    "overview": "Meta is a champion of open-source artificial intelligence, publishing the foundational Llama model weights and safety frameworks to the global developer community. By offering edge-optimized multimodal models and standardizing Llama Stack APIs, Meta enables developers to deploy customizable cognitive infrastructure on-premises and in the cloud.",
+    "official_site_url": "https://llama.meta.com",
+    "theme_color": "#0080ff"
+  },
+  "llms": [
+    {
+      "id": "llama-3-1-text",
+      "name": "Llama 3.1 Text Models",
+      "family": "Llama 3.1",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "flagship",
+      "short_tagline": "General-purpose open LLMs for server and cloud deployments.",
+      "description": "Llama 3.1 text models are general-purpose open LLMs available at multiple parameter sizes, designed for cloud and serverless deployments. Developers utilize these highly steerable models to run custom instruction-following engines, power multi-step agentic reasoning, and execute domain-specific text generation workloads.",
+      "primary_use_cases": [
+        "Cloud-based custom agent reasoning",
+        "Steerable instruction-following pipelines",
+        "Domain-specific text generation tasks"
+      ],
+      "docs_url": "https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1"
+    },
+    {
+      "id": "llama-3-2-vision",
+      "name": "Llama 3.2 Vision & Edge",
+      "family": "Llama 3.2 Vision",
+      "modality": "vision-language",
+      "type": "edge-optimized",
+      "tier": "lightweight",
+      "short_tagline": "Multimodal and edge-friendly models for on-device vision.",
+      "description": "Llama 3.2 features multimodal vision capabilities and edge-optimized sizes built for on-device applications. Developers leverage these compact models to execute visual question answering, OCR document parsing, and real-time inference on smartphones and edge devices without relying on external cloud endpoints.",
+      "primary_use_cases": [
+        "On-device visual document parsing",
+        "Real-time visual search and OCR",
+        "Offline edge hardware chat engines"
+      ],
+      "docs_url": "https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_2"
+    },
+    {
+      "id": "llama-guard-3",
+      "name": "Llama Guard 3",
+      "family": "Llama Guard 3",
+      "modality": "text",
+      "type": "safety",
+      "tier": "safety-filter",
+      "short_tagline": "Input/output safety classifiers for content moderation.",
+      "description": "Llama Guard 3 is a specialized safety model trained to classify prompts and model outputs against safety policies. Developers insert Llama Guard into request-response pipelines to filter out toxic, biased, or illegal text, securing AI applications in production.",
+      "primary_use_cases": [
+        "Input prompt policy screening",
+        "AI output toxicity filtration",
+        "Safety compliance audit logging"
+      ],
+      "docs_url": "https://llama.meta.com/docs/model-cards-and-prompt-formats/llama-guard-3"
+    },
+    {
+      "id": "prompt-guard",
+      "name": "Prompt Guard",
+      "family": "Prompt Guard",
+      "modality": "text",
+      "type": "safety",
+      "tier": "safety-filter",
+      "short_tagline": "Adversarial prompt injection and jailbreak detector.",
+      "description": "Prompt Guard is a lightweight, edge-optimized classifier designed to detect prompt-injection and jailbreak attempts. Developers integrate Prompt Guard at the entry point of their pipelines to identify adversarial user inputs before they reach the core reasoning model.",
+      "primary_use_cases": [
+        "Prompt injection attack detection",
+        "Adversarial jailbreak protection",
+        "Incoming content sanitizer layer"
+      ],
+      "docs_url": "https://huggingface.co/meta-llama/Prompt-Guard-86M"
+    },
+    {
+      "id": "llama-3-text-only",
+      "name": "Llama 3 Text Family",
+      "family": "Llama 3",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "balanced",
+      "short_tagline": "Mature open-weight models for cost-efficient text processing.",
+      "description": "The foundational Llama 3 text-only model family remains widely used for cost-efficient text processing and instruction-following. Developers deploy these mature models to perform high-speed text summarization, data extraction, and general conversation workloads across standard server infrastructure.",
+      "primary_use_cases": [
+        "High-speed text summarization",
+        "Cost-effective data extraction",
+        "Standard conversational UI systems"
+      ],
+      "docs_url": "https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "meta-for-developers",
+      "name": "Meta for Developers AI",
+      "category": "dev-portal",
+      "short_tagline": "Central developer portal for Meta AI technologies.",
+      "description": "Meta for Developers is the central portal for accessing Meta's AI assets, SDKs, and API tools. Developers use the dashboard to configure integrations, read official API documentation, manage developer accounts, and register applications within the Meta developer ecosystem.",
+      "url": "https://developers.facebook.com/products/artificial-intelligence",
+      "ideal_for": [
+        "app devs",
+        "product teams"
+      ],
+      "badges": [
+        "Ecosystem",
+        "Self-serve"
+      ]
+    },
+    {
+      "id": "llama-downloads",
+      "name": "Llama Weight Downloads",
+      "category": "open-model-hub",
+      "short_tagline": "Official portal to request and download Llama weights.",
+      "description": "The Llama Downloads page is the official channel for requesting access to Llama model weights and license files. Developers submit agreements to download raw weights, enabling them to self-host, fine-tune, and deploy models inside private computing networks.",
+      "url": "https://llama.meta.com/llama-downloads",
+      "ideal_for": [
+        "infra teams",
+        "open-source builders"
+      ],
+      "badges": [
+        "Open-weight",
+        "Self-host"
+      ]
+    },
+    {
+      "id": "llama-stack",
+      "name": "Llama Stack",
+      "category": "deployment-stack",
+      "short_tagline": "Standardized API distribution for Llama deployments.",
+      "description": "Llama Stack is Meta's recommended distribution and API specification for building Llama-powered applications. It establishes standardized APIs for serving, fine-tuning, and evaluating Llama models, allowing developers to build portable agentic applications across cloud, on-premises, and edge environments.",
+      "url": "https://llama.meta.com/docs/llama-stack",
+      "ideal_for": [
+        "infra teams",
+        "open-source builders"
+      ],
+      "badges": [
+        "Open-weight",
+        "Self-host",
+        "Edge"
+      ]
+    },
+    {
+      "id": "cloud-providers",
+      "name": "Cloud Providers Hub",
+      "category": "cloud-partner",
+      "short_tagline": "Deploy managed Llama models on enterprise clouds.",
+      "description": "Cloud Providers consolidate availability of Llama models on major hyperscale clouds including Google Vertex AI, AWS Bedrock, and IBM watsonx. Developers deploy managed Llama endpoints inside compliant cloud environments, utilizing cloud-hosted private networks and unified cloud billing.",
+      "url": "https://llama.meta.com/docs/about-llama/cloud-providers",
+      "ideal_for": [
+        "infra teams",
+        "product teams"
+      ],
+      "badges": [
+        "Cloud-hosted",
+        "Enterprise"
+      ]
+    },
+    {
+      "id": "meta-ai-experiences",
+      "name": "Meta AI consumer surfaces",
+      "category": "dev-portal",
+      "short_tagline": "Llama integrations across Meta's applications.",
+      "description": "Meta AI Experiences integrate Llama models directly into consumer-facing platforms like WhatsApp, Instagram, and Facebook. Developers study these implementations to understand prompt engineering patterns, multimodal interactions, and large-scale conversational user experience design in production environments.",
+      "url": "https://meta.ai",
+      "ideal_for": [
+        "product teams",
+        "open-source builders"
+      ],
+      "badges": [
+        "Ecosystem",
+        "Edge"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "meta-dev-guides",
+      "name": "Meta AI & Llama Developer Guides",
+      "type": "docs-guides",
+      "short_tagline": "Guides for serving and fine-tuning Llama.",
+      "description": "Official guides from Meta showing developers how to serves, fine-tune, quantize, and configure Llama models. Read details on prompts structure formatting, system parameters setting, and RAG architectures.",
+      "url": "https://llama.meta.com/docs/get-started",
+      "focus_areas": [
+        "open-models",
+        "safety"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "llama-recipes-github",
+      "name": "Llama Recipes & Examples",
+      "type": "examples",
+      "short_tagline": "Jupyter notebooks and script blueprints for Llama.",
+      "description": "The official Llama Recipes GitHub repository contains code examples for fine-tuning Llama, serving models locally, setting up RAG systems, and running model safety evaluations on corporate database networks.",
+      "url": "https://github.com/meta-llama/llama-recipes",
+      "focus_areas": [
+        "open-models",
+        "safety",
+        "edge"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "llama-stack-tutorials",
+      "name": "Llama Stack Getting Started Tutorials",
+      "type": "tutorials",
+      "short_tagline": "Interactive quickstarts for Llama Stack deployment.",
+      "description": "Step-by-step tutorials to deploy and configure Llama Stack on local machines or cloud nodes. Learn to connect tools, establish WebSocket streams, and run evaluation test suites.",
+      "url": "https://github.com/meta-llama/llama-stack",
+      "focus_areas": [
+        "open-models",
+        "edge"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "llama-community-forum",
+      "name": "Meta Llama Developer Community",
+      "type": "community",
+      "short_tagline": "Collaborative builder community and support Q&A.",
+      "description": "A community-focused hub where developers discuss custom Llama fine-tuning setups, exchange hosting configurations, resolve deployment errors, and share open-weights model variations.",
+      "url": "https://github.com/meta-llama/llama/discussions",
+      "focus_areas": [
+        "open-models"
+      ],
+      "level": "all-levels"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "llama-stack-apis",
+      "name": "Llama Stack APIs",
+      "type": "api",
+      "short_tagline": "API primitives and serving adapters for Llama.",
+      "description": "Llama Stack APIs provide standard interfaces for chat completion, tool calling, document search, and evaluation. Developers utilize these protocols to deploy interoperable Llama components across edge runtimes and enterprise cloud systems.",
+      "url": "https://github.com/meta-llama/llama-stack-apps",
+      "related_platform_ids": [
+        "llama-stack"
+      ]
+    },
+    {
+      "id": "llama-guard-tooling",
+      "name": "Llama Guard Safety Tooling",
+      "type": "safety",
+      "short_tagline": "Content moderation pipeline wrappers and filters.",
+      "description": "Safety wrappers leverage Llama Guard and Prompt Guard to sanitize incoming prompts and analyze output responses. Developers inject these components into request-response pipelines to block prompt-injection, prevent jailbreaks, and filter toxic topics.",
+      "url": "https://llama.meta.com/docs/model-cards-and-prompt-formats/llama-guard-3",
+      "related_platform_ids": [
+        "llama-downloads",
+        "cloud-providers"
+      ]
+    },
+    {
+      "id": "inference-reference-integrations",
+      "name": "Inference Reference Integrations",
+      "type": "deployment",
+      "short_tagline": "Serving adapters for vLLM, Ollama, and llama.cpp.",
+      "description": "Meta provides reference integrations connecting Llama models with third-party serving libraries like vLLM, Ollama, and llama.cpp. These configurations optimize serving throughput, memory requirements, and GPU acceleration during local deployment.",
+      "url": "https://github.com/meta-llama/llama-recipes/tree/main/recipes/quickstart",
+      "related_platform_ids": [
+        "llama-stack",
+        "llama-downloads"
+      ]
+    },
+    {
+      "id": "llama-python-sdk",
+      "name": "Llama Stack SDKs (Python / JS)",
+      "type": "tooling",
+      "short_tagline": "Client libraries for interacting with Llama Stack.",
+      "description": "The official Llama Stack SDKs simplify building applications in Python, JavaScript, and Swift. Developers use these client libraries to trigger model inference, coordinate agent runs, and manage vector stores using standardized method signatures.",
+      "url": "https://github.com/meta-llama/llama-stack-client-python",
+      "related_platform_ids": [
+        "llama-stack"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "meta-ai-site",
+      "name": "AI at Meta Portal",
+      "type": "newsroom",
+      "short_tagline": "Main site detailing Meta's AI research direction.",
+      "description": "The central landing page presenting Meta's artificial intelligence research achievements, consumer services, and ecosystem announcements.",
+      "url": "https://ai.meta.com",
+      "highlight": true
+    },
+    {
+      "id": "llama-docs-home",
+      "name": "Llama Documentation Home",
+      "type": "docs",
+      "short_tagline": "Comprehensive developer reference documents catalog.",
+      "description": "The official library hosting model cards, prompt formatting guides, deployment workflows, and hardware specification sheets.",
+      "url": "https://llama.meta.com/docs",
+      "highlight": true
+    },
+    {
+      "id": "llama-3-1-release",
+      "name": "Llama 3.1 Announcement",
+      "type": "blog",
+      "short_tagline": "Technical blog post detailing Llama 3.1 metrics.",
+      "description": "The official announcement blog post outlining the Llama 3.1 architecture, training details, and benchmark evaluations.",
+      "url": "https://ai.meta.com/blog/meta-llama-3-1",
+      "highlight": false
+    },
+    {
+      "id": "meta-dev-ai-docs",
+      "name": "Meta Developers AI docs",
+      "type": "docs",
+      "short_tagline": "Developer AI products integration guides.",
+      "description": "Documentation covering APIs and development tools for Meta's products, containing AI features implementation manuals.",
+      "url": "https://developers.facebook.com/docs/development/artificial-intelligence",
+      "highlight": false
+    },
+    {
+      "id": "huggingface-meta-llama",
+      "name": "Meta HuggingFace Space",
+      "type": "model-hub",
+      "short_tagline": "HuggingFace model organization for downloading weights.",
+      "description": "Meta Llama's official organization page on HuggingFace, hosting Llama models, guard weights, and dataset libraries.",
+      "url": "https://huggingface.co/meta-llama",
+      "highlight": true
+    },
+    {
+      "id": "meta-responsible-use",
+      "name": "Responsible Use Guide & Policy",
+      "type": "policy",
+      "short_tagline": "Guidelines for safe open-weight deployment.",
+      "description": "A set of guidelines and policy agreements detailing how to deploy open-weight Llama models responsibly and safely.",
+      "url": "https://llama.meta.com/responsible-use-guide",
+      "highlight": false
+    },
+    {
+      "id": "meta-llama-github",
+      "name": "Meta Llama GitHub organization",
+      "type": "github-org",
+      "short_tagline": "Open-source codebase repositories for Llama Stack.",
+      "description": "The official GitHub organization containing Llama Recipes, Llama Stack components, client SDKs, and safety models.",
+      "url": "https://github.com/meta-llama",
+      "highlight": true
+    }
+  ]
+}

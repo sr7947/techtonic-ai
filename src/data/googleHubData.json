@@ -1,0 +1,414 @@
+{
+  "company": {
+    "id": "google-deepmind",
+    "name": "Google / DeepMind",
+    "tagline": "Pioneering the frontier of general intelligence and developer-first AI ecosystems.",
+    "overview": "Google and DeepMind lead global AI research, pioneering neural architectures, multimodal systems, and planet-scale supercomputing infrastructure. From foundational transformer architectures to the Gemini omni-modality reasoning models, their ecosystem enables developers to construct, optimize, and orchestrate autonomous agents at scale.",
+    "official_site_url": "https://deepmind.google",
+    "theme_color": "#0a1128"
+  },
+  "llms": [
+    {
+      "id": "gemini-3-5-omni",
+      "name": "Gemini 3.5 (Flash / Omni)",
+      "family": "Gemini",
+      "modality": "multimodal",
+      "type": "frontier-cloud",
+      "tier": "flagship",
+      "short_tagline": "Frontier multimodal LLMs optimized for high-frequency reasoning.",
+      "description": "Gemini 3.5 Flash and Omni models are engineered for high-frequency, low-latency agentic reasoning. Developers leverage their native omni-modality to process interleaved inputs across text, video, and audio streams in a single inference call. This enables real-time decision loops for autonomous systems.",
+      "primary_use_cases": [
+        "Autonomous agent orchestration",
+        "Interleaved multimodal stream processing",
+        "Low-latency real-time chatbot engines"
+      ],
+      "docs_url": "https://ai.google/dev/gemini"
+    },
+    {
+      "id": "gemini-2-5-pro-flash",
+      "name": "Gemini 2.5 Pro / Flash",
+      "family": "Gemini",
+      "modality": "multimodal",
+      "type": "frontier-cloud",
+      "tier": "flagship",
+      "short_tagline": "Long-context multimodal models for massive comprehension.",
+      "description": "Gemini 2.5 models provide developers with a two-million token context window, setting the standard for complex retrieval-augmented generation. Ideal for analyzing large code repositories, entire legal libraries, or multi-hour video datasets, they deliver deep semantic comprehension and reasoning capability at production scale.",
+      "primary_use_cases": [
+        "Repository-wide code analysis",
+        "Multi-hour video indexing and questioning",
+        "Large-scale legal and document RAG pipelines"
+      ],
+      "docs_url": "https://ai.google/dev/gemini"
+    },
+    {
+      "id": "gemini-audio-realtime",
+      "name": "Gemini Audio / Real-Time",
+      "family": "Gemini",
+      "modality": "audio",
+      "type": "frontier-cloud",
+      "tier": "research",
+      "short_tagline": "Native real-time audio models for conversational interfaces.",
+      "description": "The Gemini real-time audio models process audio waveforms directly without intermediate text transcription. Developers use them to build conversational voice interfaces, low-latency audio analysis pipelines, and real-time customer support agents that detect emotional tone and background context.",
+      "primary_use_cases": [
+        "Low-latency real-time voice translation",
+        "Emotion and accent-aware voice agents",
+        "Direct acoustic speech analysis"
+      ],
+      "docs_url": "https://ai.google/dev/gemini"
+    },
+    {
+      "id": "gemma-3",
+      "name": "Gemma 3 / Gemma 3n",
+      "family": "Gemma",
+      "modality": "text",
+      "type": "open",
+      "tier": "open-source",
+      "short_tagline": "State-of-the-art open models for local deployment.",
+      "description": "Gemma 3 and 3n represent Google's state-of-the-art open-weights model family built on DeepMind research. Optimized for local deployment and custom fine-tuning, they allow developers to run highly capable text generation and reasoning workloads on edge hardware while maintaining complete data ownership.",
+      "primary_use_cases": [
+        "Private on-device text generation",
+        "Domain-specific local fine-tuning",
+        "Edge hardware deployment constraints"
+      ],
+      "docs_url": "https://ai.google/dev/gemma"
+    },
+    {
+      "id": "paligemma",
+      "name": "PaliGemma",
+      "family": "PaliGemma",
+      "modality": "vision-language",
+      "type": "vision-language",
+      "tier": "open-source",
+      "short_tagline": "Open vision-language models for visual detection and mapping.",
+      "description": "PaliGemma is a lightweight, open-weights vision-language model designed for high-speed image captioning, object detection, and visual question answering. Developers fine-tune PaliGemma for specialized edge tasks, robot vision, and automated visual inspection systems operating under strict hardware constraints.",
+      "primary_use_cases": [
+        "Automated industrial defect detection",
+        "Robotic camera vision and navigation",
+        "Real-time visual tagging and indexing"
+      ],
+      "docs_url": "https://github.com/google-research/big_vision"
+    },
+    {
+      "id": "gemini-text-embeddings",
+      "name": "Gemini Text Embeddings",
+      "family": "Gemini",
+      "modality": "embedding",
+      "type": "embedding",
+      "tier": "research",
+      "short_tagline": "Dense semantic vectors for RAG and search.",
+      "description": "The text embedding models convert text strings into dense vector representations optimized for semantic similarity and retrieval. Developers integrate them into RAG systems to power high-speed semantic search, document classification, and similarity-based recommendations.",
+      "primary_use_cases": [
+        "RAG vector database search",
+        "Semantic similarity clustering",
+        "Document classification and categorization"
+      ],
+      "docs_url": "https://ai.google/dev/gemini"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "google-ai-studio",
+      "name": "Google AI Studio",
+      "category": "prototyping-ide",
+      "short_tagline": "Web IDE for rapid Gemini model prototyping.",
+      "description": "Google AI Studio is a fast prototyping environment for building with Gemini models. Developers experiment with system prompts, structure output formats with JSON schemas, and automatically generate working API code snippets in multiple programming languages.",
+      "url": "https://aistudio.google.com",
+      "ideal_for": [
+        "app devs",
+        "agents",
+        "creators"
+      ],
+      "badges": [
+        "Free tier",
+        "Low-code",
+        "Code generation"
+      ]
+    },
+    {
+      "id": "google-antigravity",
+      "name": "Google Antigravity",
+      "category": "dev-environment",
+      "short_tagline": "Agentic AI development environment and runtime.",
+      "description": "Google Antigravity is a specialized coding framework and runtime environment designed for building autonomous agents. Equipping developers with visual canvases, command-line interfaces, and an SDK/ADK, it facilitates the orchestration of multi-agent networks and complex tool integrations.",
+      "url": "https://github.com/google/antigravity",
+      "ideal_for": [
+        "app devs",
+        "agents"
+      ],
+      "badges": [
+        "CLI",
+        "SDK",
+        "Agentic"
+      ]
+    },
+    {
+      "id": "gemini-enterprise-agent-platform",
+      "name": "Gemini Enterprise Agent Platform",
+      "category": "agent-platform",
+      "short_tagline": "Full-stack enterprise agent builder and engine.",
+      "description": "Gemini Enterprise Agent Platform, formerly Vertex AI, is a comprehensive environment for deploying foundation models. It offers enterprise-grade hosting, automated safety guardrails, vector searches, and orchestration toolsets to safely run agentic workflows on corporate database infrastructure.",
+      "url": "https://cloud.google.com/vertex-ai",
+      "ideal_for": [
+        "data teams",
+        "agents"
+      ],
+      "badges": [
+        "Enterprise",
+        "Security",
+        "RAG"
+      ]
+    },
+    {
+      "id": "agent-studio-ui",
+      "name": "Agent Studio",
+      "category": "prototyping-ide",
+      "short_tagline": "Low-code canvas for reasoning loops.",
+      "description": "Agent Studio provides a visual drag-and-drop workspace for designing agent architectures and reasoning loops. Developers drag nodes to define triggers, specify model backends, configure tool calls, and test complex logic workflows in real-time.",
+      "url": "https://cloud.google.com/agent-studio",
+      "ideal_for": [
+        "app devs",
+        "agents"
+      ],
+      "badges": [
+        "Low-code",
+        "Visual IDE"
+      ]
+    },
+    {
+      "id": "google-cloud-console",
+      "name": "Google Cloud Console",
+      "category": "cloud-console",
+      "short_tagline": "Unified dashboard for cloud computing assets.",
+      "description": "The Google Cloud Console is the administrative portal for managing computing, database, and machine learning infrastructure. Developers monitor billing budgets, configure service accounts, set IAM security access policies, and observe serverless runtimes from a unified interface.",
+      "url": "https://console.cloud.google.com",
+      "ideal_for": [
+        "data teams",
+        "app devs"
+      ],
+      "badges": [
+        "Enterprise",
+        "Monitoring",
+        "IAM"
+      ]
+    },
+    {
+      "id": "google-flow",
+      "name": "Google Flow",
+      "category": "creative-tool",
+      "short_tagline": "AI filmmaking and multimodal design studio.",
+      "description": "Google Flow is an AI-powered visual creative studio powered by Veo video and Imagen image generation models. Digital artists and developers leverage Flow to build rich cinematic assets, storyboards, and animated clips via descriptive prompts.",
+      "url": "https://deepmind.google/technologies/veo",
+      "ideal_for": [
+        "creators"
+      ],
+      "badges": [
+        "Creative",
+        "Veo",
+        "Imagen"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "cloud-skills-boost",
+      "name": "Google Cloud Skills Boost",
+      "type": "courses-hub",
+      "short_tagline": "Hands-on cloud laboratories and learning paths.",
+      "description": "Google Cloud Skills Boost offers official training courses covering AI, machine learning, and cloud infrastructure. Students access sandbox console environments to run actual labs and earn recognized credentials.",
+      "url": "https://www.cloudskillsboost.google",
+      "focus_areas": [
+        "generative-ai",
+        "cloud",
+        "data"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "grow-with-google-ai",
+      "name": "Grow with Google AI",
+      "type": "courses-hub",
+      "short_tagline": "Practical AI training and career certificates.",
+      "description": "Grow with Google provides beginner-friendly certificates and targeted training designed to build practical AI knowledge. Courses teach how to apply generative AI tools to improve workplace productivity and automation.",
+      "url": "https://grow.google/ai",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "beginner"
+    },
+    {
+      "id": "kaggle-ai-hub",
+      "name": "Kaggle",
+      "type": "community",
+      "short_tagline": "Global machine learning contests and community datasets.",
+      "description": "Kaggle is the world's largest machine learning community, hosting model competitions, free GPU notebooks, and dataset repositories. Developers share code, benchmark custom models, and participate in agent optimization challenges.",
+      "url": "https://www.kaggle.com",
+      "focus_areas": [
+        "generative-ai",
+        "agents",
+        "data"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "google-colab",
+      "name": "Google Colab",
+      "type": "notebooks",
+      "short_tagline": "Executable browser notebooks with free GPU runtimes.",
+      "description": "Google Colab provides interactive Jupyter notebook environments running directly in the browser. Popular for education and rapid research, Colab offers developers free access to GPU compute to train and test ML models.",
+      "url": "https://colab.research.google.com",
+      "focus_areas": [
+        "generative-ai",
+        "data"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "google-codelabs",
+      "name": "Google Codelabs",
+      "type": "codelabs",
+      "short_tagline": "Step-by-step developer tutorials and guides.",
+      "description": "Google Codelabs provides guided, hands-on coding tutorials for implementing Google technologies. Developers follow clean instructions to build applications on Cloud Run, integrate Gemini APIs, or build custom plugins.",
+      "url": "https://codelabs.developers.google.com",
+      "focus_areas": [
+        "generative-ai",
+        "agents",
+        "cloud"
+      ],
+      "level": "intermediate"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "gemini-api",
+      "name": "Gemini API",
+      "type": "api",
+      "short_tagline": "Foundational generative API for multimodal building.",
+      "description": "The Gemini API grants direct cloud access to Google's frontier models. Designed to process complex instructions, developers send text, image, audio, or video prompts to generate structured JSON outputs and trigger code functions.",
+      "url": "https://ai.google/dev/gemini",
+      "related_platform_ids": [
+        "google-ai-studio",
+        "gemini-enterprise-agent-platform"
+      ]
+    },
+    {
+      "id": "google-antigravity-sdk",
+      "name": "Google Antigravity APIs / Skills",
+      "type": "sdk",
+      "short_tagline": "Software developer kit for agentic automation.",
+      "description": "The Antigravity SDK provides libraries for defining agent behaviors, state machine routers, and tool sets. Developers wrap backend tasks into skill packages, allowing autonomous agents to execute complex system commands safely.",
+      "url": "https://github.com/google/antigravity-sdk",
+      "related_platform_ids": [
+        "google-antigravity"
+      ]
+    },
+    {
+      "id": "developer-knowledge-api",
+      "name": "Developer Knowledge API & MCP",
+      "type": "api",
+      "short_tagline": "Semantic search engine for developer documentation.",
+      "description": "The Developer Knowledge API searches Google's developer documentation to retrieve verified code snippets and API guides. It integrates natively with Model Context Protocol (MCP) servers, letting coding agents fetch real-time syntax assistance.",
+      "url": "https://developers.google.com/knowledge",
+      "related_platform_ids": [
+        "google-antigravity"
+      ]
+    },
+    {
+      "id": "mcp-servers-vertex",
+      "name": "MCP on Gemini Enterprise Platform",
+      "type": "protocol",
+      "short_tagline": "Standardized protocol for agent tool integrations.",
+      "description": "Model Context Protocol (MCP) integrations on the Gemini Enterprise Platform enable agents to safely query database tables, connect to internal APIs, and read filesystem directories. It establishes standard secure wrappers for enterprise tools.",
+      "url": "https://modelcontextprotocol.io",
+      "related_platform_ids": [
+        "gemini-enterprise-agent-platform",
+        "agent-studio-ui"
+      ]
+    },
+    {
+      "id": "cloud-agent-services",
+      "name": "Cloud AI Agent Services",
+      "type": "tooling",
+      "short_tagline": "Supportive toolsets for advanced agent architectures.",
+      "description": "Google Cloud provides supportive AI microservices essential for production agents. These include Vector Search for fast embeddings retrieval, RAG Engine for document grounding, and AI Content Safety filters to block toxic inputs.",
+      "url": "https://cloud.google.com/products/ai",
+      "related_platform_ids": [
+        "gemini-enterprise-agent-platform",
+        "google-cloud-console"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "google-ai-deepmind-home",
+      "name": "Google AI & DeepMind Site",
+      "type": "newsroom",
+      "short_tagline": "Official landing for Google's scientific AI research.",
+      "description": "The main portal showcasing Google DeepMind's scientific breakthroughs and organizational vision.",
+      "url": "https://deepmind.google",
+      "highlight": true
+    },
+    {
+      "id": "gemini-api-docs",
+      "name": "Gemini API Reference Docs",
+      "type": "docs",
+      "short_tagline": "Detailed guidelines and syntax guides for Gemini API.",
+      "description": "Comprehensive reference guides, quickstarts, and SDK code examples for integrating Gemini models.",
+      "url": "https://ai.google/dev/docs",
+      "highlight": true
+    },
+    {
+      "id": "vertex-platform-docs",
+      "name": "Enterprise Agent Platform Docs",
+      "type": "docs",
+      "short_tagline": "Guides for cloud scaling and model management.",
+      "description": "Cloud deployment guides for configuring model endpoints, vector pipelines, and IAM safety security.",
+      "url": "https://cloud.google.com/vertex-ai/docs",
+      "highlight": false
+    },
+    {
+      "id": "gcp-ai-ml-hub",
+      "name": "Google Cloud AI & ML Hub",
+      "type": "docs",
+      "short_tagline": "Central documentation library for cloud ML services.",
+      "description": "The central landing page containing technical documentation for all Google Cloud machine learning products.",
+      "url": "https://cloud.google.com/docs/ai-ml",
+      "highlight": false
+    },
+    {
+      "id": "google-ai-blog",
+      "name": "Google AI Blog",
+      "type": "blog",
+      "short_tagline": "Updates on Google's research developments and discoveries.",
+      "description": "Articles covering new machine learning models, research achievements, and algorithm developments from Google researchers.",
+      "url": "https://blog.google/technology/ai/",
+      "highlight": false
+    },
+    {
+      "id": "gcp-blog-ai",
+      "name": "Google Cloud Blog (AI & ML)",
+      "type": "blog",
+      "short_tagline": "Enterprise AI updates and customer success stories.",
+      "description": "Practical guides and announcements detailing how businesses implement Google Cloud AI to build products.",
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning",
+      "highlight": false
+    },
+    {
+      "id": "deepmind-blog",
+      "name": "Google DeepMind Blog",
+      "type": "blog",
+      "short_tagline": "Inside research news from the DeepMind laboratory.",
+      "description": "Stories covering science, robotics, and safety research achievements directly from the lab.",
+      "url": "https://deepmind.google/blog/",
+      "highlight": true
+    },
+    {
+      "id": "google-github-orgs",
+      "name": "Google GitHub Repositories",
+      "type": "github-org",
+      "short_tagline": "Open-source code repositories for machine learning.",
+      "description": "Access open-source implementations, library source code, and Gemma models directly from Google GitHub accounts.",
+      "url": "https://github.com/google",
+      "highlight": true
+    }
+  ]
+}

@@ -1,0 +1,360 @@
+{
+  "company": {
+    "id": "anthropic-claude",
+    "name": "Anthropic / Claude",
+    "tagline": "Fusing frontier cognitive performance with safety-first, steerable agentic systems.",
+    "overview": "Anthropic is a research-driven AI organization dedicated to constructing reliable, steerable, and safety-conscious models. Responsible for the Claude LLM family and the open-standard Model Context Protocol, Anthropic equips developers with the tools to implement complex cognitive workflows and secure multi-agent systems.",
+    "official_site_url": "https://www.anthropic.com",
+    "theme_color": "#cc7a00"
+  },
+  "llms": [
+    {
+      "id": "claude-opus-4",
+      "name": "Claude Opus 4.x",
+      "family": "Claude 4",
+      "modality": "multimodal",
+      "type": "frontier-cloud",
+      "tier": "flagship",
+      "short_tagline": "Flagship cognitive model for heavy research and complex coding.",
+      "description": "Claude Opus 4 represents Anthropic's flagship frontier reasoning model family designed for high-complexity cognitive tasks. Developers utilize Opus to execute deep academic research, parse massive legacy codebases, and orchestrate complex multi-step reasoning agents that require absolute precision and domain expertise.",
+      "primary_use_cases": [
+        "Deep scientific and academic research",
+        "Legacy system codebase analysis",
+        "High-complexity multi-step agent logic"
+      ],
+      "docs_url": "https://docs.anthropic.com/en/docs/about-claude/models#claude-opus"
+    },
+    {
+      "id": "claude-sonnet-4-3-7",
+      "name": "Claude Sonnet 4 / 3.7",
+      "family": "Claude 3.7",
+      "modality": "multimodal",
+      "type": "frontier-cloud",
+      "tier": "balanced",
+      "short_tagline": "Balanced intelligence and speed for general coding and agents.",
+      "description": "Claude Sonnet models offer a balanced default choice for general applications, high-performance coding, and agentic workflows. Optimized for balanced speed and intelligence, they process a two-hundred-thousand token context window, allowing builders to analyze voluminous data and run production agents efficiently.",
+      "primary_use_cases": [
+        "Agentic software engineering systems",
+        "General-purpose app integration",
+        "Long-context document analysis and retrieval"
+      ],
+      "docs_url": "https://docs.anthropic.com/en/docs/about-claude/models#claude-sonnet"
+    },
+    {
+      "id": "claude-haiku-3-5",
+      "name": "Claude Haiku 3.5 / 3",
+      "family": "Claude 3.5",
+      "modality": "text",
+      "type": "fast",
+      "tier": "fast",
+      "short_tagline": "Lightweight, low-latency models for high-throughput pipelines.",
+      "description": "Claude Haiku models are lightweight, low-latency systems engineered for high-frequency, high-volume production tasks. Developers leverage Haiku to power real-time data tagging, low-cost customer support chat agents, and high-speed classification pipelines operating under strict latency constraints.",
+      "primary_use_cases": [
+        "Real-time text tagging and parsing",
+        "High-volume, low-cost chat engines",
+        "High-speed database content classification"
+      ],
+      "docs_url": "https://docs.anthropic.com/en/docs/about-claude/models#claude-haiku"
+    },
+    {
+      "id": "claude-3-multimodal",
+      "name": "Claude 3 Multimodal Family",
+      "family": "Claude 3",
+      "modality": "vision-language",
+      "type": "cost-optimized",
+      "tier": "research",
+      "short_tagline": "Stable visual question-answering and schema extraction.",
+      "description": "The foundational Claude 3 model family supports long-context visual question answering, document digitization, and multimodal data processing. Builders utilize their robust vision capabilities to extract structured schemas from charts, tables, and handwritten reports in enterprise operations.",
+      "primary_use_cases": [
+        "Interactive visual chart questioning",
+        "Automated document layout extraction",
+        "Corporate database schema mapping"
+      ],
+      "docs_url": "https://docs.anthropic.com/en/docs/about-claude/models#claude-3"
+    },
+    {
+      "id": "claude-code-optimized",
+      "name": "Claude Code-Optimized Models",
+      "family": "Claude 3.7",
+      "modality": "text",
+      "type": "reasoning",
+      "tier": "research",
+      "short_tagline": "Fine-tuned models for automated software engineering.",
+      "description": "Anthropic's specialized coding-optimized model family is fine-tuned to parse developer code, refactor software packages, and write syntax-perfect routines. Developers integrate these models to power IDE autocomplete systems, command-line developer assistants, and autonomous repository-wide refactoring agents.",
+      "primary_use_cases": [
+        "Command-line programming assistants",
+        "Automated software repository refactoring",
+        "Syntax-perfect IDE code autocomplete"
+      ],
+      "docs_url": "https://docs.anthropic.com/en/docs/about-claude/models"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "claude-console",
+      "name": "Claude Console",
+      "category": "api-console",
+      "short_tagline": "Web dashboard for API administration and keys.",
+      "description": "The Claude Console is the main dashboard for developer account management, API credentials configuration, and usage monitoring. It acts as the central interface where builders create projects, allocate billing budgets, and monitor model rate limits.",
+      "url": "https://console.anthropic.com",
+      "ideal_for": [
+        "app devs",
+        "data teams"
+      ],
+      "badges": [
+        "Enterprise",
+        "Self-serve"
+      ]
+    },
+    {
+      "id": "claude-workbench",
+      "name": "Claude Workbench",
+      "category": "agent-platform",
+      "short_tagline": "Interactive developer playground and testing workspace.",
+      "description": "Claude Workbench provides an interactive prototyping interface for developers to build prompts, configure tool calling capabilities, and test computer-use features. It lets engineers run test suites, adjust model parameters, and export clean JSON structures directly into production code.",
+      "url": "https://console.anthropic.com/workbench",
+      "ideal_for": [
+        "app devs",
+        "agents"
+      ],
+      "badges": [
+        "Workbench",
+        "Artifacts"
+      ]
+    },
+    {
+      "id": "claude-enterprise-plans",
+      "name": "Claude Enterprise Suite",
+      "category": "enterprise-suite",
+      "short_tagline": "Secure collaborative workspace with knowledge links.",
+      "description": "Claude for Enterprise delivers a secure workspace for corporate teams. Administrators configure custom SSO access, manage user roles, connect external knowledge sources, and collaborate on shared projects while enforcing strict organizational data security guardrails.",
+      "url": "https://www.anthropic.com/enterprise",
+      "ideal_for": [
+        "knowledge workers",
+        "data teams"
+      ],
+      "badges": [
+        "Enterprise",
+        "Teams"
+      ]
+    },
+    {
+      "id": "claude-api",
+      "name": "Claude API Access",
+      "category": "api-console",
+      "short_tagline": "Primary developer access portal and SDKs.",
+      "description": "The Claude API is the programmatic interface for accessing Anthropic's models. It provides clean endpoints for message generation, streaming audio, and JSON mode outputs, enabling builders to integrate foundation models into web and mobile codebases.",
+      "url": "https://docs.anthropic.com/en/api/getting-started",
+      "ideal_for": [
+        "app devs",
+        "agents"
+      ],
+      "badges": [
+        "Workbench",
+        "Self-serve"
+      ]
+    },
+    {
+      "id": "claude-chat-app",
+      "name": "Claude Chat Interface (claude.ai)",
+      "category": "end-user-app",
+      "short_tagline": "Web-based collaborative chat client.",
+      "description": "The Claude Web and Mobile application is the user-facing workspace interface. Used by developers to test prompt behaviors and knowledge workers to organize documents, the chat page supports Project workspaces, Artifacts previews, and real-time document sharing.",
+      "url": "https://claude.ai",
+      "ideal_for": [
+        "knowledge workers",
+        "creators"
+      ],
+      "badges": [
+        "Projects",
+        "Artifacts"
+      ]
+    },
+    {
+      "id": "cloud-provider-access",
+      "name": "Cloud Provider Access Points",
+      "category": "enterprise-suite",
+      "short_tagline": "Deploy Claude inside Bedrock or Vertex systems.",
+      "description": "Cloud Provider Access points allow developers to deploy Claude models inside existing AWS Bedrock or Google Vertex AI environments. This enables enterprises to query Claude while maintaining compliance, utilizing cloud-hosted private networks, and consolidating cloud billing.",
+      "url": "https://docs.anthropic.com/en/docs/about-claude/cloud-providers",
+      "ideal_for": [
+        "data teams",
+        "app devs"
+      ],
+      "badges": [
+        "Enterprise",
+        "Teams"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "claude-guides-docs",
+      "name": "Claude Platform Guides",
+      "type": "docs-guides",
+      "short_tagline": "Comprehensive conceptual guides for agentic structures.",
+      "description": "Official Claude Platform documentation guides teach developers how to implement tool calling, configure structured JSON schemas, construct prompt systems, and orchestrate RAG search indexes. It focuses on enterprise-ready AI architecture patterns.",
+      "url": "https://docs.anthropic.com/en/docs/welcome",
+      "focus_areas": [
+        "agents",
+        "prompt-engineering",
+        "safety"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "anthropic-cookbook",
+      "name": "Anthropic Cookbook",
+      "type": "cookbook",
+      "short_tagline": "GitHub repository containing developer code recipes.",
+      "description": "The Anthropic Cookbook features Jupyter notebook templates and executable code files for standard API architectures. Developers copy scripts to parse PDF documents, set context parameters, and implement function calling frameworks.",
+      "url": "https://github.com/anthropics/anthropic-cookbook",
+      "focus_areas": [
+        "prompt-engineering",
+        "agents"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "prompt-engineering-tutorial",
+      "name": "Interactive Prompt Tutorial",
+      "type": "tutorial",
+      "short_tagline": "Structured lessons for prompt optimization.",
+      "description": "Anthropic's Interactive Prompt Tutorial provides step-by-step coding lessons for prompt engineering. Developers learn to utilize xml tags, define system parameters, ground model context, and prevent model hallucinations.",
+      "url": "https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial",
+      "focus_areas": [
+        "prompt-engineering"
+      ],
+      "level": "beginner"
+    },
+    {
+      "id": "claude-code-learning",
+      "name": "Claude Code Terminal Guides",
+      "type": "tutorial",
+      "short_tagline": "Tutorials for integrating Claude into CLI workflows.",
+      "description": "Guides and quickstarts detailing how to install, configure, and use Claude Code directly in your shell. Learn to automate file edits, execute local terminal testing, and write git commits.",
+      "url": "https://docs.anthropic.com/en/docs/about-claude/claude-code",
+      "focus_areas": [
+        "agents",
+        "prompt-engineering"
+      ],
+      "level": "advanced"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "claude-api-primitives",
+      "name": "Claude API Messages & Primitives",
+      "type": "api",
+      "short_tagline": "Fundamental developer messaging endpoints.",
+      "description": "Claude API Primitives provide the primary endpoints for text and vision generation. It supports streaming responses, structured JSON output matching, system prompts setting, and tool calling definitions to integrate Claude into client codebases.",
+      "url": "https://docs.anthropic.com/en/api/getting-started",
+      "related_platform_ids": [
+        "claude-api"
+      ]
+    },
+    {
+      "id": "computer-use-capabilities",
+      "name": "Computer-Use & Tool Call Utilities",
+      "type": "feature",
+      "short_tagline": "Capabilities enabling models to interact with desktops.",
+      "description": "Computer-use features let Claude interact with virtual desktops. The model receives screenshots and outputs coordinates to click buttons, type text, or navigate interfaces, enabling developers to build browser automation agents.",
+      "url": "https://docs.anthropic.com/en/docs/about-claude/computer-use",
+      "related_platform_ids": [
+        "claude-workbench",
+        "claude-api"
+      ]
+    },
+    {
+      "id": "retrieval-document-tools",
+      "name": "Retrieval & Long-Context Workflows",
+      "type": "feature",
+      "short_tagline": "Enterprise retrieval tools using long-context windows.",
+      "description": "Anthropic's document processing tools leverage Claude's long-context capabilities. Developers upload extensive text files, PDFs, or code libraries directly, enabling semantic search and context-grounded Q&A without pre-building custom vector databases.",
+      "url": "https://docs.anthropic.com/en/docs/about-claude/context-window",
+      "related_platform_ids": [
+        "claude-chat-app",
+        "claude-enterprise-plans"
+      ]
+    },
+    {
+      "id": "claude-code-tool",
+      "name": "Claude Code Terminal Agent",
+      "type": "tooling",
+      "short_tagline": "Autonomous command-line agent for local files.",
+      "description": "Claude Code is a command-line developer tool that runs locally in your terminal. It executes system terminal testing, performs multi-file code editing, and writes conventional git commits autonomously based on your instructions.",
+      "url": "https://docs.anthropic.com/en/docs/about-claude/claude-code",
+      "related_platform_ids": [
+        "claude-api"
+      ]
+    },
+    {
+      "id": "constitutional-ai-safety",
+      "name": "Constitutional AI & Safety Guardrails",
+      "type": "safety",
+      "short_tagline": "Self-alignment safety systems matching ethical policy.",
+      "description": "Constitutional AI is Anthropic's methodology for aligning models with safety principles. Developers implement safety APIs and red-teaming frameworks to monitor outputs, filter toxic inputs, and ensure reliable model behavior in customer interactions.",
+      "url": "https://www.anthropic.com/constitutional-ai",
+      "related_platform_ids": [
+        "claude-enterprise-plans",
+        "claude-api"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "anthropic-home-portal",
+      "name": "Anthropic Main Site",
+      "type": "newsroom",
+      "short_tagline": "Main site describing research achievements and goals.",
+      "description": "The official landing page covering Anthropic's corporate milestones, safety policies, and model releases.",
+      "url": "https://www.anthropic.com",
+      "highlight": true
+    },
+    {
+      "id": "claude-docs-home",
+      "name": "Claude Platform Docs Home",
+      "type": "docs",
+      "short_tagline": "Central API document catalog and guides.",
+      "description": "The central documentation library containing models lists, integration guides, and API endpoint references.",
+      "url": "https://docs.anthropic.com",
+      "highlight": true
+    },
+    {
+      "id": "safety-constitutional-research",
+      "name": "Safety & Constitutional AI Research",
+      "type": "research",
+      "short_tagline": "Academic publications detailing safety research.",
+      "description": "Publications detailing Anthropic's safety research, Constitutional AI frameworks, and alignment methodology.",
+      "url": "https://www.anthropic.com/news/constitutional-ai",
+      "highlight": false
+    },
+    {
+      "id": "anthropic-updates-blog",
+      "name": "Anthropic News Blog",
+      "type": "blog",
+      "short_tagline": "Official technical announcements and news releases.",
+      "description": "The main blog containing developer product announcements, partnership updates, and research reviews.",
+      "url": "https://www.anthropic.com/news",
+      "highlight": true
+    },
+    {
+      "id": "anthropic-research-index",
+      "name": "Anthropic Research Index",
+      "type": "research",
+      "short_tagline": "Chronological archive of academic publications.",
+      "description": "A chronological directory of Anthropic's research papers, publications, and foundational algorithm details.",
+      "url": "https://www.anthropic.com/research",
+      "highlight": false
+    },
+    {
+      "id": "anthropic-github-organization",
+      "name": "Anthropic GitHub Repositories",
+      "type": "github-org",
+      "short_tagline": "Open-source SDKs and community code repositories.",
+      "description": "Access official API client SDKs, tool libraries, cook-book examples, and open-source models.",
+      "url": "https://github.com/anthropics",
+      "highlight": true
+    }
+  ]
+}
