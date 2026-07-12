@@ -8,16 +8,13 @@ interface UpdatesSectionProps {
   articles?: any[];
 }
 
-const COMPANIES = [
-  { id: 'All', name: 'All Companies', color: 'bg-slate-400' },
-  { id: 'google', name: 'Google / DeepMind', color: 'bg-[#4285F4]' },
-  { id: 'openai', name: 'OpenAI', color: 'bg-[#10a37f]' },
-  { id: 'anthropic', name: 'Anthropic', color: 'bg-[#D97706]' },
-  { id: 'meta', name: 'Meta AI', color: 'bg-[#0064e0]' },
-  { id: 'microsoft', name: 'Microsoft AI', color: 'bg-[#00A4EF]' },
-  { id: 'amazon', name: 'Amazon Web Services', color: 'bg-[#FF9900]' },
-  { id: 'nvidia', name: 'Nvidia AI', color: 'bg-[#76B900]' },
-  { id: 'other', name: 'Others (IBM, Hugging Face, etc.)', color: 'bg-[#A855F7]' }
+const CATEGORIES = [
+  { id: 'All', name: 'All Updates' },
+  { id: 'Labs', name: 'AI Labs & Models' },
+  { id: 'Research', name: 'Research' },
+  { id: 'Enterprise AI', name: 'Enterprise AI' },
+  { id: 'Media', name: 'Tech Media' },
+  { id: 'Developer Tools', name: 'Developer Tools' }
 ];
 
 export const UpdatesSection: React.FC<UpdatesSectionProps> = ({ 
@@ -25,8 +22,8 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
   articles = []
 }) => {
   const [feedType, setFeedType] = useState<'curated' | 'live'>('live');
-  const [selectedCompany, setSelectedCompany] = useState<string>('All');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [showOlder, setShowOlder] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Pick the active dataset
@@ -64,17 +61,48 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
     return null;
   };
 
-  // Filter based on selected company
+  // Maps items to dynamic categories
+  const getItemCategory = (item: any): string => {
+    const cat = (item.category || '').toLowerCase();
+    if (cat.includes('model') || cat.includes('labs') || cat.includes('openai') || cat.includes('anthropic')) return 'Labs';
+    if (cat.includes('research') || cat.includes('deepmind') || cat.includes('google')) return 'Research';
+    if (cat.includes('enterprise') || cat.includes('microsoft') || cat.includes('aws') || cat.includes('amazon')) return 'Enterprise AI';
+    if (cat.includes('media') || cat.includes('techcrunch') || cat.includes('venture') || cat.includes('review')) return 'Media';
+    if (cat.includes('developer') || cat.includes('tool') || cat.includes('hugging')) return 'Developer Tools';
+
+    const source = (item.sourceName || item.source || item.tag || '').toLowerCase();
+    if (source.includes('openai') || source.includes('anthropic')) return 'Labs';
+    if (source.includes('deepmind') || source.includes('google') || source.includes('mit')) return 'Research';
+    if (source.includes('microsoft') || source.includes('aws') || source.includes('amazon')) return 'Enterprise AI';
+    if (source.includes('techcrunch') || source.includes('venture') || source.includes('media')) return 'Media';
+    
+    return 'Labs'; // Fallback
+  };
+
+  // Filter based on selected category & freshness
   const filteredUpdates = activeList.filter((update) => {
-    const companyField = (update as any).company || '';
-    const compKey = companyField ? companyField.toLowerCase() : getCompanyKey(update.sourceName || '', update.tag || '', update.source || '');
-    return selectedCompany === 'All' || compKey === selectedCompany.toLowerCase();
+    // 1. Freshness filter for Live News Feed
+    if (feedType === 'live') {
+      const publishedDate = new Date(update.publishedAt || update.date || new Date());
+      const ageHours = (new Date().getTime() - publishedDate.getTime()) / (1000 * 60 * 60);
+      
+      const maxAge = showOlder ? 168 : 48; // 48h limit by default, 7 days if showOlder is true
+      if (ageHours > maxAge) {
+        return false;
+      }
+    }
+
+    // 2. Category filter
+    if (selectedCategory === 'All') return true;
+    
+    const itemCat = getItemCategory(update);
+    return itemCat.toLowerCase() === selectedCategory.toLowerCase();
   });
 
   // Reset slider index when filters change
   useEffect(() => {
     setActiveIndex(0);
-  }, [selectedCompany, feedType]);
+  }, [selectedCategory, feedType, showOlder]);
 
   // Helper to color-code AI sources on the live feed
   const getSourceStyle = (source: string) => {
@@ -103,7 +131,6 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
   };
 
   const activeLeader = filteredUpdates[activeIndex];
-  const selectedCompanyObj = COMPANIES.find(c => c.id === selectedCompany) || COMPANIES[0];
 
   return (
     <section id="updates" className="relative py-24 z-10 border-t border-brand-gold/5 bg-brand-navy-deep/80 overflow-hidden">
@@ -152,47 +179,30 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
           </div>
         </div>
 
-        {/* Company Dropdown Filter */}
-        <div className="mb-12 relative flex flex-col items-center sm:items-start select-none">
-          <label className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-3 flex items-center gap-2">
+        {/* Category Tabs Filter */}
+        <div className="mb-12 relative flex flex-col items-center sm:items-start select-none w-full">
+          <label className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-4 flex items-center gap-2">
             <Filter className="w-3.5 h-3.5 text-brand-gold" />
-            Filter updates by company
+            Filter briefings by category
           </label>
           
-          <div className="relative w-72">
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="w-full flex items-center justify-between bg-brand-navy-light/10 border border-brand-gold/20 hover:border-brand-gold/50 rounded-2xl px-5 py-3.5 text-slate-200 text-sm font-semibold tracking-wide transition-all duration-300 outline-none backdrop-blur-md cursor-pointer"
-            >
-              <div className="flex items-center gap-2.5">
-                <span className={`w-2.5 h-2.5 rounded-full ${selectedCompanyObj.color} shadow-sm`} />
-                <span>{selectedCompanyObj.name}</span>
-              </div>
-              <ChevronDown className={`w-4 h-4 text-brand-gold transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {/* Dropdown Card */}
-            {dropdownOpen && (
-              <div className="absolute left-0 mt-2.5 w-full rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2 shadow-2xl z-40 max-h-72 overflow-y-auto">
-                {COMPANIES.map((comp) => (
-                  <button
-                    key={comp.id}
-                    onClick={() => {
-                      setSelectedCompany(comp.id);
-                      setDropdownOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-xs font-semibold rounded-xl text-left transition-all duration-200 cursor-pointer ${
-                      selectedCompany === comp.id
-                        ? 'bg-brand-gold text-brand-navy-dark'
-                        : 'text-slate-300 hover:bg-brand-navy-light/20 hover:text-slate-100'
-                    }`}
-                  >
-                    <span className={`w-2 h-2 rounded-full ${selectedCompany === comp.id ? 'bg-brand-navy-dark' : comp.color}`} />
-                    <span>{comp.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="flex flex-wrap gap-2.5 justify-center sm:justify-start">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setSelectedCategory(cat.id);
+                  setShowOlder(false);
+                }}
+                className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 border cursor-pointer ${
+                  selectedCategory === cat.id
+                    ? 'bg-brand-gold text-brand-navy-dark border-brand-gold shadow-lg shadow-brand-gold/15 font-bold'
+                    : 'bg-brand-navy-deep/40 text-slate-400 border-brand-gold/10 hover:border-brand-gold/30 hover:text-slate-200'
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -432,8 +442,39 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
           </div>
         ) : (
-          <div className="text-center py-20">
-            <p className="text-slate-400 font-serif text-lg">No updates found for this company.</p>
+          <div className="w-full max-w-2xl mx-auto p-12 rounded-3xl border border-brand-gold/15 bg-brand-navy-deep/60 backdrop-blur-md shadow-2xl text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-brand-gold/10 border border-brand-gold/25 flex items-center justify-center mx-auto text-brand-gold">
+              <Clock className="w-8 h-8 animate-pulse" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-200">No Recent Updates Found</h3>
+              <p className="text-slate-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                {feedType === 'live'
+                  ? `There are no new AI news releases in the last ${showOlder ? '7 days' : '48 hours'} for this category.`
+                  : 'No curated editor briefings are available under this category.'}
+              </p>
+            </div>
+            {feedType === 'live' && !showOlder && (
+              <button
+                onClick={() => setShowOlder(true)}
+                className="px-6 py-3 rounded-xl bg-brand-gold text-brand-navy-dark hover:bg-brand-gold-bright transition-all text-xs font-bold uppercase tracking-wider cursor-pointer"
+              >
+                View Older Stories (Last 7 Days)
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* View Older Stories Button at bottom when articles exist */}
+        {filteredUpdates.length > 0 && feedType === 'live' && !showOlder && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => setShowOlder(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-gold/15 hover:border-brand-gold/40 text-slate-400 hover:text-slate-200 transition-all text-xs font-bold uppercase tracking-wider cursor-pointer bg-brand-navy-deep/30"
+            >
+              <Clock className="w-3.5 h-3.5 text-brand-gold" />
+              Looking for more? View older stories (Last 7 Days)
+            </button>
           </div>
         )}
 
