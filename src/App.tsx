@@ -246,6 +246,7 @@ function App() {
         {currentPath === '/leaders/mistral-ai' && <CompanyHubPage companyId="mistral-ai" navigate={navigate} />}
         {currentPath === '/leaders/ibm-watsonx' && <CompanyHubPage companyId="ibm-watsonx" navigate={navigate} />}
         {currentPath === '/leaders/cohere' && <CompanyHubPage companyId="cohere" navigate={navigate} />}
+        {currentPath === '/leaders/huggingface' && <CompanyHubPage companyId="huggingface" navigate={navigate} />}
       </main>
 
       {/* Platform Footer */}
