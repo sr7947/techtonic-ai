@@ -11,6 +11,7 @@ import xaiHubData from '../data/xaiHubData.json';
 import mistralHubData from '../data/mistralHubData.json';
 import ibmHubData from '../data/ibmHubData.json';
 import cohereHubData from '../data/cohereHubData.json';
+import huggingfaceHubData from '../data/huggingfaceHubData.json';
 import { 
   Building, 
   ExternalLink, 
@@ -55,7 +56,9 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
                       ? ibmHubData
                       : companyId === 'cohere'
                         ? cohereHubData
-                        : googleHubData;
+                        : companyId === 'huggingface'
+                          ? huggingfaceHubData
+                          : googleHubData;
   const { company, llms, platforms, learning, technologies, docsAndNews } = hubData;
   const hardware = (hubData as any).hardware || null;
 

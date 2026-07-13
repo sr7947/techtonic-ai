@@ -1,0 +1,283 @@
+{
+  "company": {
+    "id": "hugging-face",
+    "name": "Hugging Face",
+    "tagline": "The home of open-source AI collaboration, hosting thousands of community-built models, datasets, and demos.",
+    "overview": "Hugging Face is the central hub for the open machine learning ecosystem. By providing git-based repository hosting for models, datasets, and interactive Spaces, Hugging Face enables developers to share weights, benchmark model performance, and integrate state-of-the-art architectures using unified python libraries.",
+    "official_site_url": "https://huggingface.co",
+    "theme_color": "#fbbf24"
+  },
+  "llms": [
+    {
+      "id": "llama-collection-hub",
+      "name": "Llama Model Collection",
+      "family": "Meta Llama",
+      "modality": "multimodal",
+      "type": "open-weight",
+      "tier": "flagship",
+      "short_tagline": "Meta Llama open weights repository checkpoints.",
+      "description": "The Llama model collection hosts Meta's open-weights foundation models, from base text-generation checkpoints to instruction-tuned multimodal variants. Developers download these repository weights to fine-tune local models, construct private enterprise chat applications, and build cost-effective agent networks using open-source toolkits.",
+      "primary_use_cases": [
+        "Local model fine-tuning and adapters",
+        "Private enterprise chat applications",
+        "Cost-effective agent network builds"
+      ],
+      "docs_url": "https://huggingface.co/meta-llama"
+    },
+    {
+      "id": "mistral-collection-hub",
+      "name": "Mistral Model Collection",
+      "family": "Mistral",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "balanced",
+      "short_tagline": "Mistral open MoE and edge repository models.",
+      "description": "The Mistral model collection includes high-efficiency open weights models engineered for low-latency inference and high-density hosting. Developers pull these models to implement mixture-of-experts architectures, run fast local reasoning agents, and build cost-optimized summarization systems on serverless cloud hardware.",
+      "primary_use_cases": [
+        "Local mixture-of-experts model runs",
+        "Fast local reasoning agent systems",
+        "Cost-optimized text summarization"
+      ],
+      "docs_url": "https://huggingface.co/mistralai"
+    },
+    {
+      "id": "open-hermes-fine-tunes",
+      "name": "OpenHermes & Checkpoints",
+      "family": "OpenHermes",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "cost-optimized",
+      "short_tagline": "Synthetic dataset fine-tunes for coding and chat.",
+      "description": "OpenHermes and community checkpoints represent highly optimized instruct-tuned derivatives trained on rich synthetic datasets. Developers utilize these community-curated models to achieve state-of-the-art coding, chat, and reasoning capabilities on consumer-grade hardware without paying proprietary API fees.",
+      "primary_use_cases": [
+        "Coding and chat helper tools",
+        "High-performance local text inference",
+        "Synthetic training dataset evaluations"
+      ],
+      "docs_url": "https://huggingface.co/models?search=openhermes"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "huggingface-hub-repository",
+      "name": "Hugging Face Hub",
+      "category": "dev-portal",
+      "short_tagline": "Git repositories for model weights and datasets.",
+      "description": "The Hugging Face Hub is the central registry for sharing machine learning models, structured datasets, and web application repositories. Developers run git-based workflows to clone models, upload dataset splits, version training logs, and collaborate on open-source machine learning projects.",
+      "url": "https://huggingface.co/models",
+      "ideal_for": [
+        "ML engineers",
+        "data teams"
+      ],
+      "badges": [
+        "Open-source",
+        "Git-based"
+      ]
+    },
+    {
+      "id": "hf-spaces-demos",
+      "name": "Hugging Face Spaces",
+      "category": "fm-platform",
+      "short_tagline": "Containerized web hosting for model demos.",
+      "description": "Hugging Face Spaces is an interactive browser hosting service for deploying machine learning application demos in real-time. Developers build and run Gradio, Streamlit, or Docker-based user interfaces, allowing community users to test model parameters directly from the browser.",
+      "url": "https://huggingface.co/spaces",
+      "ideal_for": [
+        "app devs",
+        "ML engineers"
+      ],
+      "badges": [
+        "Docker",
+        "Gradio",
+        "Streamlit"
+      ]
+    },
+    {
+      "id": "hf-inference-endpoints",
+      "name": "Hugging Face Inference Endpoints",
+      "category": "fm-platform",
+      "short_tagline": "Managed dedicated cloud GPU server deployments.",
+      "description": "Hugging Face Inference Endpoints provide fully managed, low-latency container hosting for deploying foundation models on dedicated cloud GPUs. Developers spin up secure, auto-scaling endpoints on AWS or Azure using pre-configured hardware templates in one click.",
+      "url": "https://huggingface.co/inference-endpoints",
+      "ideal_for": [
+        "MLOps",
+        "infra teams"
+      ],
+      "badges": [
+        "Managed",
+        "GPU-powered"
+      ]
+    },
+    {
+      "id": "hf-cloud-integrations",
+      "name": "Cloud Integrations",
+      "category": "cloud-partners",
+      "short_tagline": "Native SageMaker, Azure, and Vertex integrations.",
+      "description": "Hugging Face integrates natively with cloud partners including AWS SageMaker, Microsoft Azure AI, and Google Vertex AI. Developers deploy models from the Hub directly into private cloud environments, leveraging enterprise-managed instances to run secure model training and inference.",
+      "url": "https://huggingface.co/docs/sagemaker/index",
+      "ideal_for": [
+        "enterprise IT",
+        "infra teams"
+      ],
+      "badges": [
+        "Enterprise",
+        "Hybrid"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "hf-nlp-transformers-course",
+      "name": "Hugging Face Course",
+      "type": "workshops",
+      "short_tagline": "Hands-on tutorials for NLP, speech, and vision.",
+      "description": "The official Hugging Face Course provides comprehensive, self-paced learning paths covering natural language processing, audio, and vision. Developers learn to write transformer pipelines, configure training loops, handle dataset tokenization, and share custom fine-tuned weights on the Hub.",
+      "url": "https://huggingface.co/learn",
+      "focus_areas": [
+        "generative-ai",
+        "docs-guides"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "hf-documentation-tutorials",
+      "name": "Hugging Face Docs",
+      "type": "docs-guides",
+      "short_tagline": "Library setups and custom PEFT recipes.",
+      "description": "Tutorial guides and technical references detailing library installations and API operations. Builders copy code snippets, learn model card templates, follow parameter-efficient fine-tuning walkthroughs, and master model optimization techniques.",
+      "url": "https://huggingface.co/docs",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "hf-community-events",
+      "name": "Community & Blog",
+      "type": "blog",
+      "short_tagline": "Forums and blog posts detailing new models.",
+      "description": "Official blogs and community forum boards discussing machine learning breakthroughs, project ideas, and hardware setups. Developers participate in community hackathons, read engineering deep-dives, and solve integration challenges with peer open-source builders.",
+      "url": "https://huggingface.co/blog",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "all-levels"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "hf-transformers-library",
+      "name": "Transformers",
+      "type": "framework",
+      "short_tagline": "Python pipeline tool for text, vision, and audio.",
+      "description": "Transformers is the industry-standard python library for loading, training, and optimizing state-of-the-art language, vision, and audio models. Developers write modular Swift or Python code to compile model weights, run local inference, and deploy transformer architectures.",
+      "url": "https://github.com/huggingface/transformers",
+      "related_platform_ids": [
+        "huggingface-hub-repository"
+      ]
+    },
+    {
+      "id": "hf-datasets-library",
+      "name": "Datasets",
+      "type": "tooling",
+      "short_tagline": "Streaming library for loading large training files.",
+      "description": "Datasets is a lightweight python library designed for high-speed download, local caching, and streaming of diverse training datasets. Developers run memory-mapped dataset pipelines to load terabytes of text or audio data in seconds without system overhead.",
+      "url": "https://github.com/huggingface/datasets",
+      "related_platform_ids": [
+        "huggingface-hub-repository"
+      ]
+    },
+    {
+      "id": "hf-diffusers-library",
+      "name": "Diffusers",
+      "type": "framework",
+      "short_tagline": "Diffusion APIs for image and video synthesis.",
+      "description": "Diffusers is the premier toolbox for working with generative diffusion models, including image and audio generation networks. Developers utilize Diffusers APIs to construct image generators, control generation pipelines with adapters, and build multi-step video synthesis apps.",
+      "url": "https://github.com/huggingface/diffusers",
+      "related_platform_ids": [
+        "huggingface-hub-repository"
+      ]
+    },
+    {
+      "id": "hf-peft-library",
+      "name": "PEFT",
+      "type": "framework",
+      "short_tagline": "LoRA adapter library reducing GPU training memory.",
+      "description": "Parameter-Efficient Fine-Tuning (PEFT) is a optimization library for adapter training on large language models. Developers apply LoRA, prefix tuning, or prompt tuning configurations to update a fraction of parameters, saving massive GPU computing memory.",
+      "url": "https://github.com/huggingface/peft",
+      "related_platform_ids": [
+        "huggingface-hub-repository"
+      ]
+    },
+    {
+      "id": "hf-safetensors-format",
+      "name": "Safetensors",
+      "type": "tooling",
+      "short_tagline": "Zero-copy weight files blocking dynamic code injection.",
+      "description": "Safetensors is a zero-copy, memory-safe file format for storing model weight tensors. Developers utilize Safetensors files to prevent malicious code injection attacks and accelerate model loading times across CPU and GPU hardware.",
+      "url": "https://github.com/huggingface/safetensors",
+      "related_platform_ids": [
+        "huggingface-hub-repository"
+      ]
+    },
+    {
+      "id": "hf-evaluation-leaderboards",
+      "name": "Model Evaluation & Leaderboards",
+      "type": "safety",
+      "short_tagline": "Standard benchmark matrices scoring model capabilities.",
+      "description": "The Open LLM Leaderboard is the central benchmark database for tracking open-source model reasoning capabilities. Developers submit model weights to run automated test suites, comparing mathematical accuracy, coding skills, and instruction-following metrics.",
+      "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard",
+      "related_platform_ids": [
+        "huggingface-hub-repository"
+      ]
+    },
+    {
+      "id": "hf-cli-python-tooling",
+      "name": "CLI & Python Hub Tooling",
+      "type": "tooling",
+      "short_tagline": "Command client modules programmatically updating files.",
+      "description": "Command-line utilities and python client modules for interacting with Hugging Face repositories programmatically. Developers write automated scripts to push model files, download large weights datasets, manage remote folder layouts, and audit repository changes.",
+      "url": "https://github.com/huggingface/huggingface_hub",
+      "related_platform_ids": [
+        "huggingface-hub-repository"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "hf-docs-home",
+      "name": "Hugging Face Documentation Portal",
+      "type": "docs",
+      "short_tagline": "Primary developer guides and API manuals.",
+      "description": "The primary developer portal containing API references, integration manuals, and model parameter specifications.",
+      "url": "https://huggingface.co/docs",
+      "highlight": true
+    },
+    {
+      "id": "hf-blog-news",
+      "name": "Hugging Face Blog",
+      "type": "blog",
+      "short_tagline": "Engineering blog posts and open science updates.",
+      "description": "Technical engineering blog posts announcing model integrations, library updates, and open science research.",
+      "url": "https://huggingface.co/blog",
+      "highlight": true
+    },
+    {
+      "id": "meta-llama-hosted-org",
+      "name": "Hosted Llama Org Page",
+      "type": "docs",
+      "short_tagline": "Official organization registry for Llama checkpoints.",
+      "description": "Meta Llama's official organization page on the Hub hosting weights and model cards.",
+      "url": "https://huggingface.co/meta-llama",
+      "highlight": false
+    },
+    {
+      "id": "hf-github-org",
+      "name": "Hugging Face GitHub Organization",
+      "type": "github-org",
+      "short_tagline": "Library repositories and developer scripts.",
+      "description": "Access official client SDKs, python libraries, and model pipeline repositories on GitHub.",
+      "url": "https://github.com/huggingface",
+      "highlight": true
+    }
+  ]
+}
