@@ -1,0 +1,234 @@
+{
+  "company": {
+    "id": "xai-grok",
+    "name": "xAI / Grok",
+    "tagline": "Accelerating human scientific discovery with reasoning-heavy, real-time-grounded foundation models.",
+    "overview": "xAI designs frontier artificial intelligence models to understand the true nature of the universe. Led by the Grok series, the company prioritizes deep mathematical reasoning, massive active context windows, and real-time information grounding to power next-generation developer platforms and autonomous agent systems.",
+    "official_site_url": "https://x.ai",
+    "theme_color": "#ffffff"
+  },
+  "llms": [
+    {
+      "id": "grok-flagship-models",
+      "name": "Grok Flagship Models",
+      "family": "Grok 4.3",
+      "modality": "text",
+      "type": "reasoning",
+      "tier": "flagship",
+      "short_tagline": "Frontier logical reasoning, coding, and mathematical analysis.",
+      "description": "Grok flagship models represent xAI's state-of-the-art foundation architectures optimized for complex logical deduction, mathematical reasoning, and high-fidelity code generation. Equipped with massive context capabilities, these models excel at analyzing multi-file codebases and executing complex long-form task plans.",
+      "primary_use_cases": [
+        "Complex logical and math reasoning",
+        "High-fidelity codebase generation",
+        "Long-form agentic task execution"
+      ],
+      "docs_url": "https://docs.x.ai/docs"
+    },
+    {
+      "id": "grok-fast-and-mini",
+      "name": "Grok Fast & Mini",
+      "family": "Grok 3.x",
+      "modality": "text",
+      "type": "frontier-cloud",
+      "tier": "fast",
+      "short_tagline": "Low-latency models for rapid conversational flows.",
+      "description": "Grok fast and mini models provide lightweight, low-latency text and reasoning runtimes for high-frequency application requests. Developers integrate these models to power rapid conversational flows, run real-time classification scripts, and deploy highly responsive chatbot agents without incurring high cloud computing costs.",
+      "primary_use_cases": [
+        "Low-latency chatbot conversational flows",
+        "Real-time text classification scripts",
+        "High-frequency lightweight API actions"
+      ],
+      "docs_url": "https://docs.x.ai/docs"
+    },
+    {
+      "id": "grok-vision-multimodal",
+      "name": "Grok Vision Multimodal",
+      "family": "Grok 4.3",
+      "modality": "multimodal",
+      "type": "reasoning",
+      "tier": "flagship",
+      "short_tagline": "Visual-language models for document OCR and chart parsing.",
+      "description": "Grok vision models expand xAI's core reasoning engine to handle multimodal image and document inputs. Developers utilize these visual-language endpoints to parse spatial charts, analyze schematic layouts, perform high-accuracy OCR text extraction, and solve complex multi-step visual reasoning problems.",
+      "primary_use_cases": [
+        "Multimodal chart and schema parsing",
+        "High-accuracy document OCR extraction",
+        "Multi-step visual reasoning tasks"
+      ],
+      "docs_url": "https://docs.x.ai/docs"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "xai-developer-console",
+      "name": "xAI Developer Console & API",
+      "category": "dev-portal",
+      "short_tagline": "xAI console for API key administration and budgets.",
+      "description": "The xAI Developer Console is the central administration gateway for managing API access, billing budgets, and usage limits. Developers generate secure API keys, monitor model consumption metrics, adjust system rate limits, and test raw endpoints from an intuitive web-based dashboard.",
+      "url": "https://console.x.ai",
+      "ideal_for": [
+        "app devs",
+        "MLOps",
+        "enterprise IT"
+      ],
+      "badges": [
+        "Serverless",
+        "Managed"
+      ]
+    },
+    {
+      "id": "xai-grok-playground",
+      "name": "xAI Grok Playground",
+      "category": "dev-portal",
+      "short_tagline": "Interactive developer workshop for prompt tuning.",
+      "description": "The Grok Playground is an interactive browser workspace for testing and evaluating model parameters in real-time. Developers adjust temperature coefficients, experiment with system instruction prompts, compare model versions, and inspect raw JSON request-response payloads before writing application code.",
+      "url": "https://console.x.ai/playground",
+      "ideal_for": [
+        "app devs"
+      ],
+      "badges": [
+        "Serverless",
+        "Self-serve"
+      ]
+    },
+    {
+      "id": "x-platform-integration",
+      "name": "X Platform Real-Time Ingest",
+      "category": "system-intelligence",
+      "short_tagline": "Social data grounding layer for real-time summaries.",
+      "description": "xAI's deep integration with X, formerly Twitter, enables Grok models to query real-time social data and news events. Developers leverage this unique grounding layer to construct applications that analyze trending topics, verify breaking news stories, and synthesize dynamic real-time summaries.",
+      "url": "https://x.com",
+      "ideal_for": [
+        "app devs",
+        "research labs"
+      ],
+      "badges": [
+        "Hybrid",
+        "Enterprise"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "xai-api-quickstarts",
+      "name": "xAI API Getting Started Guides",
+      "type": "docs-guides",
+      "short_tagline": "Step-by-step client install guides and curl recipes.",
+      "description": "The official xAI getting-started documentation contains step-by-step installation guides and basic curl recipes. Developers learn to initialize client connections, format header parameters, handle stream outputs, and resolve basic API error codes in minutes.",
+      "url": "https://docs.x.ai/docs",
+      "focus_areas": [
+        "generative-ai",
+        "docs-guides"
+      ],
+      "level": "beginner"
+    },
+    {
+      "id": "grok-agentic-recipes",
+      "name": "Grok Agent & Tool Cookbooks",
+      "type": "sample-code",
+      "short_tagline": "Function-calling templates and agent build recipes.",
+      "description": "A collection of developer tutorials and script templates demonstrating Grok tool-calling and agentic orchestration patterns. Learn to write structured function schemas, manage multi-turn session conversations, and build autonomous agents that access external databases.",
+      "url": "https://docs.x.ai/docs",
+      "focus_areas": [
+        "agents",
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "xai-research-publications",
+      "name": "xAI Technical Blogs & Research",
+      "type": "docs-guides",
+      "short_tagline": "Scientific articles detailing model specifications.",
+      "description": "Technical blogs and research papers detailing xAI's model architectures, benchmark results, and system efficiency achievements. Developers read these papers to understand training techniques, reasoning methodologies, and optimal deployment configurations.",
+      "url": "https://x.ai/blog",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "advanced"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "grok-tool-calling-api",
+      "name": "Grok Tool & Function Calling",
+      "type": "api",
+      "short_tagline": "JSON schema function-calling for external APIs.",
+      "description": "Grok's native tool-calling technology allows developers to connect models to external databases, APIs, and client-side scripts. By providing JSON schemas of available functions, builders enable Grok to choose and execute the correct tools to solve complex tasks.",
+      "url": "https://docs.x.ai/docs",
+      "related_platform_ids": [
+        "xai-developer-console"
+      ]
+    },
+    {
+      "id": "grok-long-context-handling",
+      "name": "Grok Long-Context Processing",
+      "type": "orchestration",
+      "short_tagline": "1M token context capacity for massive code reading.",
+      "description": "Grok's long-context architecture supports parsing and reasoning over up to one million text tokens in a single request. Developers use this technology to analyze entire code repositories, read whole books, and synthesize insights from extensive research documents.",
+      "url": "https://docs.x.ai/docs",
+      "related_platform_ids": [
+        "xai-developer-console"
+      ]
+    },
+    {
+      "id": "xai-client-sdks",
+      "name": "xAI Client Libraries & SDKs",
+      "type": "tooling",
+      "short_tagline": "Python and Node SDKs managing connection retries.",
+      "description": "Official and community-supported SDK libraries for integrating xAI endpoints into Python and Node.js applications. These lightweight client kits package connection handling, auto-retry logic, and stream-parsing primitives to simplify developer integration workflows.",
+      "url": "https://github.com/xai-org",
+      "related_platform_ids": [
+        "xai-developer-console"
+      ]
+    },
+    {
+      "id": "grok-content-safety-guardrails",
+      "name": "xAI Safety & Output Guardrails",
+      "type": "safety",
+      "short_tagline": "Automated filters blocking toxic or copyrighted outputs.",
+      "description": "xAI's content safety filters provide automated moderation layers to ensure compliant model outputs. Developers configure these guardrails to detect adversarial prompt attacks, block toxic queries, and prevent the generation of harmful or copyrighted text.",
+      "url": "https://docs.x.ai/docs",
+      "related_platform_ids": [
+        "xai-developer-console"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "xai-console-docs",
+      "name": "xAI Developer Documentation",
+      "type": "docs",
+      "short_tagline": "API references and parameter sheets.",
+      "description": "The primary developer portal containing API references, model parameter guidelines, and integration tutorials.",
+      "url": "https://docs.x.ai",
+      "highlight": true
+    },
+    {
+      "id": "xai-technical-blog",
+      "name": "xAI Blog",
+      "type": "blog",
+      "short_tagline": "Engineering releases and compute specs.",
+      "description": "Official engineering blog posts announcing model releases, compute infrastructure details, and research benchmarks.",
+      "url": "https://x.ai/blog",
+      "highlight": true
+    },
+    {
+      "id": "xai-console-status",
+      "name": "xAI Service Status",
+      "type": "status",
+      "short_tagline": "API uptime status sheets.",
+      "description": "Real-time service status page detailing API endpoint availability, system latencies, and scheduled maintenance windows.",
+      "url": "https://status.x.ai",
+      "highlight": false
+    },
+    {
+      "id": "xai-github-repos",
+      "name": "xAI Open Source Repositories",
+      "type": "github-org",
+      "short_tagline": "Open-weights repositories and recipes.",
+      "description": "xAI's GitHub home containing open-weights model code, benchmark evaluations, and developer script templates.",
+      "url": "https://github.com/xai-org",
+      "highlight": true
+    }
+  ]
+}
