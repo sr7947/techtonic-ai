@@ -6,6 +6,7 @@ import metaHubData from '../data/metaHubData.json';
 import microsoftHubData from '../data/microsoftHubData.json';
 import nvidiaHubData from '../data/nvidiaHubData.json';
 import awsHubData from '../data/awsHubData.json';
+import appleHubData from '../data/appleHubData.json';
 import { 
   Building, 
   ExternalLink, 
@@ -40,7 +41,9 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
             ? nvidiaHubData
             : companyId === 'aws-ai'
               ? awsHubData
-              : googleHubData;
+              : companyId === 'apple-intelligence'
+                ? appleHubData
+                : googleHubData;
   const { company, llms, platforms, learning, technologies, docsAndNews } = hubData;
   const hardware = (hubData as any).hardware || null;
 

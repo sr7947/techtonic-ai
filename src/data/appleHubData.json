@@ -1,0 +1,331 @@
+{
+  "company": {
+    "id": "apple-intelligence",
+    "name": "Apple / Apple Intelligence",
+    "tagline": "Fusing intuitive system-wide intelligence with private on-device processing and secure cloud infrastructure.",
+    "overview": "Apple Intelligence integrates deeply into iOS, iPadOS, and macOS, prioritizing local execution on Apple Silicon Neural Engines. When complex tasks exceed on-device limits, Private Cloud Compute dynamically routes queries to secure Apple-managed servers, preserving user privacy while enabling advanced transformer models.",
+    "official_site_url": "https://developer.apple.com/apple-intelligence",
+    "theme_color": "#a3a3a3"
+  },
+  "llms": [
+    {
+      "id": "apple-foundation-models",
+      "name": "Apple Foundation Models",
+      "family": "Foundation Models",
+      "modality": "multimodal",
+      "type": "on-device",
+      "tier": "personal-intelligence",
+      "short_tagline": "Optimized on-device and private cloud transformer models.",
+      "description": "Apple Foundation Models represent highly optimized on-device and private cloud transformer architectures for text and image processing. Developers access these generative capabilities using the Swift-native Foundation Models framework, enabling local text summarization and semantic chat interactions on Apple Silicon Neural Engines.",
+      "primary_use_cases": [
+        "On-device text summarization",
+        "Semantic local chat interfaces",
+        "Private Cloud Compute reasoning"
+      ],
+      "docs_url": "https://developer.apple.com/apple-intelligence"
+    },
+    {
+      "id": "system-writing-tools",
+      "name": "System Writing Tools",
+      "family": "Apple Intelligence Writing Tools",
+      "modality": "text",
+      "type": "system-feature",
+      "tier": "system-wide",
+      "short_tagline": "System-native rewrite, proofread, and summarization features.",
+      "description": "System-wide writing tools provide system-native rewrite, proofread, and summarization features across all application text views. Developers leverage these tools out-of-the-box in Standard Text Kit structures, allowing users to transform tone, check spelling, and create key-point summaries in place.",
+      "primary_use_cases": [
+        "System-native text rewriting",
+        "In-place spelling and proofreading",
+        "Automated text content summarization"
+      ],
+      "docs_url": "https://developer.apple.com/apple-intelligence"
+    },
+    {
+      "id": "image-playground-apis",
+      "name": "Image Playground & Genmoji",
+      "family": "Image Playground",
+      "modality": "image",
+      "type": "system-feature",
+      "tier": "developer-exposed",
+      "short_tagline": "Generative sheets and inputs for creating custom Genmoji.",
+      "description": "Image Playground and Genmoji features expose generative image creation tools directly inside Apple platform user interfaces. Developers utilize custom UI presentation sheets and text input bindings to let users generate stylized illustrations and personalized character emojis in-app.",
+      "primary_use_cases": [
+        "In-app stylized image generation",
+        "Personalized Genmoji creation interfaces",
+        "Text-to-graphic user interactions"
+      ],
+      "docs_url": "https://developer.apple.com/apple-intelligence"
+    },
+    {
+      "id": "visual-intelligence",
+      "name": "Visual Intelligence",
+      "family": "Foundation Models",
+      "modality": "vision-language",
+      "type": "on-device",
+      "tier": "system-wide",
+      "short_tagline": "On-screen and camera spatial object understanding.",
+      "description": "Visual Intelligence leverages Apple's on-device camera and display layers to analyze physical objects and on-screen text. Developers tap into visual-spatial recognition algorithms to identify geographic landmarks, read contact details, and translate foreign language text strings dynamically in real-time.",
+      "primary_use_cases": [
+        "Real-time camera spatial analysis",
+        "On-screen text and contact reading",
+        "Dynamic foreign language translation"
+      ],
+      "docs_url": "https://developer.apple.com/apple-intelligence"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "apple-intelligence-siri",
+      "name": "Apple Intelligence & Siri",
+      "category": "system-intelligence",
+      "short_tagline": "Core operating system personal context and voice router.",
+      "description": "Apple Intelligence integrates deeply into Apple's operating systems to orchestrate personal context and voice interactions. Siri leverages on-device semantic indexes and App Intents to perform actions across applications, maintaining granular privacy protocols while delivering context-aware responses.",
+      "url": "https://www.apple.com/apple-intelligence",
+      "ideal_for": [
+        "iOS devs",
+        "macOS devs",
+        "visionOS devs"
+      ],
+      "badges": [
+        "On-device",
+        "Private Cloud Compute",
+        "Secure"
+      ]
+    },
+    {
+      "id": "foundation-models-framework",
+      "name": "Foundation Models Framework",
+      "category": "dev-framework",
+      "short_tagline": "Swift-native API for on-device transformer execution.",
+      "description": "The Foundation Models framework is a Swift-native API for executing on-device natural language and vision processing. Developers call standard model protocols, customize prompt structures, and load specialized fine-tuned adapter profiles to run localized generative logic.",
+      "url": "https://developer.apple.com/documentation/foundation",
+      "ideal_for": [
+        "iOS devs",
+        "macOS devs"
+      ],
+      "badges": [
+        "Swift",
+        "On-device",
+        "Secure"
+      ]
+    },
+    {
+      "id": "core-ml-platform",
+      "name": "Core ML",
+      "category": "dev-framework",
+      "short_tagline": "On-device model compiler and runtime engine.",
+      "description": "Core ML is the foundational on-device machine learning framework optimized for Apple Silicon Neural Engines. Developers convert external models to the unified .mlmodel format to run fast, low-power neural network inference on iOS, macOS, and visionOS.",
+      "url": "https://developer.apple.com/documentation/coreml",
+      "ideal_for": [
+        "iOS devs",
+        "macOS devs",
+        "visionOS devs"
+      ],
+      "badges": [
+        "On-device",
+        "Swift",
+        "Secure"
+      ]
+    },
+    {
+      "id": "create-ml-platform",
+      "name": "Create ML",
+      "category": "ml-training",
+      "short_tagline": "Visual toolkit for training custom Core ML models.",
+      "description": "Create ML is a developer toolkit for training custom machine learning models on macOS. Using a visual interface or Swift scripts, developers train image classifiers, text categorizers, and activity predictors, outputting ready-to-run Core ML model files.",
+      "url": "https://developer.apple.com/documentation/createml",
+      "ideal_for": [
+        "macOS devs"
+      ],
+      "badges": [
+        "On-device",
+        "Swift"
+      ]
+    },
+    {
+      "id": "app-intents-shortcuts",
+      "name": "App Intents & Shortcuts",
+      "category": "automation",
+      "short_tagline": "Siri natural language automation and semantic routing.",
+      "description": "App Intents define the program actions and data types that Apple Intelligence can query and execute. By declaring clear, type-safe intents, developers expose application functionality to Siri natural language prompts, system-wide shortcuts, and automated widget actions.",
+      "url": "https://developer.apple.com/documentation/appintents",
+      "ideal_for": [
+        "iOS devs",
+        "macOS devs",
+        "visionOS devs"
+      ],
+      "badges": [
+        "Swift",
+        "Secure"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "apple-intelligence-dev-pages",
+      "name": "Apple Intelligence Developer Center",
+      "type": "docs-guides",
+      "short_tagline": "Manuals and sample codes for Apple Intelligence.",
+      "description": "Apple's official developer documentation and sample projects for Apple Intelligence features. Builders learn to adopt App Intents, construct rich prompt templates, and format application text fields for system-native writing tools.",
+      "url": "https://developer.apple.com/apple-intelligence",
+      "focus_areas": [
+        "apple-intelligence",
+        "docs-guides"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "core-ml-sample-code",
+      "name": "Core ML & Create ML Cookbooks",
+      "type": "sample-code",
+      "short_tagline": "Model conversion recipes and optimization blueprints.",
+      "description": "Getting-started guides, sample code repositories, and conversion recipes for Core ML. Developers learn to map model parameters, optimize neural network layouts, and compile weights for Neural Engine deployment.",
+      "url": "https://developer.apple.com/machine-learning/models",
+      "focus_areas": [
+        "core-ml",
+        "create-ml"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "wwdc-ml-sessions",
+      "name": "WWDC Accelerated ML Sessions",
+      "type": "sessions",
+      "short_tagline": "Video archives covering WWDC developer updates.",
+      "description": "A curated archive of WWDC technical session videos detailing machine learning updates on Apple platforms. Sessions cover Swift model integration strategies, Private Cloud Compute safety layers, and Apple Silicon hardware optimization tricks.",
+      "url": "https://developer.apple.com/videos/machine-learning",
+      "focus_areas": [
+        "apple-intelligence",
+        "core-ml"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "vision-nlp-sound-tutorials",
+      "name": "Vision, Language & Audio Tutorials",
+      "type": "videos",
+      "short_tagline": "Tutorial walkthroughs for domain-specific ML SDKs.",
+      "description": "Official step-by-step guides for integrating Apple's domain-specific ML frameworks. Developers learn to implement real-time object tracking, audio sound classification, and semantic natural language tokenization inside Swift applications.",
+      "url": "https://developer.apple.com/machine-learning",
+      "focus_areas": [
+        "vision"
+      ],
+      "level": "all-levels"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "core-ml-engine",
+      "name": "Core ML Engine",
+      "type": "runtime",
+      "short_tagline": "On-device model compiler and Neural Engine scheduler.",
+      "description": "Core ML provides the runtime engine for executing machine learning models directly on Apple hardware. Developers use it to leverage unified memory pools, schedule tasks across GPU and CPU cores, and accelerate neural network performance.",
+      "url": "https://developer.apple.com/documentation/coreml",
+      "related_platform_ids": [
+        "core-ml-platform"
+      ]
+    },
+    {
+      "id": "create-ml-technology",
+      "name": "Create ML SDK",
+      "type": "sdk",
+      "short_tagline": "Training libraries for custom predictive models.",
+      "description": "Create ML offers Swift-native training APIs for building custom classifiers and regression models. Developers build local data pipelines, train models in the background, and output pre-compiled Core ML assets for app distribution.",
+      "url": "https://developer.apple.com/documentation/createml",
+      "related_platform_ids": [
+        "create-ml-platform"
+      ]
+    },
+    {
+      "id": "vision-nlp-sound-tech",
+      "name": "Vision & Language SDKs",
+      "type": "framework",
+      "short_tagline": "Pre-trained frameworks for vision, text, and audio.",
+      "description": "Vision, Natural Language, and Sound Analysis are pre-trained domain SDKs built into Apple OS layers. Developers call simple Swift APIs to perform facial tracking, identify text languages, and classify environmental sounds without importing external models.",
+      "url": "https://developer.apple.com/documentation/vision",
+      "related_platform_ids": [
+        "core-ml-platform"
+      ]
+    },
+    {
+      "id": "foundation-models-framework-tech",
+      "name": "Foundation Models framework API",
+      "type": "framework",
+      "short_tagline": "Swift APIs for compiling and loading local adapters.",
+      "description": "The Foundation Models framework manages localized language and vision model execution. Developers implement Swift protocols, load dynamic adapter configurations, and run secure private cloud pipelines using a unified programming model.",
+      "url": "https://developer.apple.com/documentation/foundation",
+      "related_platform_ids": [
+        "foundation-models-framework"
+      ]
+    },
+    {
+      "id": "app-intents-shortcuts-tech",
+      "name": "App Intents API",
+      "type": "automation",
+      "short_tagline": "Intent declarations linking code to Siri voice query.",
+      "description": "App Intents provide the developer SDK for linking app functions to Siri's semantic router. Developers declare actions, define input parameters, and link data shortcuts, allowing users to navigate and automate workflows using voice.",
+      "url": "https://developer.apple.com/documentation/appintents",
+      "related_platform_ids": [
+        "app-intents-shortcuts"
+      ]
+    },
+    {
+      "id": "genmoji-playground-apis",
+      "name": "Genmoji & Image Playground APIs",
+      "type": "sdk",
+      "short_tagline": "APIs exposing on-device image generators.",
+      "description": "Genmoji and Image Playground APIs expose Apple's on-device generative image models to custom apps. Developers present system-native generation sheets, receive output image files, and insert custom stylized graphics directly into application views.",
+      "url": "https://developer.apple.com/apple-intelligence",
+      "related_platform_ids": [
+        "apple-intelligence-siri"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "apple-intelligence-newsroom",
+      "name": "Apple Intelligence Newsroom",
+      "type": "newsroom",
+      "short_tagline": "Official news releases detailing Apple Intelligence rollouts.",
+      "description": "Official corporate announcements detailing the architecture, rollout timeline, and hardware compatibility of Apple Intelligence.",
+      "url": "https://www.apple.com/newsroom/2024/06/introducing-apple-intelligence-for-iphone-ipad-and-mac",
+      "highlight": true
+    },
+    {
+      "id": "apple-developer-ml",
+      "name": "Apple Developer ML Portal",
+      "type": "docs",
+      "short_tagline": "SDK downloads and machine learning portal.",
+      "description": "The central landing page listing SDK downloads, documentation links, and sample code for Apple Intelligence.",
+      "url": "https://developer.apple.com/machine-learning",
+      "highlight": true
+    },
+    {
+      "id": "core-ml-documentation",
+      "name": "Core ML Docs Home",
+      "type": "docs",
+      "short_tagline": "Technical specs and converting manuals.",
+      "description": "Technical reference manuals detailing Core ML APIs, model converter tools, and Neural Engine optimization guides.",
+      "url": "https://developer.apple.com/documentation/coreml",
+      "highlight": true
+    },
+    {
+      "id": "create-ml-documentation",
+      "name": "Create ML Guides Home",
+      "type": "docs",
+      "short_tagline": "macOS training apps and tutorial schemas.",
+      "description": "User guides and Swift API references for training domain-specific classifiers and predictors on macOS.",
+      "url": "https://developer.apple.com/documentation/createml",
+      "highlight": false
+    },
+    {
+      "id": "apple-ml-research",
+      "name": "Apple Machine Learning Research",
+      "type": "blog",
+      "short_tagline": "Technical blog posts detailing model achievements.",
+      "description": "Scientific publications and engineering articles explaining Apple's foundation model training methods and device efficiency strategies.",
+      "url": "https://machinelearning.apple.com",
+      "highlight": true
+    }
+  ]
+}
