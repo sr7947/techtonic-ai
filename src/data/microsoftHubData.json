@@ -1,0 +1,336 @@
+{
+  "company": {
+    "id": "microsoft-azure-ai",
+    "name": "Microsoft / Azure AI",
+    "tagline": "Empowering enterprise intelligence with Phi small language models and scalable Azure cloud infrastructure.",
+    "overview": "Microsoft and Azure AI deliver a comprehensive cloud-first developer platform, combining proprietary models, open weights, and extensive enterprise toolsets. From local Phi small language models to orchestration tools like Prompt Flow, the ecosystem enables developers to design, evaluate, and scale secure agentic workflows.",
+    "official_site_url": "https://azure.microsoft.com/products/ai-services",
+    "theme_color": "#00a2ed"
+  },
+  "llms": [
+    {
+      "id": "phi-4",
+      "name": "Phi-4",
+      "family": "Phi-4",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "flagship",
+      "short_tagline": "State-of-the-art reasoning and math-optimized small model.",
+      "description": "Phi-4 represents Microsoft's state-of-the-art small language model optimized for complex mathematical reasoning and logical deduction. Developers deploy Phi-4 to execute multi-step analysis, run high-accuracy code generators, and complete reasoning-heavy tasks on localized computing nodes where resources are highly constrained.",
+      "primary_use_cases": [
+        "Local logical and mathematical reasoning",
+        "High-accuracy code generation",
+        "Resource-constrained computing deployments"
+      ],
+      "docs_url": "https://azure.microsoft.com/products/phi-model"
+    },
+    {
+      "id": "phi-4-mini",
+      "name": "Phi-4-mini",
+      "family": "Phi-4",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "mini",
+      "short_tagline": "Lightweight SLM for low-latency multilingual instruction following.",
+      "description": "Phi-4-mini is a lightweight, edge-optimized small language model engineered for low-latency instruction following and multilingual tasks. Developers integrate it into mobile apps, edge devices, and localized chatbots to achieve rapid textual processing and semantic reasoning without introducing cloud network latency.",
+      "primary_use_cases": [
+        "Low-latency multilingual chatbots",
+        "On-device text classification",
+        "Local instruction-following apps"
+      ],
+      "docs_url": "https://azure.microsoft.com/products/phi-model"
+    },
+    {
+      "id": "phi-4-multimodal",
+      "name": "Phi-4 Multimodal",
+      "family": "Phi-4",
+      "modality": "multimodal",
+      "type": "open-weight",
+      "tier": "multimodal",
+      "short_tagline": "Small multimodal model for vision, speech, and text.",
+      "description": "Phi-4-multimodal extends Microsoft's small model capabilities into vision and audio processing. Developers leverage this multimodal SLM to parse charts, scan OCR documents, interpret speech streams, and analyze multi-frame videos directly on local devices or cost-effective serverless cloud instances.",
+      "primary_use_cases": [
+        "On-device visual document parsing",
+        "Speech-to-text semantic analysis",
+        "Multi-frame video segment tagging"
+      ],
+      "docs_url": "https://azure.microsoft.com/products/phi-model"
+    },
+    {
+      "id": "phi-3-5-and-3",
+      "name": "Phi-3.5 / Phi-3",
+      "family": "Phi-3.5",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "edge-optimized",
+      "short_tagline": "Compact language understanding and coding models.",
+      "description": "The earlier Phi-3.5 and Phi-3 series provide robust language understanding, coding capabilities, and reasoning features in compact model footprints. Developers utilize these stable open-weight models to build private text classification pipelines and lightweight offline conversational agents.",
+      "primary_use_cases": [
+        "Private text categorization",
+        "Offline conversational assistants",
+        "Cost-effective inference workloads"
+      ],
+      "docs_url": "https://azure.microsoft.com/products/phi-model"
+    },
+    {
+      "id": "hosted-frontier-models",
+      "name": "Hosted Frontier Models",
+      "family": "Azure Catalog",
+      "modality": "multimodal",
+      "type": "cloud-hosted",
+      "tier": "flagship",
+      "short_tagline": "hyperscale API access to partner LLMs and models.",
+      "description": "The Azure AI Model Catalog grants managed serverless access to flagship frontier models including OpenAI's GPT, Meta's Llama, and Mistral. Developers consume these hosted APIs securely, leveraging Microsoft's infrastructure to scale high-intelligence multimodal applications under enterprise safety boundaries.",
+      "primary_use_cases": [
+        "Hyperscale multimodal application APIs",
+        "Enterprise-grade OpenAI model hosting",
+        "Partner model testing and comparisons"
+      ],
+      "docs_url": "https://azure.microsoft.com/products/ai-foundry"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "azure-ai-studio",
+      "name": "Azure AI Studio / Foundry",
+      "category": "ai-studio",
+      "short_tagline": "End-to-end generative AI builder and safety platform.",
+      "description": "Azure AI Studio, now Azure AI Foundry, is a unified developer platform for constructing generative AI systems. Developers design RAG systems, orchestrate Prompt Flow graphs, run automatic evaluations, and monitor deployed endpoints using integrated safety guardrails.",
+      "url": "https://ai.azure.com",
+      "ideal_for": [
+        "app devs",
+        "data teams",
+        "enterprise"
+      ],
+      "badges": [
+        "Generative AI",
+        "Enterprise",
+        "RAG"
+      ]
+    },
+    {
+      "id": "azure-openai-service",
+      "name": "Azure OpenAI Service",
+      "category": "cloud-console",
+      "short_tagline": "Enterprise-grade access to OpenAI foundation models.",
+      "description": "Azure OpenAI Service provides secure access to OpenAI's models, including GPT-4o and Realtime. It implements Azure's strict security boundaries, private virtual networking, data privacy rules, and enterprise compliance requirements.",
+      "url": "https://azure.microsoft.com/products/ai-services/openai-service",
+      "ideal_for": [
+        "enterprise",
+        "app devs"
+      ],
+      "badges": [
+        "Enterprise",
+        "Generative AI"
+      ]
+    },
+    {
+      "id": "microsoft-copilot-platform",
+      "name": "Microsoft Copilot Platform",
+      "category": "copilot-platform",
+      "short_tagline": "Ecosystem and SDKs for building custom copilots.",
+      "description": "The Microsoft Copilot Platform allows developers to extend Microsoft 365, Windows, and GitHub with custom agents. Developers configure Copilot Studio, write plugins, and link database systems to deploy intelligent assistants inside corporate applications.",
+      "url": "https://copilotstudio.microsoft.com",
+      "ideal_for": [
+        "enterprise",
+        "prompt-engineers"
+      ],
+      "badges": [
+        "Low-code",
+        "Enterprise"
+      ]
+    },
+    {
+      "id": "azure-ai-search",
+      "name": "Azure AI Search",
+      "category": "search-service",
+      "short_tagline": "Hyperscale vector and hybrid search engine.",
+      "description": "Azure AI Search is a cloud search service optimized for RAG grounding. It provides hybrid retrieval, keyword matching, vector database search, and semantic ranking to return high-relevance search context for large language models.",
+      "url": "https://azure.microsoft.com/products/search",
+      "ideal_for": [
+        "data teams",
+        "app devs"
+      ],
+      "badges": [
+        "RAG",
+        "Enterprise"
+      ]
+    },
+    {
+      "id": "azure-portal-console",
+      "name": "Azure Portal Console",
+      "category": "cloud-console",
+      "short_tagline": "Unified cloud administrative management console.",
+      "description": "The Azure Portal is the primary administrative console for managing Microsoft cloud assets. Developers configure service permissions, set billing budgets, manage API connections, and monitor serverless functions from a unified interface.",
+      "url": "https://portal.azure.com",
+      "ideal_for": [
+        "data teams",
+        "enterprise"
+      ],
+      "badges": [
+        "Enterprise",
+        "Cloud-hosted"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "microsoft-learn-ai",
+      "name": "Microsoft Learn AI paths",
+      "type": "learn-path",
+      "short_tagline": "Structured cloud training paths and certifications.",
+      "description": "Microsoft Learn offers structured courses and official certifications covering Azure AI, OpenAI integrations, and RAG. Students build practical skills through sandboxed portal labs and interactive coding modules.",
+      "url": "https://learn.microsoft.com/training/paths/build-cognitive-search-solutions",
+      "focus_areas": [
+        "generative-ai",
+        "cloud",
+        "prompt-flow"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "phi-cookbooks",
+      "name": "Phi Cookbooks & Guides",
+      "type": "docs-guides",
+      "short_tagline": "GitHub cookbook for deploying and fine-tuning Phi.",
+      "description": "The Phi Cookbooks repository contains script blueprints and tutorials for deploying Phi small language models. Developers copy code to quantize parameters, fine-tune weights on local datasets, and host models on edge devices.",
+      "url": "https://github.com/microsoft/Phi-3CookBook",
+      "focus_areas": [
+        "phi-models",
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "copilot-builders-guide",
+      "name": "Microsoft Copilot Studio guides",
+      "type": "docs-guides",
+      "short_tagline": "Developer tutorials for building custom copilots.",
+      "description": "Documentation and quickstarts covering Microsoft Copilot Studio integration patterns. Learn to write custom API connectors, structure conversational flows, and orchestrate automated system actions.",
+      "url": "https://learn.microsoft.com/copilot/studio",
+      "focus_areas": [
+        "copilot",
+        "generative-ai"
+      ],
+      "level": "beginner"
+    },
+    {
+      "id": "azure-skills-boost-labs",
+      "name": "Azure Hands-on Labs",
+      "type": "hands-on-labs",
+      "short_tagline": "Hands-on laboratories for Azure AI services.",
+      "description": "Microsoft Cloud Skills Boost offers self-paced laboratory tasks inside real Azure environments. Builders follow tutorials to deploy cognitive indexes, configure content filters, and test RAG pipelines in real-time.",
+      "url": "https://microsoftlearning.github.io/mslearn-openai",
+      "focus_areas": [
+        "generative-ai",
+        "cloud",
+        "prompt-flow"
+      ],
+      "level": "intermediate"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "prompt-flow-orchestration",
+      "name": "Prompt Flow",
+      "type": "orchestration",
+      "short_tagline": "Visual orchestration framework for LLM pipelines.",
+      "description": "Prompt Flow is a developer tooling framework inside Azure AI Studio for connecting LLMs, vector search, and Python code blocks. Developers construct executable flow graphs, run parallel evaluation tests, and trace latency metrics.",
+      "url": "https://learn.microsoft.com/azure/ai-studio/how-to/prompt-flow",
+      "related_platform_ids": [
+        "azure-ai-studio"
+      ]
+    },
+    {
+      "id": "semantic-kernel-sdk",
+      "name": "Semantic Kernel SDK",
+      "type": "tooling",
+      "short_tagline": "Agentic orchestrator SDK supporting C# and Python.",
+      "description": "Semantic Kernel is an open-source SDK that simplifies building autonomous agents. Developers use it to define memory, integrate custom plugins, and link external APIs, allowing LLMs to orchestrate complex task executions.",
+      "url": "https://github.com/microsoft/semantic-kernel",
+      "related_platform_ids": [
+        "azure-openai-service",
+        "microsoft-copilot-platform"
+      ]
+    },
+    {
+      "id": "azure-ai-content-filters",
+      "name": "Responsible AI safety tools",
+      "type": "safety",
+      "short_tagline": "Automated safety content filters and moderation.",
+      "description": "Azure AI Content Safety provides real-time text and image moderation filters. Developers insert these safety check layers into request pipelines to automatically detect jailbreak attempts, block toxic queries, and check compliance.",
+      "url": "https://azure.microsoft.com/products/ai-services/ai-content-safety",
+      "related_platform_ids": [
+        "azure-ai-studio",
+        "azure-openai-service"
+      ]
+    },
+    {
+      "id": "azure-vector-search",
+      "name": "Vector Index & hybrid search",
+      "type": "search",
+      "short_tagline": "Vector database capabilities for RAG models.",
+      "description": "Azure AI Search's vector indexing supports high-speed similarity checks, keyword queries, and hybrid ranking. Developers build search indexes that match dense embedding vectors, returning grounded reference context to local LLMs.",
+      "url": "https://learn.microsoft.com/azure/search/vector-search-overview",
+      "related_platform_ids": [
+        "azure-ai-search"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "microsoft-ai-portal",
+      "name": "Microsoft AI Home",
+      "type": "newsroom",
+      "short_tagline": "Main site detailing Microsoft's AI goals and news.",
+      "description": "The central landing page presenting Microsoft's machine learning research, partner releases, and corporate AI news.",
+      "url": "https://www.microsoft.com/ai",
+      "highlight": true
+    },
+    {
+      "id": "azure-ai-studio-docs",
+      "name": "Azure AI Studio Docs",
+      "type": "docs",
+      "short_tagline": "Developer reference documentation for Azure AI.",
+      "description": "The official documentation portal containing model cards, Prompt Flow guides, and deployment tutorials.",
+      "url": "https://learn.microsoft.com/azure/ai-studio",
+      "highlight": true
+    },
+    {
+      "id": "phi-model-page",
+      "name": "Phi Open Models Portal",
+      "type": "docs",
+      "short_tagline": "Microsoft's Phi model cards and details.",
+      "description": "The landing page displaying Phi small language model specifications, training benchmarks, and HuggingFace download links.",
+      "url": "https://azure.microsoft.com/products/phi-model",
+      "highlight": false
+    },
+    {
+      "id": "azure-openai-docs",
+      "name": "Azure OpenAI Service Docs",
+      "type": "docs",
+      "short_tagline": "Azure OpenAI integration reference guides.",
+      "description": "Documentation covering endpoints, security rules, network configs, and code quickstarts for Azure OpenAI.",
+      "url": "https://learn.microsoft.com/azure/ai-services/openai",
+      "highlight": false
+    },
+    {
+      "id": "microsoft-ai-blog",
+      "name": "Microsoft AI Blog",
+      "type": "blog",
+      "short_tagline": "Announcements and research updates from Microsoft.",
+      "description": "Technical articles covering new model features, engineering breakthroughs, and client integrations from Microsoft researchers.",
+      "url": "https://blogs.microsoft.com/ai",
+      "highlight": true
+    },
+    {
+      "id": "microsoft-github-ai",
+      "name": "Microsoft GitHub organization",
+      "type": "github-org",
+      "short_tagline": "Open-source SDKs and sample code databases.",
+      "description": "The official GitHub organization containing Semantic Kernel repositories, Phi cookbooks, sample templates, and SDK libraries.",
+      "url": "https://github.com/microsoft",
+      "highlight": true
+    }
+  ]
+}
