@@ -1,0 +1,285 @@
+{
+  "company": {
+    "id": "mistral-ai",
+    "name": "Mistral AI",
+    "tagline": "Pioneering open-weights generative AI with high-density, compute-efficient foundation models.",
+    "overview": "Mistral AI delivers open, customizable, and exceptionally efficient large language models for enterprise deployments. Headquartered in Europe, they specialize in mixture-of-experts architectures that dramatically reduce inference latency and computational overhead, offering developers total hosting flexibility.",
+    "official_site_url": "https://mistral.ai",
+    "theme_color": "#f97316"
+  },
+  "llms": [
+    {
+      "id": "mistral-large-family",
+      "name": "Mistral Large Family",
+      "family": "Mistral Large 3",
+      "modality": "multimodal",
+      "type": "open-weight",
+      "tier": "flagship",
+      "short_tagline": "Flagship open-weight multimodal and multilingual model.",
+      "description": "Mistral Large represents the flagship open-weight multimodal model family engineered for complex multilingual reasoning, mathematical deduction, and high-fidelity code generation. Developers deploy Large to execute agentic workflows, analyze multi-language document vaults, and serve general intelligence APIs.",
+      "primary_use_cases": [
+        "Complex multilingual reasoning",
+        "High-fidelity codebase generation",
+        "Multi-step agentic workflows"
+      ],
+      "docs_url": "https://docs.mistral.ai/getting-started/models/models_overview/#mistral-large"
+    },
+    {
+      "id": "mistral-medium-family",
+      "name": "Mistral Medium Family",
+      "family": "Mistral Medium 3.5",
+      "modality": "text",
+      "type": "hosted",
+      "tier": "balanced",
+      "short_tagline": "State-of-the-art reasoning, coding, and chat model.",
+      "description": "Mistral Medium provides a balanced, state-of-the-art reasoning model optimized for general conversation, text summarization, and software coding. Developers utilize Medium to build high-throughput chatbot interfaces and middle-tier task orchestrators that require advanced semantic understanding.",
+      "primary_use_cases": [
+        "General-purpose conversation and chat",
+        "Middle-tier task orchestration",
+        "Code completion and explanation"
+      ],
+      "docs_url": "https://docs.mistral.ai/getting-started/models/models_overview/#mistral-medium"
+    },
+    {
+      "id": "mistral-small-family",
+      "name": "Mistral Small Family",
+      "family": "Mistral Small 4",
+      "modality": "multimodal",
+      "type": "open-weight",
+      "tier": "cost-optimized",
+      "short_tagline": "Lightweight multilingual model for fast text processing.",
+      "description": "Mistral Small is a highly efficient, compact model family designed for high-volume text classification and low-latency multilingual processing. Developers deploy Small on localized servers to execute fast semantic search queries, extract structured entities, and run real-time translation pipelines.",
+      "primary_use_cases": [
+        "High-volume text classification",
+        "Entity extraction and tagging",
+        "Real-time translation pipelines"
+      ],
+      "docs_url": "https://docs.mistral.ai/getting-started/models/models_overview/#mistral-small"
+    },
+    {
+      "id": "ministral-edge-models",
+      "name": "Ministral Edge Family",
+      "family": "Ministral 3",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "edge-oriented",
+      "short_tagline": "Edge-optimized models for on-device and offline usage.",
+      "description": "Ministral represents the edge-optimized small language model series engineered for on-device execution and offline operations. Developers package these models into desktop applications, edge gateways, and mobile devices to run private, secure text processing without internet connectivity.",
+      "primary_use_cases": [
+        "On-device mobile text processing",
+        "Offline desktop application integration",
+        "Private local network deployments"
+      ],
+      "docs_url": "https://docs.mistral.ai/getting-started/models/models_overview/#ministral"
+    },
+    {
+      "id": "codestral-coding-models",
+      "name": "Codestral / Devstral",
+      "family": "Codestral",
+      "modality": "text",
+      "type": "coding",
+      "tier": "balanced",
+      "short_tagline": "Software engineering models optimized for code completion.",
+      "description": "Codestral and Devstral are domain-specific model families custom-built for software development, code completion, and test suite generation. Developers integrate these models into IDE extensions, CI/CD automated test pipelines, and AI software agent builders to accelerate development workflows.",
+      "primary_use_cases": [
+        "Real-time IDE code completion",
+        "Automated software agent builds",
+        "CI/CD test suite generation"
+      ],
+      "docs_url": "https://docs.mistral.ai/getting-started/models/models_overview/#codestral"
+    },
+    {
+      "id": "pixtral-vision-models",
+      "name": "Pixtral Vision",
+      "family": "Pixtral",
+      "modality": "vision-language",
+      "type": "vision",
+      "tier": "balanced",
+      "short_tagline": "Vision-language models for graphics and schematics.",
+      "description": "Pixtral is the multimodal vision-language model family built to analyze complex graphics, schematics, and photographic inputs. Developers deploy Pixtral endpoints to construct document parsing pipelines, automate OCR text extraction, and analyze multi-frame visual diagrams.",
+      "primary_use_cases": [
+        "Complex document parsing pipelines",
+        "Automated OCR text extraction",
+        "Visual-spatial diagram analysis"
+      ],
+      "docs_url": "https://docs.mistral.ai/getting-started/models/models_overview/#pixtral"
+    },
+    {
+      "id": "voxtral-audio-models",
+      "name": "Voxtral Speech",
+      "family": "Voxtral",
+      "modality": "audio",
+      "type": "speech",
+      "tier": "balanced",
+      "short_tagline": "ASR and speech generation audio models.",
+      "description": "Voxtral is the native audio-speech model family designed for low-latency automatic speech recognition and voice generation. Developers leverage Voxtral to construct real-time conversational voice assistants, transcription systems, and expressive vocal synthesis engines on GPU servers.",
+      "primary_use_cases": [
+        "Conversational voice assistant SDKs",
+        "Low-latency speech transcription",
+        "Expressive voice synthesis engines"
+      ],
+      "docs_url": "https://docs.mistral.ai/getting-started/models/models_overview"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "la-plateforme",
+      "name": "La Plateforme",
+      "category": "mistral-console",
+      "short_tagline": "Official console for managing API keys and usage.",
+      "description": "La Plateforme is Mistral AI's official cloud developer console providing managed API access to their foundation models. Developers generate secure API keys, monitor real-time usage metrics, configure billing boundaries, and test endpoints via an interactive playground.",
+      "url": "https://console.mistral.ai",
+      "ideal_for": [
+        "app devs",
+        "MLOps"
+      ],
+      "badges": [
+        "Managed",
+        "Serverless"
+      ]
+    },
+    {
+      "id": "mistral-cloud-partners",
+      "name": "Cloud Partners (Bedrock / Azure)",
+      "category": "cloud-partners",
+      "short_tagline": "Managed partner hosting on AWS, Azure, and Google Cloud.",
+      "description": "Mistral models are available as managed serverless endpoints through AWS Bedrock, Microsoft Azure AI, and Google Cloud Vertex AI. Developers leverage these partner integrations to deploy Mistral models directly inside existing corporate cloud environments.",
+      "url": "https://mistral.ai/news/mistral-ai-on-amazon-bedrock",
+      "ideal_for": [
+        "enterprise IT",
+        "infra teams"
+      ],
+      "badges": [
+        "Serverless",
+        "Hybrid"
+      ]
+    },
+    {
+      "id": "mistral-for-enterprise",
+      "name": "Mistral for Business",
+      "category": "managed-solutions",
+      "short_tagline": "Offline hosting and Vnets for enterprise compliance.",
+      "description": "Mistral Enterprise offers tailored offline hosting and dedicated server clusters for business-critical applications. Enterprises customize weights, deploy secure virtual private clouds, and establish strict data isolation boundaries to meet complex regulatory compliance standards.",
+      "url": "https://mistral.ai/enterprise",
+      "ideal_for": [
+        "enterprise IT"
+      ],
+      "badges": [
+        "On-prem",
+        "Enterprise"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "mistral-documentation-guides",
+      "name": "Mistral Developer Docs",
+      "type": "docs-guides",
+      "short_tagline": "Model cards, guides, and integration tutorials.",
+      "description": "Official step-by-step guides detailing Mistral model integrations, pricing tables, and API parameter configurations. Developers access tutorial quickstarts, copy curl recipes, and learn to format request payloads for all foundation models.",
+      "url": "https://docs.mistral.ai",
+      "focus_areas": [
+        "generative-ai",
+        "docs-guides"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "mistral-sdk-cookbooks",
+      "name": "Mistral Python & JS Cookbooks",
+      "type": "sample-code",
+      "short_tagline": "Sample codes and notebooks for SDK integration.",
+      "description": "A collection of developer cookbooks and sample repositories demonstrating Python and JavaScript SDK usage. Learn to configure streaming responses, write dynamic agent prompt matrices, and deploy model evaluation scripts.",
+      "url": "https://github.com/mistralai/cookbook",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "mistral-technical-blog-posts",
+      "name": "Mistral Engineering Blog",
+      "type": "blog",
+      "short_tagline": "Technical research papers and model specifications.",
+      "description": "Announcements, engineering deep-dives, and benchmark breakdowns from Mistral's research team. Developers read these posts to stay informed on model architectures, mixture-of-experts training gains, and optimization best practices.",
+      "url": "https://mistral.ai/news",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "advanced"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "mistral-core-apis",
+      "name": "Mistral Core APIs",
+      "type": "api",
+      "short_tagline": "JSON endpoints for chat, embeddings, and tools.",
+      "description": "Mistral's core APIs expose high-speed text completion, semantic vector embeddings, and real-time output streaming. Developers integrate these endpoints to build Retrieval-Augmented Generation (RAG) systems, construct search indexes, and serve conversational user interfaces.",
+      "url": "https://docs.mistral.ai/api",
+      "related_platform_ids": [
+        "la-plateforme"
+      ]
+    },
+    {
+      "id": "pixtral-vision-integration",
+      "name": "Pixtral Vision Engine",
+      "type": "vision",
+      "short_tagline": "Graphic analysis and visual prompt parsing modules.",
+      "description": "Pixtral's vision technology enables high-relevance graphic processing, image classification, and multimodal prompt routing. Developers integrate these vision modules to build systems that interpret physical charts, read architectural blue maps, and classify photos.",
+      "url": "https://docs.mistral.ai/getting-started/models/pixtral",
+      "related_platform_ids": [
+        "la-plateforme"
+      ]
+    },
+    {
+      "id": "mistral-moderation-service",
+      "name": "Mistral Moderation API",
+      "type": "safety",
+      "short_tagline": "Automated text classifier check moderation layers.",
+      "description": "The Mistral Moderation API provides automated classification and filtering checks to screen request and response streams. Developers use these moderation layers to block toxic queries, detect jailbreak attempts, and ensure corporate safety compliance.",
+      "url": "https://docs.mistral.ai/platform/guardrails",
+      "related_platform_ids": [
+        "la-plateforme"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "mistral-docs-home",
+      "name": "Mistral Documentation Portal",
+      "type": "docs",
+      "short_tagline": "Primary developer guides and API manuals.",
+      "description": "The primary developer portal containing API references, integration manuals, and model parameter specifications.",
+      "url": "https://docs.mistral.ai",
+      "highlight": true
+    },
+    {
+      "id": "mistral-models-directory",
+      "name": "Mistral Models Directory",
+      "type": "docs",
+      "short_tagline": "Model weights directory index and downloads.",
+      "description": "A comprehensive directory listing model weights, download links, and HuggingFace repositories.",
+      "url": "https://mistral.ai/technology",
+      "highlight": false
+    },
+    {
+      "id": "mistral-newsroom",
+      "name": "Mistral News & Press",
+      "type": "blog",
+      "short_tagline": "Press announcements and partner news releases.",
+      "description": "Official news bulletins announcing model releases, corporate partnerships, and research achievements.",
+      "url": "https://mistral.ai/news",
+      "highlight": true
+    },
+    {
+      "id": "mistral-github-org",
+      "name": "Mistral GitHub organization",
+      "type": "github-org",
+      "short_tagline": "Official client SDKs and script codebases.",
+      "description": "Access official client SDKs, prompt cookbooks, fine-tuning scripts, and code templates on GitHub.",
+      "url": "https://github.com/mistralai",
+      "highlight": true
+    }
+  ]
+}
