@@ -9,6 +9,7 @@ import awsHubData from '../data/awsHubData.json';
 import appleHubData from '../data/appleHubData.json';
 import xaiHubData from '../data/xaiHubData.json';
 import mistralHubData from '../data/mistralHubData.json';
+import ibmHubData from '../data/ibmHubData.json';
 import { 
   Building, 
   ExternalLink, 
@@ -49,7 +50,9 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
                   ? xaiHubData
                   : companyId === 'mistral-ai'
                     ? mistralHubData
-                    : googleHubData;
+                    : companyId === 'ibm-watsonx'
+                      ? ibmHubData
+                      : googleHubData;
   const { company, llms, platforms, learning, technologies, docsAndNews } = hubData;
   const hardware = (hubData as any).hardware || null;
 

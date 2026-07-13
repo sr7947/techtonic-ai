@@ -1,0 +1,250 @@
+{
+  "company": {
+    "id": "ibm-watsonx",
+    "name": "IBM / watsonx",
+    "tagline": "Scale trustworthy, enterprise-grade AI with targeted Granite models and full-lifecycle governance.",
+    "overview": "IBM watsonx provides a comprehensive enterprise AI and data platform designed for secure, transparent model operations. Complemented by the open-weight Granite model family, the watsonx suite enables developers and data teams to clean datasets, train targeted models, and automate regulatory policy compliance across hybrid-cloud environments.",
+    "official_site_url": "https://www.ibm.com/watsonx",
+    "theme_color": "#0f62fe"
+  },
+  "llms": [
+    {
+      "id": "ibm-granite-text",
+      "name": "IBM Granite Text",
+      "family": "Granite",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "balanced",
+      "short_tagline": "Open-weight enterprise models for text generation and RAG.",
+      "description": "IBM Granite text models are open-weights foundation architectures optimized for enterprise tasks including summarization, retrieval-augmented generation, and classification. Developers deploy Granite models to build low-latency chatbots, extract structured data from business documents, and run targeted language tasks on cost-effective enterprise server nodes.",
+      "primary_use_cases": [
+        "Enterprise conversational chat and RAG",
+        "Document data extraction and parsing",
+        "Cost-effective text classification"
+      ],
+      "docs_url": "https://www.ibm.com/docs/en/watsonx/watsonx-ai?topic=models-granite-text-model-cards"
+    },
+    {
+      "id": "ibm-granite-code",
+      "name": "IBM Granite Code",
+      "family": "Granite",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "domain-specific",
+      "short_tagline": "Software engineering models for code completion and translation.",
+      "description": "IBM Granite code models are specialized architectures trained on multiple programming languages to support software development and application modernization. Developers integrate Granite code to automate code completion, generate unit tests, explain legacy systems, and translate outdated codebases into modern syntax.",
+      "primary_use_cases": [
+        "Real-time code completion in IDEs",
+        "Legacy codebase syntax translation",
+        "Automated unit test suite generation"
+      ],
+      "docs_url": "https://www.ibm.com/docs/en/watsonx/watsonx-ai?topic=models-granite-code-model-cards"
+    },
+    {
+      "id": "hosted-partner-models-watsonx",
+      "name": "Hosted Partner Models",
+      "family": "Partner models",
+      "modality": "multimodal",
+      "type": "enterprise-cloud",
+      "tier": "flagship",
+      "short_tagline": "Managed partner models hosted on secure IBM Cloud.",
+      "description": "watsonx.ai grants managed API access to leading open foundation models including Meta's Llama and Mistral AI. Developers consume these hosted partner models securely, leveraging IBM's cloud infrastructure to run high-intelligence workflows under strict enterprise security boundaries and private data agreements.",
+      "primary_use_cases": [
+        "High-intelligence multimodal workflows",
+        "Enterprise-grade partner model APIs",
+        "Secure cloud model benchmarking"
+      ],
+      "docs_url": "https://www.ibm.com/docs/en/watsonx/watsonx-ai?topic=studio-supported-foundation-models"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "watsonx-ai-studio",
+      "name": "watsonx.ai",
+      "category": "fm-platform",
+      "short_tagline": "Enterprise foundation model studio and API manager.",
+      "description": "watsonx.ai is a unified developer studio and API platform for building, evaluating, and deploying generative AI models. Developers orchestrate multi-model prompt experiments, fine-tune model weights on private datasets, and host scalable serverless API endpoints using integrated enterprise-grade safety guardrails.",
+      "url": "https://www.ibm.com/products/watsonx-ai",
+      "ideal_for": [
+        "app devs",
+        "data teams"
+      ],
+      "badges": [
+        "Managed",
+        "Enterprise",
+        "RAG"
+      ]
+    },
+    {
+      "id": "watsonx-data-lakehouse",
+      "name": "watsonx.data",
+      "category": "ml-workbench",
+      "short_tagline": "Enterprise lakehouse repository for scaling AI datasets.",
+      "description": "watsonx.data is a high-performance query engine and lakehouse repository designed for scaling AI workloads. Developers connect diverse data sources, execute fast SQL queries over Apache Iceberg catalogs, and clean data pools to train and ground large language models.",
+      "url": "https://www.ibm.com/products/watsonx-data",
+      "ideal_for": [
+        "data teams",
+        "MLOps"
+      ],
+      "badges": [
+        "Enterprise",
+        "Hybrid"
+      ]
+    },
+    {
+      "id": "watsonx-governance-risk",
+      "name": "watsonx.governance",
+      "category": "ml-workbench",
+      "short_tagline": "Automated risk management and compliance tracker.",
+      "description": "watsonx.governance provides the administrative toolkit for monitoring models, managing risks, and auditing compliance policies. MLOps teams automate model validation checks, trace lineage metrics, configure approval workflows, and generate compliance reports to meet complex regulatory audit requirements.",
+      "url": "https://www.ibm.com/products/watsonx-governance",
+      "ideal_for": [
+        "enterprise IT",
+        "MLOps"
+      ],
+      "badges": [
+        "Enterprise",
+        "Managed"
+      ]
+    },
+    {
+      "id": "ibm-cloud-ai-services",
+      "name": "IBM Cloud AI Services",
+      "category": "dev-portal",
+      "short_tagline": "Pre-trained cognitive APIs for speech and translation.",
+      "description": "IBM Cloud AI services provide a collection of pre-trained API modules for speech-to-text conversion, language translation, and visual recognition. Developers integrate these ready-to-run microservices to add multi-modal capabilities to enterprise web applications without training custom models from scratch.",
+      "url": "https://www.ibm.com/cloud/ai",
+      "ideal_for": [
+        "app devs"
+      ],
+      "badges": [
+        "Serverless",
+        "Managed"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "ibm-watsonx-tutorials",
+      "name": "IBM watsonx tutorials",
+      "type": "docs-guides",
+      "short_tagline": "Hands-on tutorials for watsonx APIs and pipelines.",
+      "description": "IBM offers structured, step-by-step developer tutorials and coding guides for the watsonx platform. Builders learn to connect data lakehouses, configure model validation guardrails, convert legacy codebases, and deploy serverless endpoints through hands-on laboratory exercises.",
+      "url": "https://developer.ibm.com/patterns/series/watsonx-ai-quick-start",
+      "focus_areas": [
+        "generative-ai",
+        "sageMaker"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "watsonx-model-selection-guides",
+      "name": "Model Selection Guides",
+      "type": "docs-guides",
+      "short_tagline": "Granite parameters and compute benchmarking sheets.",
+      "description": "Comprehensive model documentation and selection guides explaining how to choose optimal foundation models. Developers review comparative parameter sizes, training data lineage logs, licensing terms, and compute benchmarks to select target models for specific tasks.",
+      "url": "https://www.ibm.com/docs/en/watsonx/watsonx-ai?topic=studio-choosing-foundation-model",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "ibm-watsonx-academy",
+      "name": "IBM watsonx Academy Courses",
+      "type": "workshops",
+      "short_tagline": "Professional courses covering AI and data orchestration.",
+      "description": "Official certification courses and technical webinars covering watsonx.ai, watsonx.data, and model governance practices. Developers follow structured learning plans to master enterprise AI orchestration, data preparation pipelines, and compliance audit workflows.",
+      "url": "https://www.ibm.com/training/search?query=watsonx",
+      "focus_areas": [
+        "generative-ai",
+        "agents"
+      ],
+      "level": "intermediate"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "watsonx-developer-apis",
+      "name": "watsonx.ai Developer APIs",
+      "type": "api",
+      "short_tagline": "Endpoints for text completion, code, and embeddings.",
+      "description": "watsonx.ai developer APIs expose secure endpoints for text generation, code execution, and vector embedding creations. Builders integrate these APIs into enterprise software to run Retrieval-Augmented Generation (RAG) systems, parse documents, and serve conversational agents.",
+      "url": "https://www.ibm.com/docs/en/watsonx/watsonx-ai?topic=apis-watsonxai-rest-api",
+      "related_platform_ids": [
+        "watsonx-ai-studio"
+      ]
+    },
+    {
+      "id": "watsonx-data-connectors",
+      "name": "watsonx.data Connectors",
+      "type": "tooling",
+      "short_tagline": "Iceberg data engine queries and lakehouse links.",
+      "description": "watsonx.data integration connectors allow developers to query and clean unstructured data across hybrid-cloud systems. By linking database schemas and Iceberg storage formats, builders feed high-relevance grounding context to enterprise large language models.",
+      "url": "https://www.ibm.com/docs/en/watsonx/watsonx-data?topic=data-integrating-watsonxdata-external-services",
+      "related_platform_ids": [
+        "watsonx-data-lakehouse"
+      ]
+    },
+    {
+      "id": "watsonx-governance-tooling",
+      "name": "watsonx.governance Compliance Tooling",
+      "type": "safety",
+      "short_tagline": "Drift alert triggers and regulatory audit registries.",
+      "description": "watsonx.governance tools enable real-time tracking of model latency, accuracy drift, and bias metrics. Developers configure automated alerts, design model registry approvals, and build detailed audit trails to ensure compliance with global AI regulations.",
+      "url": "https://www.ibm.com/docs/en/watsonx/watsonx-governance?topic=governance-monitoring-deployments",
+      "related_platform_ids": [
+        "watsonx-governance-risk"
+      ]
+    },
+    {
+      "id": "ibm-watsonx-client-sdks",
+      "name": "IBM watsonx Client SDKs",
+      "type": "tooling",
+      "short_tagline": "Python and Node libraries with auto-retry routines.",
+      "description": "Official client SDK libraries for integrating watsonx endpoints into Python and Node.js enterprise applications. These libraries simplify connection handling, automate request retry policies, and parse stream outputs, reducing developer integration times.",
+      "url": "https://github.com/IBM/watson-machine-learning-sdk",
+      "related_platform_ids": [
+        "watsonx-ai-studio"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "watsonx-ai-documentation",
+      "name": "watsonx.ai Documentation",
+      "type": "docs",
+      "short_tagline": "Model cards, prompt manuals, and API parameters.",
+      "description": "The primary developer manuals containing API references, prompt guides, and model deployment tutorials.",
+      "url": "https://www.ibm.com/docs/en/watsonx/watsonx-ai",
+      "highlight": true
+    },
+    {
+      "id": "ibm-watsonx-blogs",
+      "name": "IBM watsonx Technical Blog",
+      "type": "blog",
+      "short_tagline": "Granite specs, engineering deep-dives, and announcements.",
+      "description": "Technical engineering blog posts and research papers detailing Granite architectures, AI developments, and client use cases.",
+      "url": "https://www.ibm.com/blog/watsonx",
+      "highlight": true
+    },
+    {
+      "id": "ibm-github-watsonx",
+      "name": "IBM watsonx GitHub organization",
+      "type": "github-org",
+      "short_tagline": "Client libraries, python templates, and starter codes.",
+      "description": "Access official starter repositories, client SDK codes, and watsonx orchestration templates on GitHub.",
+      "url": "https://github.com/IBM",
+      "highlight": true
+    },
+    {
+      "id": "ibm-ai-licensing-policy",
+      "name": "IBM Granite Licensing & Policy Docs",
+      "type": "docs",
+      "short_tagline": "Indemnity coverage sheets and trustworthy AI protocols.",
+      "description": "Official documentation explaining Granite open-weights IP protection, model indemnity terms, and ethical AI development policies.",
+      "url": "https://www.ibm.com/downloads/cas/MJA8K9KD",
+      "highlight": false
+    }
+  ]
+}
