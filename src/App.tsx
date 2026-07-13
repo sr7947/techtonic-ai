@@ -21,6 +21,7 @@ import { SkillsPage } from './pages/SkillsPage';
 import { FrameworksPage } from './pages/FrameworksPage';
 import { InfrastructurePage } from './pages/InfrastructurePage';
 import { CompanyHubPage } from './pages/CompanyHubPage';
+import { LearningPage } from './pages/LearningPage';
 
 interface UserProfile {
   name: string;
@@ -247,6 +248,7 @@ function App() {
         {currentPath === '/leaders/ibm-watsonx' && <CompanyHubPage companyId="ibm-watsonx" navigate={navigate} />}
         {currentPath === '/leaders/cohere' && <CompanyHubPage companyId="cohere" navigate={navigate} />}
         {currentPath === '/leaders/huggingface' && <CompanyHubPage companyId="huggingface" navigate={navigate} />}
+        {currentPath === '/learning' && <LearningPage />}
       </main>
 
       {/* Platform Footer */}

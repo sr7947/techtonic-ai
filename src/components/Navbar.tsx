@@ -210,6 +210,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Trending
               </button>
 
+              <button
+                onClick={() => navigate('/learning')}
+                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                  currentPath === '/learning' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
+                }`}
+              >
+                AI Learning
+              </button>
+
               {/* Technologies Dropdown */}
               <div className="relative group">
                 <button className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-brand-gold transition-all py-1 focus:outline-none cursor-pointer">
@@ -379,6 +388,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
             >
               Trending
+            </button>
+
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/learning');
+              }}
+              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
+            >
+              AI Learning
             </button>
 
             {/* Technologies Accordion */}
