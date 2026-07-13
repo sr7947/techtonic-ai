@@ -1,0 +1,435 @@
+{
+  "company": {
+    "id": "aws-ai",
+    "name": "AWS / Generative AI",
+    "tagline": "Scale generative and agentic AI systems on fully managed AWS cloud platforms and custom silicon.",
+    "overview": "Amazon Web Services (AWS) delivers a robust cloud-native ecosystem for deploying foundation models at enterprise scale. Through serverless platforms like Amazon Bedrock and customized silicon chips like Trainium and Inferentia, AWS offers developers absolute model choice, granular safety guardrails, and flexible machine learning workbenches.",
+    "official_site_url": "https://aws.amazon.com/bedrock",
+    "theme_color": "#ff9900"
+  },
+  "llms": [
+    {
+      "id": "amazon-titan-models",
+      "name": "Amazon Titan Models",
+      "family": "Amazon Titan",
+      "modality": "multimodal",
+      "type": "first-party",
+      "tier": "balanced",
+      "short_tagline": "AWS first-party models for text generation, embeddings, and images.",
+      "description": "Amazon Titan is AWS's first-party foundation model family optimized for text processing, semantic embedding generation, and high-resolution image creation. Developers utilize Titan models to build secure internal search capabilities, generate custom vectors for RAG pipelines, and produce studio-quality product graphics under strict safety policies.",
+      "primary_use_cases": [
+        "First-party secure text generation",
+        "Semantic vector embedding pipelines",
+        "High-resolution studio image creation"
+      ],
+      "docs_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/titan-models.html"
+    },
+    {
+      "id": "claude-on-bedrock",
+      "name": "Claude on Bedrock",
+      "family": "Anthropic Claude",
+      "modality": "multimodal",
+      "type": "partner",
+      "tier": "flagship",
+      "short_tagline": "Reasoning-heavy models for autonomous agents and coding.",
+      "description": "Anthropic's Claude models on Bedrock provide advanced reasoning, massive context windows, and robust coding assistance. Developers deploy Claude to power autonomous multi-step agents, conduct detailed document analysis, and execute tool integrations via the Model Context Protocol standard.",
+      "primary_use_cases": [
+        "Autonomous multi-step agent actions",
+        "Large-context document analysis",
+        "High-accuracy code assistance"
+      ],
+      "docs_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-claude.html"
+    },
+    {
+      "id": "meta-llama-on-bedrock",
+      "name": "Meta Llama on Bedrock",
+      "family": "Meta Llama",
+      "modality": "multimodal",
+      "type": "open-weight",
+      "tier": "cost-optimized",
+      "short_tagline": "Managed open-weight models for text and chat tasks.",
+      "description": "Meta's Llama models on Bedrock offer high-performance open-weight capabilities managed directly by AWS. Developers deploy Llama to run localized text generation, construct conversational systems, and perform lightweight task orchestration without managing underlying server nodes.",
+      "primary_use_cases": [
+        "Cost-effective text generation",
+        "Conversational system building",
+        "Lightweight task orchestration"
+      ],
+      "docs_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-meta.html"
+    },
+    {
+      "id": "openai-frontier-on-bedrock",
+      "name": "OpenAI Frontier Models",
+      "family": "OpenAI Frontier",
+      "modality": "multimodal",
+      "type": "reasoning",
+      "tier": "flagship",
+      "short_tagline": "Exposed API endpoints for high-end reasoning workloads.",
+      "description": "OpenAI's frontier models are exposed through the Bedrock Responses API to support high-end reasoning and complex code generation. Developers leverage these hosted endpoints to drive advanced agentic workflows and construct conversational layers under AWS enterprise compliance standards.",
+      "primary_use_cases": [
+        "High-intelligence reasoning workflows",
+        "Complex code generation systems",
+        "Enterprise-compliant conversational APIs"
+      ],
+      "docs_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html"
+    },
+    {
+      "id": "partner-fm-bundles",
+      "name": "Partner FM Bundles",
+      "family": "Mistral & Stability",
+      "modality": "multimodal",
+      "type": "partner",
+      "tier": "balanced",
+      "short_tagline": "Integrated FMs from Mistral, Stability, and Cohere.",
+      "description": "Bedrock packages diverse partner foundation models from Mistral AI, Stability AI, and Cohere. Developers utilize these pre-integrated model families to select optimal cost-performance runtimes for text summarization, multilingual translation, and vector search operations.",
+      "primary_use_cases": [
+        "Multilingual translation pipelines",
+        "Cost-optimized text summarization",
+        "Localized image and design rendering"
+      ],
+      "docs_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "amazon-bedrock-platform",
+      "name": "Amazon Bedrock",
+      "category": "fm-platform",
+      "short_tagline": "Serverless foundation model API and orchestration portal.",
+      "description": "Amazon Bedrock is a fully managed, serverless platform for building generative AI applications. It gives developers secure access to leading foundation models alongside integrated orchestration tools, enterprise-grade guardrails, and automated Knowledge Bases for rapid RAG deployment.",
+      "url": "https://aws.amazon.com/bedrock",
+      "ideal_for": [
+        "app devs",
+        "enterprise IT"
+      ],
+      "badges": [
+        "Serverless",
+        "RAG",
+        "Agents"
+      ]
+    },
+    {
+      "id": "amazon-bedrock-agentcore",
+      "name": "Bedrock AgentCore",
+      "category": "fm-platform",
+      "short_tagline": "Agent creation, tracing, and secure orchestration platform.",
+      "description": "AgentCore is AWS's dedicated platform for constructing, connecting, and optimizing autonomous AI agents. Developers use it to choreograph multi-step execution flows, trace system operations in real-time, and manage secure connections to external company databases.",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html",
+      "ideal_for": [
+        "app devs",
+        "MLOps"
+      ],
+      "badges": [
+        "Agents",
+        "Managed"
+      ]
+    },
+    {
+      "id": "amazon-sagemaker-ai",
+      "name": "Amazon SageMaker AI",
+      "category": "ml-workbench",
+      "short_tagline": "Managed ML platform for custom model operations.",
+      "description": "Amazon SageMaker AI is a comprehensive machine learning workbench for training, tuning, and hosting custom models. It provides developers with collaborative notebooks, automated pipelines, and SageMaker JumpStart for deploying open foundation models.",
+      "url": "https://aws.amazon.com/sagemaker",
+      "ideal_for": [
+        "data teams",
+        "MLOps"
+      ],
+      "badges": [
+        "Managed",
+        "Hybrid"
+      ]
+    },
+    {
+      "id": "amazon-q-business",
+      "name": "Amazon Q Business",
+      "category": "copilot-suite",
+      "short_tagline": "Enterprise assistant for secure document search and chat.",
+      "description": "Amazon Q Business is a generative AI-powered assistant designed to answer questions and analyze data across enterprise repositories. Developers configure connectors to link Q Business to corporate storage systems, providing secure, permission-aware answers.",
+      "url": "https://aws.amazon.com/q/business",
+      "ideal_for": [
+        "enterprise IT"
+      ],
+      "badges": [
+        "RAG",
+        "Enterprise"
+      ]
+    },
+    {
+      "id": "amazon-q-developer",
+      "name": "Amazon Q Developer",
+      "category": "copilot-suite",
+      "short_tagline": "IDE code helper and AWS environment copilot.",
+      "description": "Amazon Q Developer is an intelligent software assistant integrated into IDEs, command-line interfaces, and the AWS console. It generates clean code snippets, explains complex algorithms, debugs runtime exceptions, and optimizes cloud resource architectures.",
+      "url": "https://aws.amazon.com/q/developer",
+      "ideal_for": [
+        "app devs"
+      ],
+      "badges": [
+        "Serverless",
+        "Agents"
+      ]
+    },
+    {
+      "id": "aws-genai-developer-center",
+      "name": "AWS Generative AI Dev Center",
+      "category": "dev-portal",
+      "short_tagline": "Developer hub for blueprints and tutorial guides.",
+      "description": "The AWS Generative AI Developer Center is the centralized hub for SDKs, tutorial guides, and reference architectures. Developers access code blueprints, check API specifications, and copy starter templates to accelerate deployment cycles.",
+      "url": "https://aws.amazon.com/developer/community/generative-ai",
+      "ideal_for": [
+        "app devs"
+      ],
+      "badges": [
+        "Serverless",
+        "Ecosystem"
+      ]
+    }
+  ],
+  "hardware": [
+    {
+      "id": "aws-trainium",
+      "name": "AWS Trainium / Trainium2",
+      "category": "training-accelerator",
+      "short_tagline": "Deep learning training chips for foundation models.",
+      "description": "AWS Trainium is a custom accelerator silicon family purpose-built for deep learning model training. Featuring high-bandwidth HBM memory and FP8 transformer engines, Trainium instances deliver optimal price-performance for scaling trillion-parameter foundational AI models.",
+      "key_specs": [
+        "Neuron cores",
+        "HBM memory",
+        "FP8 transformer support",
+        "inter-chip interconnects"
+      ],
+      "ideal_use_cases": [
+        "frontier-LLM-training",
+        "fine-tuning",
+        "massive-scale-pretraining"
+      ],
+      "docs_url": "https://aws.amazon.com/ec2/instance-types/trn1"
+    },
+    {
+      "id": "aws-inferentia",
+      "name": "AWS Inferentia / Inferentia2",
+      "category": "inference-accelerator",
+      "short_tagline": "Cost-optimized silicon for deep learning inference.",
+      "description": "AWS Inferentia custom silicon chips are engineered to deliver low-latency, high-throughput model inference. Developers deploy Inferentia instances to reduce the cost of running large language models and vision systems by up to seventy percent.",
+      "key_specs": [
+        "Neuron cores",
+        "optimized FP16/BF16/FP8",
+        "low-latency interconnect",
+        "EC2 Inf2 instances"
+      ],
+      "ideal_use_cases": [
+        "cost-efficient-inference",
+        "real-time-serving",
+        "multimodal-inference"
+      ],
+      "docs_url": "https://aws.amazon.com/ec2/instance-types/inf2"
+    },
+    {
+      "id": "aws-graviton",
+      "name": "AWS Graviton ARM CPUs",
+      "category": "cpu",
+      "short_tagline": "Energy-efficient ARM processors for server workloads.",
+      "description": "AWS Graviton processors are energy-efficient, custom-built ARM CPUs optimized for general cloud workloads. Developers utilize Graviton-based instances to accelerate token preprocessing, orchestrate data analytics pipelines, and run lightweight machine learning inferences cost-effectively.",
+      "key_specs": [
+        "ARM Neoverse cores",
+        "high-bandwidth memory",
+        "hardware security features",
+        "EC2 Graviton4"
+      ],
+      "ideal_use_cases": [
+        "general-cloud-compute",
+        "data-preprocessing",
+        "orchestration"
+      ],
+      "docs_url": "https://aws.amazon.com/ec2/graviton"
+    },
+    {
+      "id": "ai-optimized-ec2-instances",
+      "name": "AI-Optimized EC2 Instances",
+      "category": "inference-accelerator",
+      "short_tagline": "Clustered servers matching custom silicon and high-end GPUs.",
+      "description": "AWS's portfolio of virtual server instances brings together custom silicon and high-end GPUs like NVIDIA H100/H200. Developers configure these instances inside Amazon EC2 to match compute resources to specific training, tuning, or inference workloads.",
+      "key_specs": [
+        "Trainium instances",
+        "Inferentia instances",
+        "NVIDIA SXM/PCIe GPUs",
+        "Elastic Fabric Adapter"
+      ],
+      "ideal_use_cases": [
+        "frontier-LLM-training",
+        "cost-efficient-inference",
+        "large-scale-simulation"
+      ],
+      "docs_url": "https://aws.amazon.com/ec2/instance-types"
+    }
+  ],
+  "learning": [
+    {
+      "id": "skill-builder-dev-plan",
+      "name": "AWS Skill Builder GenAI Path",
+      "type": "skill-builder-plan",
+      "short_tagline": "Structured certification paths for cloud developers.",
+      "description": "AWS Skill Builder offers structured learning paths and official certifications for generative AI developers. Students learn to implement Bedrock APIs, configure Knowledge Bases, and establish guardrails through interactive, hands-on lab modules.",
+      "url": "https://aws.amazon.com/training/learning-paths/generative-ai",
+      "focus_areas": [
+        "generative-ai",
+        "bedrock",
+        "agents"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "aws-generative-ai-workshops",
+      "name": "AWS Workshops & black belt videos",
+      "type": "workshops",
+      "short_tagline": "Video manuals and interactive workshops for builders.",
+      "description": "AWS Workshops provide developers with step-by-step training tutorials and video guides. Topics cover deploying Retrieval-Augmented Generation (RAG) workflows, orchestrating agents, configuring content safety filters, and optimizing custom model deployments.",
+      "url": "https://workshops.aws",
+      "focus_areas": [
+        "bedrock",
+        "agents",
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "sagemaker-getting-started",
+      "name": "SageMaker Developer Guides",
+      "type": "docs-guides",
+      "short_tagline": "Deployment manual and recipes for SageMaker AI.",
+      "description": "Comprehensive developer guides detailing how to use SageMaker AI. Builders learn to configure distributed training nodes, run model search experiments, and deploy secure endpoints using JumpStart scripts.",
+      "url": "https://docs.aws.amazon.com/sagemaker",
+      "focus_areas": [
+        "sageMaker",
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "trainium-inferentia-learning",
+      "name": "AWS Neuron SDK & chip tutorials",
+      "type": "docs-guides",
+      "short_tagline": "Neuron SDK compiler recipes and chip user guides.",
+      "description": "Getting-started guides and cookbooks for AWS Trainium and Inferentia. Developers learn to compile models using the AWS Neuron SDK, map network weights, and optimize GPU-to-Neuron transitions.",
+      "url": "https://aws.amazon.com/machine-learning/trainium",
+      "focus_areas": [
+        "ai-chips",
+        "generative-ai"
+      ],
+      "level": "advanced"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "amazon-bedrock-apis",
+      "name": "Amazon Bedrock APIs & Guardrails",
+      "type": "api",
+      "short_tagline": "Developer endpoints for calling models and security checks.",
+      "description": "Amazon Bedrock APIs allow developers to invoke models, manage Knowledge Bases, and configure Guardrails programmatically. Builders integrate these APIs to execute secure vector search queries, construct multi-agent chains, and apply automated toxic content filters.",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html",
+      "related_platform_ids": [
+        "amazon-bedrock-platform"
+      ]
+    },
+    {
+      "id": "amazon-bedrock-studio",
+      "name": "Amazon Bedrock Studio",
+      "type": "orchestration",
+      "short_tagline": "Visual workspace for prototyping and testing Bedrock apps.",
+      "description": "Bedrock Studio is a browser-based prototyping environment for testing generative AI applications. Developers experiment with different model configurations, evaluate system outputs in real-time, and transition working codebases directly into production cloud environments.",
+      "url": "https://aws.amazon.com/bedrock/studio",
+      "related_platform_ids": [
+        "amazon-bedrock-platform"
+      ]
+    },
+    {
+      "id": "sagemaker-ai-components",
+      "name": "SageMaker Studio & Endpoints",
+      "type": "tooling",
+      "short_tagline": "Coding interfaces, HyperPod containers, and hosting slots.",
+      "description": "SageMaker AI components support the full lifecycle of custom model engineering. Developers utilize SageMaker Studio for coding, SageMaker HyperPod for clustered training, and secure SageMaker endpoints for low-latency serving.",
+      "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html",
+      "related_platform_ids": [
+        "amazon-sagemaker-ai"
+      ]
+    },
+    {
+      "id": "aws-neuron-sdk",
+      "name": "AWS Neuron SDK",
+      "type": "tooling",
+      "short_tagline": "Compiler stack linking custom silicon to PyTorch.",
+      "description": "The Neuron SDK is the software stack that links machine learning frameworks to Trainium and Inferentia. It integrates with PyTorch and TensorFlow, enabling developers to compile and optimize models with minimal code changes.",
+      "url": "https://aws.amazon.com/machine-learning/neuron",
+      "related_platform_ids": [
+        "amazon-sagemaker-ai"
+      ]
+    },
+    {
+      "id": "aws-silicon-innovation-stack",
+      "name": "AWS Silicon Innovation Stack",
+      "type": "safety",
+      "short_tagline": "Custom hardware stack running cloud ML pipelines.",
+      "description": "AWS's unified silicon stack combines Graviton CPUs, Trainium training chips, and Inferentia inference processors. This custom hardware layer enables developers to optimize price-performance ratios and achieve energy-efficient operations at cloud scale.",
+      "url": "https://aws.amazon.com/ec2/graviton/silicon-design",
+      "related_platform_ids": [
+        "amazon-sagemaker-ai"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "amazon-bedrock-docs",
+      "name": "Amazon Bedrock Documentation",
+      "type": "docs",
+      "short_tagline": "API references and Bedrock user manuals.",
+      "description": "The primary developer manuals containing API references, integration guides, and security best practices.",
+      "url": "https://docs.aws.amazon.com/bedrock",
+      "highlight": true
+    },
+    {
+      "id": "amazon-bedrock-studio-docs",
+      "name": "Amazon Bedrock Studio Docs",
+      "type": "docs",
+      "short_tagline": "Deployment guides for Bedrock Studio workspaces.",
+      "description": "Quickstart guides and tutorial blueprints for building and testing AI apps inside Bedrock Studio.",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-studio.html",
+      "highlight": false
+    },
+    {
+      "id": "amazon-sagemaker-docs",
+      "name": "Amazon SageMaker Documentation",
+      "type": "docs",
+      "short_tagline": "API blueprints and deployment schemas.",
+      "description": "Technical reference documentation detailing model hosting, notebook configurations, and pipeline orchestrations.",
+      "url": "https://docs.aws.amazon.com/sagemaker",
+      "highlight": true
+    },
+    {
+      "id": "aws-ml-blog",
+      "name": "AWS Machine Learning Blog",
+      "type": "blog",
+      "short_tagline": "Deep-dives and developer coding blueprints.",
+      "description": "Deep-dive articles and code walkthroughs detailing Bedrock integrations, custom silicon deployments, and SageMaker optimizations.",
+      "url": "https://aws.amazon.com/blogs/machine-learning",
+      "highlight": true
+    },
+    {
+      "id": "aws-silicon-innovation-page",
+      "name": "AWS Silicon Innovation Portal",
+      "type": "docs",
+      "short_tagline": "Technical specs for Graviton, Trainium, and Inferentia.",
+      "description": "Technical specifications and case studies detailing Graviton, Trainium, and Inferentia hardware architectures.",
+      "url": "https://aws.amazon.com/ec2/graviton/silicon-design",
+      "highlight": false
+    },
+    {
+      "id": "aws-github-organization",
+      "name": "AWS GitHub organization",
+      "type": "github-org",
+      "short_tagline": "SDK codes and Bedrock agent repositories.",
+      "description": "Access official starter templates, Neuron SDK recipes, and Bedrock agent scripts in AWS's GitHub repositories.",
+      "url": "https://github.com/aws",
+      "highlight": true
+    }
+  ]
+}

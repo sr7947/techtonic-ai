@@ -240,6 +240,7 @@ function App() {
         {currentPath === '/leaders/meta-llama' && <CompanyHubPage companyId="meta-llama" navigate={navigate} />}
         {currentPath === '/leaders/microsoft-azure-ai' && <CompanyHubPage companyId="microsoft-azure-ai" navigate={navigate} />}
         {currentPath === '/leaders/nvidia-ai' && <CompanyHubPage companyId="nvidia-ai" navigate={navigate} />}
+        {currentPath === '/leaders/aws-ai' && <CompanyHubPage companyId="aws-ai" navigate={navigate} />}
       </main>
 
       {/* Platform Footer */}
