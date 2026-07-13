@@ -49,7 +49,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ resources = LEARNING_R
     'PLATFORMS',
     'HARDWARE & SYSTEMS',
     'TECHNOLOGIES',
-    'LEARNING HUB'
+    'AI DEVELOPERS'
   ];
 
   const leaders = [
@@ -153,7 +153,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ resources = LEARNING_R
             toolName: item.name,
             description: item.description,
             useCase: `${item.focus_areas ? item.focus_areas.join(', ') : ''} (Level: ${item.level || 'All'})`,
-            category: 'LEARNING HUB',
+            category: 'AI DEVELOPERS',
             badges: item.type ? [item.type] : [],
             docsUrl: item.url,
             learnUrl: item.url
@@ -240,7 +240,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ resources = LEARNING_R
         {/* Section Header */}
         <div className="text-center md:text-left max-w-3xl mb-16 space-y-4">
           <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
-            AI Developer <span className="gold-gradient-text">Learning Hub</span>
+            AI <span className="gold-gradient-text">Developers</span>
           </h2>
           <div className="w-20 h-[3px] bg-brand-gold rounded-full md:mx-0 mx-auto" />
           <p className="text-slate-400 text-base md:text-lg leading-relaxed">

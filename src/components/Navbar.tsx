@@ -168,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {[
                 { id: 'updates', label: 'Latest Updates' },
                 { id: 'leaders', label: 'AI Leaders' },
-                { id: 'learning', label: 'Learning Hub' },
+                { id: 'learning', label: 'AI Developers' },
                 { id: 'videos', label: 'Videos' }
               ].map((sect) => (
                 <button
@@ -338,7 +338,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {[
               { id: 'updates', label: 'Latest Updates' },
               { id: 'leaders', label: 'AI Leaders' },
-              { id: 'learning', label: 'Learning Hub' },
+              { id: 'learning', label: 'AI Developers' },
               { id: 'videos', label: 'Videos' }
             ].map((sect) => (
               <button
