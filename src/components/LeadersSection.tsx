@@ -300,6 +300,22 @@ export const LeadersSection: React.FC<LeadersSectionProps> = ({
                     </button>
                   </div>
                 )}
+
+                {activeLeader.id === 'cohere' && (
+                  <div className="pt-4 flex justify-center md:justify-start">
+                    <button
+                      onClick={() => {
+                        window.history.pushState({}, '', '/leaders/cohere');
+                        window.dispatchEvent(new Event('pushstate'));
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs font-extrabold uppercase tracking-wider transition-all shadow-md shadow-brand-gold/15 cursor-pointer border border-brand-gold"
+                    >
+                      <Building className="w-4 h-4" />
+                      Explore Cohere Ecosystem Hub
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Right Column: Site & Technical Links */}

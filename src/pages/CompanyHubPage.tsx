@@ -10,6 +10,7 @@ import appleHubData from '../data/appleHubData.json';
 import xaiHubData from '../data/xaiHubData.json';
 import mistralHubData from '../data/mistralHubData.json';
 import ibmHubData from '../data/ibmHubData.json';
+import cohereHubData from '../data/cohereHubData.json';
 import { 
   Building, 
   ExternalLink, 
@@ -52,7 +53,9 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
                     ? mistralHubData
                     : companyId === 'ibm-watsonx'
                       ? ibmHubData
-                      : googleHubData;
+                      : companyId === 'cohere'
+                        ? cohereHubData
+                        : googleHubData;
   const { company, llms, platforms, learning, technologies, docsAndNews } = hubData;
   const hardware = (hubData as any).hardware || null;
 

@@ -1,0 +1,229 @@
+{
+  "company": {
+    "id": "cohere",
+    "name": "Cohere",
+    "tagline": "Supercharging enterprise search, retrieval-augmented generation, and agentic workflows with language models.",
+    "overview": "Cohere designs high-performance natural language processing models optimized for enterprise information retrieval and agentic orchestration. The product suite, led by the Command-R and Rerank model families, enables developers to construct advanced search systems, secure conversational agents, and private cloud-hosted text analytics platforms.",
+    "official_site_url": "https://cohere.com",
+    "theme_color": "#3b82f6"
+  },
+  "llms": [
+    {
+      "id": "cohere-command-r",
+      "name": "Command-R Family",
+      "family": "Command-R",
+      "modality": "text",
+      "type": "frontier-cloud",
+      "tier": "flagship",
+      "short_tagline": "RAG-optimized and tool-use reasoning models.",
+      "description": "Cohere Command-R represents the flagship reasoning model series optimized for large-scale Retrieval-Augmented Generation (RAG) and multi-step tool execution. Developers deploy Command-R to power autonomous agent workflows, resolve complex conversational queries, and query enterprise databases securely using multilingual prompt schemas.",
+      "primary_use_cases": [
+        "Large-scale Retrieval-Augmented Generation",
+        "Autonomous multi-step agent workflows",
+        "Secure multilingual database queries"
+      ],
+      "docs_url": "https://docs.cohere.com/docs/command-r"
+    },
+    {
+      "id": "cohere-command",
+      "name": "Command Family",
+      "family": "Command 3.x",
+      "modality": "text",
+      "type": "frontier-cloud",
+      "tier": "balanced",
+      "short_tagline": "Efficient language generation and text summarization.",
+      "description": "The baseline Cohere Command family offers highly efficient, general-purpose text generation, summarization, and chat capabilities. Developers utilize Command endpoints to run high-volume classification pipelines, generate marketing drafts, and serve low-latency conversational agents across cloud environments.",
+      "primary_use_cases": [
+        "High-volume text classification",
+        "General business text generation",
+        "Low-latency conversational agents"
+      ],
+      "docs_url": "https://docs.cohere.com/docs/command-beta"
+    },
+    {
+      "id": "cohere-embed",
+      "name": "Cohere Embed",
+      "family": "Embed",
+      "modality": "text",
+      "type": "retrieval",
+      "tier": "cost-optimized",
+      "short_tagline": "Multilingual semantic vector embeddings for search.",
+      "description": "Cohere Embed models generate high-relevance semantic vectors across dozens of languages for semantic search and classification. Developers utilize these models to construct dense vector databases, run multilingual text clustering, and improve document retrieval accuracy inside corporate search pipelines.",
+      "primary_use_cases": [
+        "Multilingual semantic search",
+        "Dense vector database indexing",
+        "Multilingual document clustering"
+      ],
+      "docs_url": "https://docs.cohere.com/docs/embeddings"
+    },
+    {
+      "id": "cohere-rerank",
+      "name": "Cohere Rerank",
+      "family": "Rerank",
+      "modality": "text",
+      "type": "retrieval",
+      "tier": "balanced",
+      "short_tagline": "Two-stage retrieval ranking for high-accuracy RAG.",
+      "description": "Cohere Rerank is a specialized retrieval-stage model designed to re-order search results for maximum relevance. Developers place Rerank directly after keyword or vector database queries to immediately improve RAG grounding and return high-accuracy document fragments to downstream language models.",
+      "primary_use_cases": [
+        "Two-stage retrieval ranking",
+        "High-accuracy RAG grounding",
+        "Keyword search relevance tuning"
+      ],
+      "docs_url": "https://docs.cohere.com/docs/reranking"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "cohere-platform-console",
+      "name": "Cohere Console",
+      "category": "dev-portal",
+      "short_tagline": "Official console for API keys and fine-tuning jobs.",
+      "description": "The Cohere Console is the administrative portal for managing developer access, billing budgets, and rate limits. Developers generate API keys, track active usage graphs, configure custom model fine-tuning jobs, and test endpoints via an interactive playground environment.",
+      "url": "https://dashboard.cohere.com",
+      "ideal_for": [
+        "app devs",
+        "MLOps"
+      ],
+      "badges": [
+        "Managed",
+        "Serverless"
+      ]
+    },
+    {
+      "id": "cohere-rag-templates",
+      "name": "Cohere Chat / RAG Templates",
+      "category": "fm-platform",
+      "short_tagline": "Starter code blueprints for building search systems.",
+      "description": "Cohere's RAG templates provide pre-configured project blueprints for deploying Retrieval-Augmented Generation architectures. Developers copy these boilerplates to quickly wire up vector databases, connect search endpoints, configure chat memory, and host responsive search portals.",
+      "url": "https://github.com/cohere-ai/cohere-developer-experience",
+      "ideal_for": [
+        "app devs"
+      ],
+      "badges": [
+        "RAG",
+        "Self-host"
+      ]
+    },
+    {
+      "id": "cohere-enterprise-hosting",
+      "name": "Cohere Enterprise",
+      "category": "enterprise-offerings",
+      "short_tagline": "Private cloud virtual network hosting on AWS and Azure.",
+      "description": "Cohere Enterprise delivers private cloud hosting, virtual networks, and dedicated hardware deployments. Businesses customize model weights and establish secure, isolated data environments on AWS, Azure, or Google Cloud to meet complex corporate compliance standards.",
+      "url": "https://cohere.com/enterprise",
+      "ideal_for": [
+        "enterprise IT",
+        "infra teams"
+      ],
+      "badges": [
+        "Enterprise",
+        "On-prem",
+        "Hybrid"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "cohere-api-quickstarts",
+      "name": "Cohere Developer Docs",
+      "type": "docs-guides",
+      "short_tagline": "Endpoint quickstarts and API integration manuals.",
+      "description": "Official documentation and getting-started tutorials detailing Cohere API integrations. Developers learn to initialize client connections, construct retrieval prompt formats, convert text to vector embeddings, and parse model output streams.",
+      "url": "https://docs.cohere.com",
+      "focus_areas": [
+        "generative-ai",
+        "docs-guides"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "cohere-nlp-tutorials",
+      "name": "Cohere LLM Tutorials",
+      "type": "blog",
+      "short_tagline": "Rerank and vector database tuning walkthroughs.",
+      "description": "Technical blogs and step-by-step guides explaining how to optimize search systems. Developers learn to deploy Rerank models, configure multi-language vector databases, audit content safety filters, and build complex agentic pipelines.",
+      "url": "https://cohere.com/blog",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    },
+    {
+      "id": "cohere-github-samples",
+      "name": "Cohere SDK Cookbooks",
+      "type": "sample-code",
+      "short_tagline": "Conversational memory templates and script recipes.",
+      "description": "A collection of developer cookbooks and sample repositories demonstrating SDK usage. Builders learn to implement conversational memory, write tool-calling schemas, and deploy model evaluation scripts inside full-stack applications.",
+      "url": "https://github.com/cohere-ai/notebooks",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "intermediate"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "cohere-core-apis",
+      "name": "Cohere Core APIs",
+      "type": "api",
+      "short_tagline": "REST API endpoints for chat, embeds, and rerank.",
+      "description": "Cohere's developer APIs expose secure endpoints for chat, embeddings, reranking, and text classification. Builders integrate these APIs into enterprise systems to serve conversational user interfaces, index search vaults, and run text moderation checks.",
+      "url": "https://docs.cohere.com/reference/about",
+      "related_platform_ids": [
+        "cohere-platform-console"
+      ]
+    },
+    {
+      "id": "cohere-built-in-safety",
+      "name": "Safety & Moderation Filters",
+      "type": "safety",
+      "short_tagline": "Adversarial check systems screening requests.",
+      "description": "Cohere's built-in safety filters provide real-time content checks to screen requests and model outputs. Developers configure these guardrails to detect adversarial jailbreaks, filter offensive queries, and ensure corporate safety compliance.",
+      "url": "https://docs.cohere.com/docs/safety-on-cohere-custom-models",
+      "related_platform_ids": [
+        "cohere-platform-console"
+      ]
+    },
+    {
+      "id": "cohere-framework-integrations",
+      "name": "Framework Integrations",
+      "type": "orchestration",
+      "short_tagline": "Connectors linking Cohere to LangChain and LlamaIndex.",
+      "description": "Pre-built connectors linking Cohere models to popular orchestration frameworks like LangChain, LlamaIndex, and AutoGen. Developers leverage these integrations to construct modular agent architectures and accelerate the building of conversational RAG apps.",
+      "url": "https://docs.cohere.com/docs/integrations",
+      "related_platform_ids": [
+        "cohere-platform-console"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "cohere-docs-home",
+      "name": "Cohere Documentation Portal",
+      "type": "docs",
+      "short_tagline": "Primary developer guides and API manuals.",
+      "description": "The primary developer portal containing API references, integration manuals, and model parameter specifications.",
+      "url": "https://docs.cohere.com",
+      "highlight": true
+    },
+    {
+      "id": "cohere-newsroom",
+      "name": "Cohere Newsroom",
+      "type": "blog",
+      "short_tagline": "Announcements and research update postings.",
+      "description": "Official news bulletins announcing model releases, corporate partnerships, and research achievements.",
+      "url": "https://cohere.com/newsroom",
+      "highlight": true
+    },
+    {
+      "id": "cohere-github-org",
+      "name": "Cohere GitHub organization",
+      "type": "github-org",
+      "short_tagline": "Official client SDK libraries and cook recipes.",
+      "description": "Access official client SDKs, prompt cookbooks, fine-tuning scripts, and code templates on GitHub.",
+      "url": "https://github.com/cohere-ai",
+      "highlight": true
+    }
+  ]
+}
