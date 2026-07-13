@@ -1,0 +1,424 @@
+{
+  "company": {
+    "id": "nvidia-ai",
+    "name": "NVIDIA / Accelerated AI",
+    "tagline": "Powering the global AI infrastructure with GPU-accelerated computing and turnkey enterprise software stacks.",
+    "overview": "NVIDIA leads the accelerated computing revolution, supplying the core GPU architectures, interconnects, and full-stack software engines that power modern AI factories. From CUDA programming libraries to specialized NIM microservices and DGX clusters, they provide the hardware and software layers needed to train and serve frontier AI models.",
+    "official_site_url": "https://www.nvidia.com/ai",
+    "theme_color": "#76b900"
+  },
+  "llms": [
+    {
+      "id": "nemotron-4-language",
+      "name": "Nemotron-4 Language Models",
+      "family": "Nemotron-4",
+      "modality": "text",
+      "type": "foundation-model",
+      "tier": "open-weight",
+      "short_tagline": "Steerable LLM family for synthetic data generation and logical reasoning.",
+      "description": "Nemotron-4 represents NVIDIA's open-weights language model family optimized for synthetic data generation, logical reasoning, and agentic workflows. Developers deploy Nemotron-4 within the NVIDIA AI Enterprise suite to construct domain-specific RAG systems, perform high-fidelity text summarization, and fine-tune specialized enterprise software systems.",
+      "primary_use_cases": [
+        "High-fidelity synthetic data generation",
+        "Domain-specific RAG system grounding",
+        "Steerable instruction-following pipelines"
+      ],
+      "docs_url": "https://build.nvidia.com/nvidia/nemotron-4-340b-instruct"
+    },
+    {
+      "id": "nim-language-microservices",
+      "name": "NIM Language Microservices",
+      "family": "NVIDIA NIM Language",
+      "modality": "text",
+      "type": "microservice",
+      "tier": "enterprise",
+      "short_tagline": "Production-ready containerized APIs for deploying LLMs at scale.",
+      "description": "NVIDIA NIM language microservices deliver production-ready REST and gRPC API endpoints for serving LLMs at hyperscale. Powered by Triton Inference Server and TensorRT-LLM under the hood, these containers allow developers to serve open models at maximum throughput and minimal token latency.",
+      "primary_use_cases": [
+        "High-throughput enterprise chat APIs",
+        "Low-latency agent reasoning pipelines",
+        "Secure cloud-native model serving"
+      ],
+      "docs_url": "https://docs.nvidia.com/nim/large-language-models/latest/introduction.html"
+    },
+    {
+      "id": "nim-vision-microservices",
+      "name": "NIM Vision Microservices",
+      "family": "NVIDIA NIM Vision",
+      "modality": "vision-language",
+      "type": "microservice",
+      "tier": "enterprise",
+      "short_tagline": "Optimized vision-language containers for object detection and OCR.",
+      "description": "NIM vision microservices provide pre-optimized containers for computer vision, object detection, and multimodal processing. Developers integrate these vision-language NIMs to construct automated OCR engines, classify multi-frame video segments, and deploy visual safety systems inside secure private database networks.",
+      "primary_use_cases": [
+        "Automated OCR document parsing",
+        "Multi-frame video segment tagging",
+        "Visual safety classification systems"
+      ],
+      "docs_url": "https://build.nvidia.com/explore/discover"
+    },
+    {
+      "id": "nim-speech-microservices",
+      "name": "NIM Speech Microservices",
+      "family": "NVIDIA NIM Speech",
+      "modality": "speech",
+      "type": "microservice",
+      "tier": "enterprise",
+      "short_tagline": "ASR and TTS microservices for real-time speech agents.",
+      "description": "NIM speech microservices package advanced automatic speech recognition and text-to-speech models into deployable API containers. Developers utilize these tools to build ultra-responsive voice agents, real-time audio translation services, and natural conversational interfaces that operate directly on local enterprise server hubs.",
+      "primary_use_cases": [
+        "Low-latency real-time voice agents",
+        "Simultaneous translation speech hubs",
+        "Local speech-to-text text classification"
+      ],
+      "docs_url": "https://build.nvidia.com/explore/discover"
+    },
+    {
+      "id": "domain-specific-ai-services",
+      "name": "cuOpt & Optimization Services",
+      "family": "NVIDIA NIM Language",
+      "modality": "text",
+      "type": "domain-specific",
+      "tier": "research",
+      "short_tagline": "Accelerated solvers for industrial routing and operations.",
+      "description": "cuOpt and other specialized NIM microservices offer accelerated solvers for complex industrial optimization challenges. Developers leverage these domain-specific services to automate route navigation, optimize factory operations, and solve complex scheduling problems on GPU clusters at fraction-of-a-second speeds.",
+      "primary_use_cases": [
+        "Automated route navigation logistics",
+        "High-efficiency industrial scheduling",
+        "Accelerated GPU operations research"
+      ],
+      "docs_url": "https://www.nvidia.com/en-us/autonomous-machines/cuopt"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "nvidia-ai-enterprise",
+      "name": "NVIDIA AI Enterprise",
+      "category": "ai-enterprise-platform",
+      "short_tagline": "Cloud-native operating system for production AI workloads.",
+      "description": "NVIDIA AI Enterprise is a cloud-native software suite that bundles NIM microservices, CUDA-X libraries, and ML frameworks. It provides a secure, enterprise-grade operating system for scaling generative AI applications across public clouds, virtualized data centers, and edge computing environments.",
+      "url": "https://www.nvidia.com/en-us/data-center/products/ai-enterprise",
+      "ideal_for": [
+        "enterprise IT",
+        "MLOps",
+        "infra teams"
+      ],
+      "badges": [
+        "NIM",
+        "Cloud-native",
+        "Enterprise"
+      ]
+    },
+    {
+      "id": "dgx-cloud",
+      "name": "DGX Cloud & AI Factory",
+      "category": "cloud-service",
+      "short_tagline": "Serverless supercomputing infrastructure for model training.",
+      "description": "DGX Cloud provides developers with serverless, web-based access to multi-node DGX supercomputers for training and fine-tuning frontier models. It offers ready-to-run cluster partitions and high-bandwidth interconnects, enabling research teams to build custom AI factories on-demand.",
+      "url": "https://www.nvidia.com/en-us/data-center/dgx-cloud",
+      "ideal_for": [
+        "research labs",
+        "MLOps",
+        "infra teams"
+      ],
+      "badges": [
+        "NIM",
+        "Cloud-hosted",
+        "Ecosystem"
+      ]
+    },
+    {
+      "id": "nvidia-ngc-catalog",
+      "name": "NGC Catalog",
+      "category": "developer-portal",
+      "short_tagline": "Container and model registry for accelerated AI stacks.",
+      "description": "The NGC Catalog is NVIDIA's central registry for GPU-optimized container images, pre-trained AI models, and deployment Helm charts. Developers pull pre-configured stacks for Triton, PyTorch, and TensorFlow to deploy AI services on local or cloud-hosted servers.",
+      "url": "https://ngc.nvidia.com",
+      "ideal_for": [
+        "app devs",
+        "MLOps"
+      ],
+      "badges": [
+        "Self-host",
+        "Cloud-hosted"
+      ]
+    },
+    {
+      "id": "nvidia-omniverse",
+      "name": "NVIDIA Omniverse",
+      "category": "simulation-platform",
+      "short_tagline": "Simulation engine for digital twins and physical AI.",
+      "description": "Omniverse is a simulation platform designed for building digital twins and programming physical AI systems. Developers connect 3D design software, execute real-time physics simulations, and train autonomous robots or vehicle models inside high-fidelity virtual environments.",
+      "url": "https://www.nvidia.com/en-us/omniverse",
+      "ideal_for": [
+        "research labs",
+        "enterprise IT"
+      ],
+      "badges": [
+        "Edge",
+        "On-prem",
+        "CUDA-X"
+      ]
+    },
+    {
+      "id": "nvidia-developer-portal",
+      "name": "NVIDIA Developer portal",
+      "category": "developer-portal",
+      "short_tagline": "Central hub for SDK downloads and technical docs.",
+      "description": "The NVIDIA Developer Portal is the central interface for downloading SDKs, accessing technical documentation, and joining developer forums. It serves as the gateway for builders to obtain CUDA tools, download libraries, and engage with accelerated computing communities.",
+      "url": "https://developer.nvidia.com",
+      "ideal_for": [
+        "app devs",
+        "MLOps"
+      ],
+      "badges": [
+        "Ecosystem",
+        "Self-serve"
+      ]
+    }
+  ],
+  "hardware": [
+    {
+      "id": "blackwell-architecture",
+      "name": "Blackwell Architecture GPUs",
+      "category": "gpu",
+      "short_tagline": "Next-gen GPU silicon for trillion-parameter scale training.",
+      "description": "The Blackwell GPU architecture represents NVIDIA's next-generation silicon engineered for trillion-parameter AI workloads. Featuring FP4 and FP8 Transformer Engines and fifth-generation NVLink connections, Blackwell delivers unprecedented speed for large-scale training and real-time LLM inference cycles.",
+      "key_specs": [
+        "FP4/FP8 Transformer Engine",
+        "fifth-generation NVLink",
+        "HBM3E memory",
+        "Grace CPU link"
+      ],
+      "ideal_use_cases": [
+        "frontier-LLM-training",
+        "real-time-inference",
+        "large-scale-simulation"
+      ],
+      "docs_url": "https://www.nvidia.com/en-us/data-center/blackwell"
+    },
+    {
+      "id": "hopper-architecture",
+      "name": "Hopper Architecture GPUs (H100/H200)",
+      "category": "gpu",
+      "short_tagline": "Enterprise benchmark GPUs for LLM training and RAG.",
+      "description": "The Hopper architecture, featuring H100 and H200 GPUs, is the enterprise benchmark for LLM training and high-throughput inference. Equipped with a fourth-generation Tensor Core Transformer Engine, Hopper accelerates matrix multiplication tasks and hosts massive model parameters efficiently.",
+      "key_specs": [
+        "H100/H200 Tensor Core",
+        "Transformer Engine",
+        "HBM3/HBM3E memory",
+        "PCIe/SXM interfaces"
+      ],
+      "ideal_use_cases": [
+        "frontier-LLM-training",
+        "high-throughput-inference",
+        "data-science"
+      ],
+      "docs_url": "https://www.nvidia.com/en-us/data-center/hopper-architecture"
+    },
+    {
+      "id": "grace-hopper-superchips",
+      "name": "Grace CPU & Blackwell Superchips",
+      "category": "system",
+      "short_tagline": "Coherent CPU/GPU superchips for memory-intensive AI.",
+      "description": "Grace Hopper and Grace Blackwell superchips tightly couple NVIDIA's ARM-based Grace CPU with high-performance GPUs. Operating over a high-bandwidth coherent memory interconnect, these superchips eliminate data bottlenecks, accelerating large-scale vector search and giant model inference.",
+      "key_specs": [
+        "NVIDIA Grace CPU",
+        "Blackwell/Hopper GPU",
+        "coherent memory interconnect",
+        "high-bandwidth bus"
+      ],
+      "ideal_use_cases": [
+        "frontier-LLM-training",
+        "real-time-inference",
+        "vector-search-grounding"
+      ],
+      "docs_url": "https://www.nvidia.com/en-us/data-center/grace-cpu"
+    },
+    {
+      "id": "dgx-systems",
+      "name": "DGX Turnkey Supercomputers",
+      "category": "system",
+      "short_tagline": "Turnkey multi-GPU servers for enterprise scaling.",
+      "description": "DGX turnkey servers pack multiple Tensor Core GPUs, NVSwitches, and high-performance networking adapters into a single node. Enterprises scale these turnkey systems into DGX SuperPOD architectures to establish dedicated supercomputers for training next-generation foundational models.",
+      "key_specs": [
+        "NVIDIA NVSwitch",
+        "8x SXM GPUs",
+        "Quantum-2 InfiniBand",
+        "DGX SuperPOD scaling"
+      ],
+      "ideal_use_cases": [
+        "frontier-LLM-training",
+        "large-scale-simulation",
+        "enterprise-compute-hub"
+      ],
+      "docs_url": "https://www.nvidia.com/en-us/data-center/dgx-systems"
+    },
+    {
+      "id": "rtx-workstation-gpus",
+      "name": "RTX Workstation & Desktop GPUs",
+      "category": "gpu",
+      "short_tagline": "Localized AI acceleration for developers and edge.",
+      "description": "RTX workstation and desktop GPUs deliver localized AI acceleration for developer machines and private enterprise servers. Utilizing dedicated Ray Tracing and Tensor Cores, RTX cards power local LLM prototyping, physical AI simulations, and advanced graphics rendering.",
+      "key_specs": [
+        "RTX Tensor Cores",
+        "dedicated RT Cores",
+        "large VRAM configurations",
+        "local PCIe deployment"
+      ],
+      "ideal_use_cases": [
+        "local-LLM-prototyping",
+        "graphics+AI",
+        "edge-ai"
+      ],
+      "docs_url": "https://www.nvidia.com/en-us/design-visualization/rtx-workstations"
+    }
+  ],
+  "learning": [
+    {
+      "id": "deep-learning-institute",
+      "name": "NVIDIA Deep Learning Institute (DLI)",
+      "type": "courses",
+      "short_tagline": "Hands-on cloud laboratories and technical certifications.",
+      "description": "The NVIDIA Deep Learning Institute offers hands-on online laboratories and technical certifications for developers. Students access GPU-accelerated cloud nodes to write CUDA code, optimize TensorRT workloads, configure Triton servers, and build physical AI pipelines.",
+      "url": "https://www.nvidia.com/en-us/training/online",
+      "focus_areas": [
+        "deep-learning",
+        "cuda",
+        "accelerated-computing"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "dli-learning-paths",
+      "name": "DLI Learning Paths",
+      "type": "certification",
+      "short_tagline": "Structured paths for CUDA, Triton, and Omniverse.",
+      "description": "DLI Learning Paths provide guided, multi-course curriculums for mastering accelerated computing topics. Developers follow specialized sequences to learn real-time physics modeling in Omniverse, configure Jetson edge devices, and deploy NIM microservices inside Kubernetes clusters.",
+      "url": "https://www.nvidia.com/en-us/training/online",
+      "focus_areas": [
+        "cuda",
+        "omniverse"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "nvidia-inception-program",
+      "name": "NVIDIA Inception & GPU Bootcamps",
+      "type": "community",
+      "short_tagline": "Startup support program and parallel coding hackathons.",
+      "description": "NVIDIA Inception provides startups with technical support, discounted hardware, and learning credits. In parallel, NVIDIA GPU hackathons and bootcamps gather developer teams globally to optimize local codes, accelerate algorithms, and test GPU-parallel programming paradigms.",
+      "url": "https://www.nvidia.com/en-us/inception",
+      "focus_areas": [
+        "accelerated-computing",
+        "deep-learning"
+      ],
+      "level": "all-levels"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "cuda-and-cuda-x",
+      "name": "CUDA & CUDA-X Libraries",
+      "type": "sdk",
+      "short_tagline": "Core parallel programming platform and math primitives.",
+      "description": "CUDA is NVIDIA's core parallel computing platform that lets developers program GPUs directly. CUDA-X provides a library collection of pre-accelerated primitives for deep learning, linear algebra, and data science, forming the base of modern AI frameworks.",
+      "url": "https://developer.nvidia.com/cuda-toolkit",
+      "related_platform_ids": [
+        "nvidia-developer-portal"
+      ]
+    },
+    {
+      "id": "tensorrt-and-triton",
+      "name": "TensorRT-LLM & Triton Inference Server",
+      "type": "runtime",
+      "short_tagline": "High-speed compiler and production serving engine.",
+      "description": "TensorRT-LLM compiles and optimizes large language models for high-speed GPU execution. Triton Inference Server acts as the production serving engine, handling concurrent model requests, dynamic batching, and multi-framework deployments across enterprise clusters.",
+      "url": "https://developer.nvidia.com/tensorrt",
+      "related_platform_ids": [
+        "nvidia-developer-portal",
+        "nvidia-ai-enterprise"
+      ]
+    },
+    {
+      "id": "nvidia-nim-microservices-tech",
+      "name": "NVIDIA NIM",
+      "type": "api",
+      "short_tagline": "Packaged containerized APIs for accelerated model execution.",
+      "description": "NIM microservices package foundation models and inference engines into deployable API containers. Exposed as standard REST or gRPC endpoints, NIMs simplify the deployment of whitelisted language, vision, and speech models on NVIDIA GPUs.",
+      "url": "https://developer.nvidia.com/nims",
+      "related_platform_ids": [
+        "nvidia-ai-enterprise",
+        "nvidia-developer-portal"
+      ]
+    },
+    {
+      "id": "nvidia-nemo-framework",
+      "name": "NVIDIA NeMo Framework",
+      "type": "orchestration",
+      "short_tagline": "Cloud-native framework for data training and alignment.",
+      "description": "NeMo is a cloud-native framework for building, training, and fine-tuning conversational and generative AI models. It provides developers with script packages for custom data curation, reinforcement learning alignment, and guardrails configuration.",
+      "url": "https://developer.nvidia.com/nemo",
+      "related_platform_ids": [
+        "nvidia-developer-portal"
+      ]
+    },
+    {
+      "id": "gpu-orchestration-tooling",
+      "name": "GPU Cluster Orchestration",
+      "type": "tooling",
+      "short_tagline": "Kubernetes operators and Multi-Instance GPU partitioning.",
+      "description": "GPU Orchestration tools allow administrators to partition and manage GPU clusters. Using Kubernetes GPU operators and Multi-Instance GPU (MIG) settings, developers allocate compute resources dynamically, securing isolated execution boundaries for enterprise AI workloads.",
+      "url": "https://docs.nvidia.com/datacenter/cloud-native/kubernetes/install-guide.html",
+      "related_platform_ids": [
+        "nvidia-ai-enterprise"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "nvidia-ai-enterprise-docs",
+      "name": "NVIDIA AI Enterprise Docs",
+      "type": "docs",
+      "short_tagline": "Official deployment manuals and guides.",
+      "description": "Comprehensive developer guides for configuring NIM containers, deploying CUDA libraries, and managing AI Enterprise software licenses.",
+      "url": "https://docs.nvidia.com/ai-enterprise",
+      "highlight": true
+    },
+    {
+      "id": "nvidia-developer-blog",
+      "name": "NVIDIA Developer Blog",
+      "type": "blog",
+      "short_tagline": "Technical acceleration guides and scripts.",
+      "description": "Technical articles and tutorial scripts detailing accelerated computing optimizations and model fine-tuning achievements directly from NVIDIA engineers.",
+      "url": "https://developer.nvidia.com/blog",
+      "highlight": true
+    },
+    {
+      "id": "blackwell-documentation",
+      "name": "Blackwell Architecture documentation",
+      "type": "whitepaper",
+      "short_tagline": "Architectural specifications for Blackwell chips.",
+      "description": "Architectural whitepapers detailing Blackwell Tensor Cores, transformer engine specifications, and NVLink interconnect designs.",
+      "url": "https://www.nvidia.com/en-us/data-center/blackwell",
+      "highlight": false
+    },
+    {
+      "id": "dli-training-home",
+      "name": "DLI Training Portal",
+      "type": "docs",
+      "short_tagline": "Course registrations and learning credentials.",
+      "description": "The main registration page for accessing GPU-accelerated hands-on training courses and official developer credentials.",
+      "url": "https://www.nvidia.com/en-us/training",
+      "highlight": false
+    },
+    {
+      "id": "nvidia-github-organization",
+      "name": "NVIDIA GitHub repos",
+      "type": "github-org",
+      "short_tagline": "Open-source SDKs and sample code registries.",
+      "description": "Access open-source codebases, model recipes, TensorRT scripts, and client SDKs directly from NVIDIA's GitHub repositories.",
+      "url": "https://github.com/NVIDIA",
+      "highlight": true
+    }
+  ]
+}

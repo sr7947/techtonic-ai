@@ -3,6 +3,8 @@ import googleHubData from '../data/googleHubData.json';
 import openaiHubData from '../data/openaiHubData.json';
 import anthropicHubData from '../data/anthropicHubData.json';
 import metaHubData from '../data/metaHubData.json';
+import microsoftHubData from '../data/microsoftHubData.json';
+import nvidiaHubData from '../data/nvidiaHubData.json';
 import { 
   Building, 
   ExternalLink, 
@@ -23,7 +25,7 @@ interface CompanyHubPageProps {
 }
 
 export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navigate }) => {
-  const [activeTab, setActiveTab] = useState<'all' | 'llms' | 'platforms' | 'learning' | 'technologies'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'llms' | 'platforms' | 'learning' | 'technologies' | 'hardware'>('all');
 
   const hubData = companyId === 'openai' 
     ? openaiHubData 
@@ -31,13 +33,19 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
       ? anthropicHubData 
       : companyId === 'meta-llama'
         ? metaHubData
-        : googleHubData;
+        : companyId === 'microsoft-azure-ai'
+          ? microsoftHubData
+          : companyId === 'nvidia-ai'
+            ? nvidiaHubData
+            : googleHubData;
   const { company, llms, platforms, learning, technologies, docsAndNews } = hubData;
+  const hardware = (hubData as any).hardware || null;
 
   const tabItems = [
     { id: 'all', name: 'All Ecosystem' },
     { id: 'llms', name: 'Model Families' },
     { id: 'platforms', name: 'Platforms' },
+    ...(hardware ? [{ id: 'hardware', name: 'Hardware & Systems' }] : []),
     { id: 'technologies', name: 'Technologies' },
     { id: 'learning', name: 'Learning Hub' }
   ];
@@ -239,6 +247,74 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
                         className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition-colors"
                       >
                         Launch Platform
+                        <ArrowUpRight className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Hardware & Systems Section */}
+          {hardware && (activeTab === 'all' || activeTab === 'hardware') && (
+            <div className="space-y-6">
+              <h2 className="font-serif text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+                <Database className="w-5 h-5 text-brand-gold" />
+                Accelerated Hardware & Architectures
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(hardware as any[]).map((hw) => (
+                  <div
+                    key={hw.id}
+                    className="rounded-2xl p-6 border border-brand-gold/10 bg-brand-navy-deep/20 flex flex-col justify-between hover:border-brand-gold/30 transition-all group hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="px-2 py-0.5 rounded bg-green-500/10 border border-green-500/20 text-green-400 text-[9px] font-bold uppercase tracking-wider">
+                          {hw.category}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-bold text-slate-100 group-hover:text-brand-gold-bright transition-colors">
+                        {hw.name}
+                      </h3>
+                      <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        {hw.description}
+                      </p>
+                      
+                      {/* Key Specs */}
+                      <div className="space-y-2 pt-2 border-t border-brand-gold/5">
+                        <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold block">Key Specifications</span>
+                        <div className="flex flex-wrap gap-1">
+                          {hw.key_specs.map((spec: string, i: number) => (
+                            <span key={i} className="px-2 py-0.5 rounded bg-brand-navy-light/35 text-slate-300 text-[9px] font-semibold border border-brand-gold/5">
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Ideal Use Cases */}
+                      <div className="space-y-2 pt-2 border-t border-brand-gold/5">
+                        <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold block">Target Workloads</span>
+                        <div className="flex flex-wrap gap-1">
+                          {hw.ideal_use_cases.map((uc: string, i: number) => (
+                            <span key={i} className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 text-[9px] font-semibold">
+                              #{uc}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-6">
+                      <a
+                        href={hw.docs_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-green-400 hover:text-green-300 transition-colors"
+                      >
+                        Specs & Architecture
                         <ArrowUpRight className="w-4 h-4" />
                       </a>
                     </div>

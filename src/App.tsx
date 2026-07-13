@@ -238,6 +238,8 @@ function App() {
         {currentPath === '/leaders/openai' && <CompanyHubPage companyId="openai" navigate={navigate} />}
         {currentPath === '/leaders/anthropic-claude' && <CompanyHubPage companyId="anthropic-claude" navigate={navigate} />}
         {currentPath === '/leaders/meta-llama' && <CompanyHubPage companyId="meta-llama" navigate={navigate} />}
+        {currentPath === '/leaders/microsoft-azure-ai' && <CompanyHubPage companyId="microsoft-azure-ai" navigate={navigate} />}
+        {currentPath === '/leaders/nvidia-ai' && <CompanyHubPage companyId="nvidia-ai" navigate={navigate} />}
       </main>
 
       {/* Platform Footer */}
