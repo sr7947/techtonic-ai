@@ -162,17 +162,22 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   const bassOscRef = useRef<OscillatorNode | null>(null);
   const padOscRef = useRef<OscillatorNode | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
-  const [musicMuted, setMusicMuted] = useState(true); // Default to muted to follow autoplay policies
+  const [musicMuted, setMusicMuted] = useState(true);
 
   // Body references for rider pedaling
   const leftThighRef = useRef<THREE.Mesh | null>(null);
   const rightThighRef = useRef<THREE.Mesh | null>(null);
   const leftShinRef = useRef<THREE.Mesh | null>(null);
   const rightShinRef = useRef<THREE.Mesh | null>(null);
+  const leftFootRef = useRef<THREE.Mesh | null>(null);
+  const rightFootRef = useRef<THREE.Mesh | null>(null);
   const frontWheelRef = useRef<THREE.Mesh | null>(null);
   const backWheelRef = useRef<THREE.Mesh | null>(null);
   const bicycleForkRef = useRef<THREE.Mesh | null>(null);
   
+  const leftPedalCrankRef = useRef<THREE.Group | null>(null);
+  const rightPedalCrankRef = useRef<THREE.Group | null>(null);
+
   // Vehicle movement parameters
   const keysPressed = useRef<Record<string, boolean>>({});
   const velocity = useRef(0);
@@ -245,7 +250,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     };
   }, [nearCompanyId, insideCompanyId, activeQuest]);
 
-  // Synthesize ambient synth track in real-time (No external audio file needed)
   const startAmbience = () => {
     if (audioCtxRef.current) return;
 
@@ -260,7 +264,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     masterGain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 3);
 
-    // Deep Bass Drone (55Hz Triangle)
+    // Deep Bass Drone
     const bassOsc = ctx.createOscillator();
     bassOsc.type = 'triangle';
     bassOsc.frequency.setValueAtTime(55, ctx.currentTime);
@@ -278,7 +282,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     bassOsc.start();
     bassOscRef.current = bassOsc;
 
-    // Ambient Pad (110Hz Sine)
+    // Ambient Pad
     const padOsc = ctx.createOscillator();
     padOsc.type = 'sine';
     padOsc.frequency.setValueAtTime(110, ctx.currentTime);
@@ -349,7 +353,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     }
   };
 
-  // Cleanup synthesizer audio on unmount
+  // Cleanup audio on unmount
   useEffect(() => {
     return () => {
       if (audioCtxRef.current) {
@@ -365,7 +369,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   useEffect(() => {
     if (!mountRef.current) return;
 
-    // --- 1. Scene & Environment (Sunset Dome) ---
+    // --- 1. Scene & Environment ---
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     scene.background = new THREE.Color('#0a1324');
@@ -418,7 +422,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mountRef.current.appendChild(renderer.domElement);
 
-    // --- 4. Lights (Warm sunset direction) ---
+    // --- 4. Lights ---
     const ambientLight = new THREE.AmbientLight('#a5b4fc', 1.3);
     scene.add(ambientLight);
 
@@ -429,7 +433,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     sunLight.shadow.mapSize.height = 2048;
     scene.add(sunLight);
 
-    // TechTonic Central Hub Spot Light
     const centerSpot = new THREE.PointLight('#bd9a76', 4.5, 35);
     centerSpot.position.set(0, 10, 0);
     scene.add(centerSpot);
@@ -461,7 +464,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       roadMesh.receiveShadow = true;
       roadGroup.add(roadMesh);
 
-      // Sidewalk borders (Light slate gray slabs)
+      // Sidewalk borders
       const sideW = 0.8;
       const sideGeo = new THREE.BoxGeometry(sideW, 0.15, l);
       const sideMat = new THREE.MeshStandardMaterial({ color: '#64748b', roughness: 0.85 });
@@ -484,7 +487,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       }
       roadGroup.add(leftSidewalk, rightSidewalk);
 
-      // Lane dividers (Dotted lines)
+      // Lane dividers
       const lineCount = Math.floor(l / 8);
       for (let i = 0; i < lineCount; i++) {
         const lineGeo = new THREE.PlaneGeometry(0.12, 1.8);
@@ -502,7 +505,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         roadGroup.add(lineMesh);
       }
 
-      // Glowing circuit lines on sides
+      // Glowing circuit lines
       const circMat = new THREE.MeshBasicMaterial({ color: '#10b981', transparent: true, opacity: 0.45 });
       const circGeo = new THREE.PlaneGeometry(0.1, l);
       const circLeft = new THREE.Mesh(circGeo, circMat);
@@ -857,84 +860,136 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     saddle.position.set(0, 1.15, -0.25);
     bike.add(saddle);
 
-    // --- High-Fidelity Cyber-Athlete Rider ---
+    // --- Interactive Pedals/Cranks (Active rotation cranks) ---
+    const crankMat = new THREE.MeshStandardMaterial({ color: '#64748b', metalness: 0.9, roughness: 0.1 });
+    const pedalMatNode = new THREE.MeshStandardMaterial({ color: '#1e293b', roughness: 0.8 });
+
+    // Left Pedal Assembly
+    const leftPedalCrank = new THREE.Group();
+    leftPedalCrank.position.set(-0.16, 0.5, -0.2);
+    
+    const leftArm = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 0.06), crankMat);
+    leftArm.position.y = -0.15;
+    leftPedalCrank.add(leftArm);
+
+    const leftPedalPlate = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.12), pedalMatNode);
+    leftPedalPlate.position.y = -0.3;
+    leftPedalCrank.add(leftPedalPlate);
+    
+    bike.add(leftPedalCrank);
+    leftPedalCrankRef.current = leftPedalCrank;
+
+    // Right Pedal Assembly
+    const rightPedalCrank = new THREE.Group();
+    rightPedalCrank.position.set(0.16, 0.5, -0.2);
+
+    const rightArm = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 0.06), crankMat);
+    rightArm.position.y = 0.15;
+    rightPedalCrank.add(rightArm);
+
+    const rightPedalPlate = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.12), pedalMatNode);
+    rightPedalPlate.position.y = 0.3;
+    rightPedalCrank.add(rightPedalPlate);
+
+    bike.add(rightPedalCrank);
+    rightPedalCrankRef.current = rightPedalCrank;
+
+    // --- High-Fidelity Cyber-Athlete Rider (REALISTIC SKIN TONE & MELODY APPAREL) ---
     const rider = new THREE.Group();
     riderGroup.add(rider);
     
-    const suitMat = new THREE.MeshStandardMaterial({
-      color: '#1e293b',
-      metalness: 0.9,
-      roughness: 0.15
-    });
+    const skinMat = new THREE.MeshStandardMaterial({ color: '#e5c298', roughness: 0.65 });
+    const tShirtMat = new THREE.MeshStandardMaterial({ color: '#2563eb', roughness: 0.7 }); // Blue sporty T-shirt
+    const jeansMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.85 }); // Indigo Jeans
+    const shoeMat = new THREE.MeshStandardMaterial({ color: '#ef4444', roughness: 0.6 }); // Red/white sneakers
 
-    const trimMat = new THREE.MeshBasicMaterial({ color: '#00e5ff' });
+    // Torso (Realistic shaped shoulders)
+    const torsoChest = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.15, 0.65, 10), tShirtMat);
+    torsoChest.position.set(0, 1.48, -0.2);
+    torsoChest.rotation.x = Math.PI / 15;
+    rider.add(torsoChest);
 
-    // Torso
-    const torsoGeo = new THREE.CylinderGeometry(0.18, 0.14, 0.7, 10);
-    const torso = new THREE.Mesh(torsoGeo, suitMat);
-    torso.position.set(0, 1.5, -0.2);
-    torso.rotation.x = Math.PI / 18;
-    rider.add(torso);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.15, 8), skinMat);
+    neck.position.set(0, 1.8, -0.15);
+    rider.add(neck);
 
-    // Legs
-    const legGeo = new THREE.CylinderGeometry(0.07, 0.05, 0.55, 8);
+    // Realistic Head
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), skinMat);
+    head.position.set(0, 1.95, -0.12);
+    rider.add(head);
+
+    // Hair
+    const hair = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 12), new THREE.MeshStandardMaterial({ color: '#27272a', roughness: 0.95 }));
+    hair.position.set(0, 2.0, -0.14);
+    hair.scale.set(1.0, 0.6, 0.9);
+    rider.add(hair);
+
+    // Left Arm (Jointed shoulder to handlebar)
+    const leftArmGroup = new THREE.Group();
+    leftArmGroup.position.set(-0.22, 1.7, -0.15);
     
-    const leftThigh = new THREE.Mesh(legGeo, suitMat);
-    leftThigh.position.set(-0.16, 1.15, -0.15);
-    leftThigh.rotation.x = Math.PI / 3;
+    const upperArmLeft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.35, 8), tShirtMat);
+    upperArmLeft.position.y = -0.15;
+    upperArmLeft.rotation.z = Math.PI / 8;
+    upperArmLeft.rotation.x = -Math.PI / 6;
+    leftArmGroup.add(upperArmLeft);
+
+    const foreArmLeft = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.35, 8), skinMat);
+    foreArmLeft.position.set(0.05, -0.4, 0.15);
+    foreArmLeft.rotation.x = -Math.PI / 3;
+    leftArmGroup.add(foreArmLeft);
+    
+    rider.add(leftArmGroup);
+
+    // Right Arm (Jointed shoulder to handlebar)
+    const rightArmGroup = new THREE.Group();
+    rightArmGroup.position.set(0.22, 1.7, -0.15);
+
+    const upperArmRight = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.35, 8), tShirtMat);
+    upperArmRight.position.y = -0.15;
+    upperArmRight.rotation.z = -Math.PI / 8;
+    upperArmRight.rotation.x = -Math.PI / 6;
+    rightArmGroup.add(upperArmRight);
+
+    const foreArmRight = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.35, 8), skinMat);
+    foreArmRight.position.set(-0.05, -0.4, 0.15);
+    foreArmRight.rotation.x = -Math.PI / 3;
+    rightArmGroup.add(foreArmRight);
+
+    rider.add(rightArmGroup);
+
+    // Legs (Thighs + Shins + Shoes)
+    const thighGeo = new THREE.CylinderGeometry(0.09, 0.07, 0.5, 8);
+    const shinGeo = new THREE.CylinderGeometry(0.07, 0.055, 0.5, 8);
+    const footGeo = new THREE.BoxGeometry(0.12, 0.08, 0.28);
+
+    // Left Leg
+    const leftThigh = new THREE.Mesh(thighGeo, jeansMat);
+    leftThigh.position.set(-0.16, 1.15, -0.2);
     rider.add(leftThigh);
     leftThighRef.current = leftThigh;
 
-    const rightThigh = new THREE.Mesh(legGeo, suitMat);
-    rightThigh.position.set(0.16, 1.15, -0.15);
-    rightThigh.rotation.x = Math.PI / 6;
-    rider.add(rightThigh);
-    rightThighRef.current = rightThigh;
-
-    const leftShin = new THREE.Mesh(legGeo, suitMat);
-    leftShin.position.set(-0.16, 0.75, 0.05);
+    const leftShin = new THREE.Mesh(shinGeo, jeansMat);
     rider.add(leftShin);
     leftShinRef.current = leftShin;
 
-    const rightShin = new THREE.Mesh(legGeo, suitMat);
-    rightShin.position.set(0.16, 0.75, -0.05);
+    const leftFoot = new THREE.Mesh(footGeo, shoeMat);
+    rider.add(leftFoot);
+    leftFootRef.current = leftFoot;
+
+    // Right Leg
+    const rightThigh = new THREE.Mesh(thighGeo, jeansMat);
+    rightThigh.position.set(0.16, 1.15, -0.2);
+    rider.add(rightThigh);
+    rightThighRef.current = rightThigh;
+
+    const rightShin = new THREE.Mesh(shinGeo, jeansMat);
     rider.add(rightShin);
     rightShinRef.current = rightShin;
 
-    // Head (Realistic Chrome Astronaut Helmet)
-    const helmetShellGeo = new THREE.SphereGeometry(0.17, 16, 16);
-    const helmetShellMat = new THREE.MeshStandardMaterial({ color: '#e2e8f0', metalness: 1.0, roughness: 0.1 });
-    const helmet = new THREE.Mesh(helmetShellGeo, helmetShellMat);
-    helmet.position.set(0, 1.95, -0.1);
-    rider.add(helmet);
-
-    const visorGeo = new THREE.SphereGeometry(0.12, 16, 16, 0, Math.PI, 0, Math.PI / 2);
-    const visorMat = new THREE.MeshStandardMaterial({ color: '#020617', metalness: 1.0, roughness: 0.02 });
-    const visor = new THREE.Mesh(visorGeo, visorMat);
-    visor.position.set(0, 1.97, 0.02);
-    visor.rotation.x = Math.PI / 12;
-    rider.add(visor);
-
-    // Collar trim
-    const collarGeo = new THREE.TorusGeometry(0.18, 0.02, 6, 16);
-    const collar = new THREE.Mesh(collarGeo, trimMat);
-    collar.position.set(0, 1.83, -0.1);
-    collar.rotation.x = Math.PI / 2;
-    rider.add(collar);
-
-    // Arms
-    const armGeo = new THREE.CylinderGeometry(0.04, 0.03, 0.65, 8);
-    const leftArm = new THREE.Mesh(armGeo, suitMat);
-    leftArm.position.set(-0.25, 1.45, 0.15);
-    leftArm.rotation.x = -Math.PI / 4;
-    leftArm.rotation.z = Math.PI / 12;
-    rider.add(leftArm);
-
-    const rightArm = new THREE.Mesh(armGeo, suitMat);
-    rightArm.position.set(0.25, 1.45, 0.15);
-    rightArm.rotation.x = -Math.PI / 4;
-    rightArm.rotation.z = -Math.PI / 12;
-    rider.add(rightArm);
+    const rightFoot = new THREE.Mesh(footGeo, shoeMat);
+    rider.add(rightFoot);
+    rightFootRef.current = rightFoot;
 
     // Setup bike position
     riderGroup.position.set(0, 0, 10);
@@ -1058,16 +1113,43 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         const bounce = Math.sin(timeNow * 0.005) * 0.02;
         playerVehicleRef.current.position.y = bounce;
 
-        // Pedaling joints trigonometric animation
-        if (leftThighRef.current && rightThighRef.current && leftShinRef.current && rightShinRef.current) {
-          const pedalCycle = timeNow * 0.018 * velocity.current;
-          const leftAngle = pedalCycle;
-          const rightAngle = pedalCycle + Math.PI;
+        // Pedaling assembly and joints trig calculation
+        const pedalCycle = timeNow * 0.015 * velocity.current;
+        const leftAngle = pedalCycle;
+        const rightAngle = pedalCycle + Math.PI;
 
+        // Rotate the metal pedal crank nodes
+        if (leftPedalCrankRef.current && rightPedalCrankRef.current) {
+          leftPedalCrankRef.current.rotation.x = leftAngle;
+          rightPedalCrankRef.current.rotation.x = rightAngle;
+        }
+
+        // Animate left/right thighs, shins, and feet to match the pedal spin
+        if (
+          leftThighRef.current && leftShinRef.current && leftFootRef.current &&
+          rightThighRef.current && rightShinRef.current && rightFootRef.current
+        ) {
+          // Left leg kinematics approximation
           leftThighRef.current.rotation.x = Math.PI / 4 + Math.sin(leftAngle) * 0.35;
+          const leftKneeY = 0.82 + Math.sin(leftAngle) * 0.18;
+          const leftKneeZ = -0.15 + Math.cos(leftAngle) * 0.12;
+
+          leftShinRef.current.position.set(-0.16, leftKneeY - 0.22, leftKneeZ + 0.18);
+          leftShinRef.current.rotation.x = -Math.PI / 6 + Math.cos(leftAngle) * 0.28;
+
+          leftFootRef.current.position.set(-0.16, 0.5 + Math.sin(leftAngle + Math.PI / 2) * 0.3, -0.2 + Math.cos(leftAngle + Math.PI / 2) * 0.3);
+          leftFootRef.current.rotation.x = Math.sin(leftAngle) * 0.15;
+
+          // Right leg kinematics approximation
           rightThighRef.current.rotation.x = Math.PI / 4 + Math.sin(rightAngle) * 0.35;
-          leftShinRef.current.rotation.x = Math.PI / 6 + Math.cos(leftAngle) * 0.25;
-          rightShinRef.current.rotation.x = Math.PI / 6 + Math.cos(rightAngle) * 0.25;
+          const rightKneeY = 0.82 + Math.sin(rightAngle) * 0.18;
+          const rightKneeZ = -0.15 + Math.cos(rightAngle) * 0.12;
+
+          rightShinRef.current.position.set(0.16, rightKneeY - 0.22, rightKneeZ + 0.18);
+          rightShinRef.current.rotation.x = -Math.PI / 6 + Math.cos(rightAngle) * 0.28;
+
+          rightFootRef.current.position.set(0.16, 0.5 + Math.sin(rightAngle + Math.PI / 2) * 0.3, -0.2 + Math.cos(rightAngle + Math.PI / 2) * 0.3);
+          rightFootRef.current.rotation.x = Math.sin(rightAngle) * 0.15;
         }
 
         // Spin wheels when moving
@@ -1129,13 +1211,11 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         const newLabels: ProjectedLabel[] = [];
 
         companyConfig.forEach((c) => {
-          // Point just above the tower's roof height
           const pos = new THREE.Vector3(c.x, c.height + 4.5, c.z);
           pos.project(cameraRef.current!);
 
           const isBehind = pos.z > 1;
 
-          // Convert to pixel coordinates
           const screenX = (pos.x * 0.5 + 0.5) * width;
           const screenY = (pos.y * -0.5 + 0.5) * height;
 
@@ -1149,7 +1229,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             name: c.name,
             x: screenX,
             y: screenY,
-            visible: !isBehind && dist < 160, // show labels within 160m distance
+            visible: !isBehind && dist < 160,
             color: c.color,
             dist: Math.round(dist)
           });
@@ -1157,23 +1237,29 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         setProjectedLabels(newLabels);
       }
 
-      // --- Chase Camera Follow ---
+      // --- Chase Camera Follow (FITTED TO VIDEO - THREE-QUARTER SIDE ANGLE OFFSET) ---
       if (cameraRef.current && playerVehicleRef.current) {
         const targetPos = playerVehicleRef.current.position;
         const camDistance = 8.5;
-        const camHeight = 3.6;
+        const camHeight = 3.2;
         
-        const idealCamX = targetPos.x - Math.sin(angle.current) * camDistance;
-        const idealCamZ = targetPos.z - Math.cos(angle.current) * camDistance;
+        // Calculate tangent (sideways) vector of orientation to offset the camera slightly to the right
+        const tangentX = -Math.cos(angle.current);
+        const tangentZ = Math.sin(angle.current);
+        const sideOffset = 1.6; // 1.6 meters offset to show beautiful three-quarter bicycle profile
+
+        const idealCamX = targetPos.x - Math.sin(angle.current) * camDistance + tangentX * sideOffset;
+        const idealCamZ = targetPos.z - Math.cos(angle.current) * camDistance + tangentZ * sideOffset;
         const idealCamY = targetPos.y + camHeight;
 
         cameraRef.current.position.x += (idealCamX - cameraRef.current.position.x) * 0.085;
         cameraRef.current.position.z += (idealCamZ - cameraRef.current.position.z) * 0.085;
         cameraRef.current.position.y += (idealCamY - cameraRef.current.position.y) * 0.085;
 
+        // Point at cyclist's back/torso center
         const lookTarget = new THREE.Vector3(
           targetPos.x + Math.sin(angle.current) * 1.5,
-          targetPos.y + 1.2,
+          targetPos.y + 1.25,
           targetPos.z + Math.cos(angle.current) * 1.5
         );
         cameraRef.current.lookAt(lookTarget);
@@ -1329,7 +1415,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             <button
               onClick={() => {
                 setShowIntro(false);
-                toggleMute(); // Auto-unmute sound on start
+                toggleMute();
               }}
               className="w-full py-3 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs sm:text-sm font-extrabold uppercase tracking-widest cursor-pointer shadow-lg shadow-brand-gold/20 transition-all active:scale-95"
             >
@@ -1342,7 +1428,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       {/* 3D Canvas Mounting Point */}
       <div ref={mountRef} className="w-full h-full relative z-10" />
 
-      {/* Projected HTML Skyscraper Floating HUD Name Tags (AR Guidance HUD) */}
+      {/* Projected HTML Skyscraper Floating HUD Name Tags */}
       <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
         {projectedLabels.map((lbl) => {
           if (!lbl.visible) return null;
