@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Settings, LogOut, ChevronDown, ArrowLeft } from 'lucide-react';
+import { Menu, X, Settings, LogOut, ChevronDown, ArrowLeft, Compass } from 'lucide-react';
 
 interface NavbarProps {
   user: { name: string; email: string; picture: string } | null;
@@ -8,6 +8,8 @@ interface NavbarProps {
   onOpenAdmin: () => void;
   currentPath?: string;
   navigate?: (path: string) => void;
+  cityMode?: boolean;
+  onCityModeToggle?: () => void;
 }
 
 const YoutubeIcon = ({ className }: { className?: string }) => (
@@ -31,7 +33,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSignOut,
   onOpenAdmin,
   currentPath = '/',
-  navigate = (path) => { window.location.pathname = path; }
+  navigate = (path) => { window.location.pathname = path; },
+  cityMode = false,
+  onCityModeToggle
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -314,6 +318,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               )}
 
+              <button
+                onClick={onCityModeToggle}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 focus:outline-none active:scale-95 border cursor-pointer ${
+                  cityMode
+                    ? 'bg-brand-gold/25 text-brand-gold-bright border-brand-gold/40 shadow-[0_0_10px_rgba(189,154,118,0.1)]'
+                    : 'bg-brand-navy-light/45 text-slate-300 border-brand-gold/10 hover:border-brand-gold/30 hover:bg-brand-navy-light/70'
+                }`}
+              >
+                <Compass className="w-4 h-4 text-brand-gold" />
+                {cityMode ? '2D View' : '3D City'}
+              </button>
+
               <a
                 href="https://youtube.com/@techtonicai7947"
                 target="_blank"
@@ -475,6 +491,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Sign In Options
                 </button>
               )}
+
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  if (onCityModeToggle) onCityModeToggle();
+                }}
+                className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg text-base font-semibold tracking-wider transition-all border cursor-pointer ${
+                  cityMode
+                    ? 'bg-brand-gold/25 text-brand-gold-bright border-brand-gold/40'
+                    : 'bg-brand-navy-light/45 text-slate-300 border-brand-gold/10 hover:bg-brand-navy-light/70'
+                }`}
+              >
+                <Compass className="w-5 h-5 text-brand-gold" />
+                {cityMode ? 'Standard Mode' : 'AI City Mode'}
+              </button>
 
               <a
                 href="https://youtube.com/@techtonicai7947"

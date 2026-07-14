@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ThreeBackground } from './components/ThreeBackground';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { AICityView } from './components/AICityView';
 import { UpdatesSection } from './components/UpdatesSection';
 import { LeadersSection } from './components/LeadersSection';
 import { LearningHub } from './components/LearningHub';
@@ -53,6 +54,7 @@ function App() {
 
   // Client-side SPA Router State
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [cityMode, setCityMode] = useState(false);
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -213,6 +215,8 @@ function App() {
         onOpenAdmin={() => setAdminOpen(true)}
         currentPath={currentPath}
         navigate={navigate}
+        cityMode={cityMode}
+        onCityModeToggle={() => setCityMode(!cityMode)}
       />
 
       {/* Main Content Layout */}
@@ -266,6 +270,9 @@ function App() {
           currentVideos={videos}
         />
       )}
+
+      {/* 3D AI City View Overlay Mode */}
+      {cityMode && <AICityView onClose={() => setCityMode(false)} />}
     </div>
   );
 }
