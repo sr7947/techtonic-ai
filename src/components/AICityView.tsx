@@ -195,11 +195,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   const deceleration = 0.015;
   const turnSpeed = 0.04;
 
-  // Refs to avoid stale closures in listeners
-  const nearCompanyIdRef = useRef<string | null>(null);
-  const insideCompanyIdRef = useRef<string | null>(null);
-  const activeQuestRef = useRef<Quest | null>(null);
-
   // Active quest selector
   const activeQuest = useMemo(() => {
     if (activeQuestIndex >= QUESTS.length) return null;
@@ -211,19 +206,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     if (!insideCompanyId) return null;
     return hubDataMap[insideCompanyId] || null;
   }, [insideCompanyId]);
-
-  // Sync refs with state changes to prevent closure issues
-  useEffect(() => {
-    nearCompanyIdRef.current = nearCompanyId;
-  }, [nearCompanyId]);
-
-  useEffect(() => {
-    insideCompanyIdRef.current = insideCompanyId;
-  }, [insideCompanyId]);
-
-  useEffect(() => {
-    activeQuestRef.current = activeQuest;
-  }, [activeQuest]);
 
   // Handle XP updates and levels
   const addXp = (amount: number) => {
@@ -249,6 +231,44 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     addXp(activeQuest.xpReward);
     setActiveQuestIndex(prev => prev + 1);
   };
+
+  // Separate Keyboard control bindings exactly like production
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      keysPressed.current[key] = true;
+      keysPressed.current[e.code.toLowerCase()] = true;
+
+      // Prevent scrolling defaults for arrows and space
+      if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'space', 'keyw', 'keys', 'keya', 'keyd'].includes(key) || 
+          ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'space', 'keyw', 'keys', 'keya', 'keyd'].includes(e.code.toLowerCase())) {
+        e.preventDefault();
+      }
+
+      console.log(`KeyDown: ${e.key} / Code: ${e.code}`);
+
+      // Enter building on "E" key
+      if (key === 'e' && nearCompanyId && !insideCompanyId) {
+        setInsideCompanyId(nearCompanyId);
+        if (activeQuest && activeQuest.targetCompanyId === nearCompanyId) {
+          completeCurrentQuest();
+        }
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      keysPressed.current[key] = false;
+      keysPressed.current[e.code.toLowerCase()] = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown, { passive: false });
+    window.addEventListener('keyup', handleKeyUp, { passive: true });
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [nearCompanyId, insideCompanyId, activeQuest]);
 
   const toggleMute = () => {
     if (audioRef.current) {
@@ -932,40 +952,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     const starField = new THREE.Points(starGeo, starMat);
     scene.add(starField);
 
-    // --- Setup Keyboard Listeners on document for high reliability ---
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const key = e.key.toLowerCase();
-      keysPressed.current[key] = true;
-      keysPressed.current[e.code.toLowerCase()] = true;
-
-      // Prevent scrolling defaults for arrows and space
-      if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'space', 'keyw', 'keys', 'keya', 'keyd'].includes(key) || 
-          ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'space', 'keyw', 'keys', 'keya', 'keyd'].includes(e.code.toLowerCase())) {
-        e.preventDefault();
-      }
-
-      console.log(`KeyDown registered: ${e.key} / Code: ${e.code}`);
-
-      // Handle Enter building on E key
-      if (key === 'e' && nearCompanyIdRef.current && !insideCompanyIdRef.current) {
-        const targetId = nearCompanyIdRef.current;
-        setInsideCompanyId(targetId);
-        
-        if (activeQuestRef.current && activeQuestRef.current.targetCompanyId === targetId) {
-          completeCurrentQuest();
-        }
-      }
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      const key = e.key.toLowerCase();
-      keysPressed.current[key] = false;
-      keysPressed.current[e.code.toLowerCase()] = false;
-    };
-
-    document.addEventListener('keydown', handleKeyDown, { passive: false });
-    document.addEventListener('keyup', handleKeyUp, { passive: true });
-
     // --- 11. Game Animation & Physics Loop ---
     let frameId: number;
     let frameIndex = 0;
@@ -1206,8 +1192,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
       if (mountRef.current) {
         mountRef.current.removeEventListener('click', handleContainerClick);
       }
