@@ -157,11 +157,8 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   const sceneRef = useRef<THREE.Scene | null>(null);
   const playerVehicleRef = useRef<THREE.Group | null>(null);
   
-  // Synthesizer Audio Engine
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const bassOscRef = useRef<OscillatorNode | null>(null);
-  const padOscRef = useRef<OscillatorNode | null>(null);
-  const masterGainRef = useRef<GainNode | null>(null);
+  // High-quality background HTML Audio stream (SoundHelix synth track)
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [musicMuted, setMusicMuted] = useState(true);
 
   // Body references for rider pedaling
@@ -250,120 +247,17 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     };
   }, [nearCompanyId, insideCompanyId, activeQuest]);
 
-  const startAmbience = () => {
-    if (audioCtxRef.current) return;
-
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    const ctx = new AudioContextClass();
-    audioCtxRef.current = ctx;
-
-    const masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(0.0, ctx.currentTime);
-    masterGain.connect(ctx.destination);
-    masterGainRef.current = masterGain;
-
-    masterGain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 3);
-
-    // Deep Bass Drone
-    const bassOsc = ctx.createOscillator();
-    bassOsc.type = 'triangle';
-    bassOsc.frequency.setValueAtTime(55, ctx.currentTime);
-    
-    const bassFilter = ctx.createBiquadFilter();
-    bassFilter.type = 'lowpass';
-    bassFilter.frequency.setValueAtTime(140, ctx.currentTime);
-
-    const bassGain = ctx.createGain();
-    bassGain.gain.setValueAtTime(0.35, ctx.currentTime);
-
-    bassOsc.connect(bassFilter);
-    bassFilter.connect(bassGain);
-    bassGain.connect(masterGain);
-    bassOsc.start();
-    bassOscRef.current = bassOsc;
-
-    // Ambient Pad
-    const padOsc = ctx.createOscillator();
-    padOsc.type = 'sine';
-    padOsc.frequency.setValueAtTime(110, ctx.currentTime);
-
-    const padFilter = ctx.createBiquadFilter();
-    padFilter.type = 'peaking';
-    padFilter.frequency.setValueAtTime(250, ctx.currentTime);
-    padFilter.Q.setValueAtTime(1.0, ctx.currentTime);
-
-    const padGain = ctx.createGain();
-    padGain.gain.setValueAtTime(0.25, ctx.currentTime);
-
-    padOsc.connect(padFilter);
-    padFilter.connect(padGain);
-    padGain.connect(masterGain);
-    padOsc.start();
-    padOscRef.current = padOsc;
-
-    // Soft celestial pentatonic plucks
-    const notes = [220, 261.63, 293.66, 329.63, 392.00, 440];
-    const triggerPluck = () => {
-      if (ctx.state === 'suspended') return;
-      
-      const now = ctx.currentTime;
-      const pluckOsc = ctx.createOscillator();
-      pluckOsc.type = 'sine';
-      
-      const note = notes[Math.floor(Math.random() * notes.length)];
-      pluckOsc.frequency.setValueAtTime(note, now);
-
-      const pluckFilter = ctx.createBiquadFilter();
-      pluckFilter.type = 'lowpass';
-      pluckFilter.frequency.setValueAtTime(750, now);
-      pluckFilter.frequency.exponentialRampToValueAtTime(160, now + 2.0);
-
-      const pluckGain = ctx.createGain();
-      pluckGain.gain.setValueAtTime(0.08, now);
-      pluckGain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
-
-      pluckOsc.connect(pluckFilter);
-      pluckFilter.connect(pluckGain);
-      pluckGain.connect(masterGain);
-      
-      pluckOsc.start(now);
-      pluckOsc.stop(now + 2.5);
-    };
-
-    const intervalId = setInterval(triggerPluck, 2800);
-    (ctx as any)._pluckInterval = intervalId;
-  };
-
   const toggleMute = () => {
-    if (musicMuted) {
-      if (!audioCtxRef.current) {
-        startAmbience();
-      } else if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
+    if (audioRef.current) {
+      if (musicMuted) {
+        audioRef.current.play().catch(err => console.warn("Audio autoplay blocked:", err));
+        setMusicMuted(false);
+      } else {
+        audioRef.current.pause();
+        setMusicMuted(true);
       }
-      if (masterGainRef.current) {
-        masterGainRef.current.gain.linearRampToValueAtTime(0.2, audioCtxRef.current!.currentTime + 0.5);
-      }
-      setMusicMuted(false);
-    } else {
-      if (masterGainRef.current && audioCtxRef.current) {
-        masterGainRef.current.gain.linearRampToValueAtTime(0.0, audioCtxRef.current.currentTime + 0.5);
-      }
-      setMusicMuted(true);
     }
   };
-
-  // Cleanup audio on unmount
-  useEffect(() => {
-    return () => {
-      if (audioCtxRef.current) {
-        if ((audioCtxRef.current as any)._pluckInterval) {
-          clearInterval((audioCtxRef.current as any)._pluckInterval);
-        }
-        audioCtxRef.current.close();
-      }
-    };
-  }, []);
 
   // Initialize Three.js Game World
   useEffect(() => {
@@ -618,63 +512,11 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     scene.add(hqGroup);
 
-    // Helper to generate rotating procedural 3D company logo
-    const createCompanyLogo = (id: string, color: string): THREE.Group => {
-      const logoGroup = new THREE.Group();
+    // Texture loader for real downloaded company logos
+    const textureLoader = new THREE.TextureLoader();
+    const downloadedLogos = ['google', 'openai', 'meta', 'nvidia', 'microsoft', 'aws', 'anthropic', 'huggingface', 'ibm', 'apple'];
 
-      if (id === 'openai') {
-        for (let i = 0; i < 6; i++) {
-          const petalGeo = new THREE.RingGeometry(0.25, 0.32, 16);
-          const petalMat = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
-          const petal = new THREE.Mesh(petalGeo, petalMat);
-          const angleRad = (i * Math.PI) / 3;
-          petal.position.set(Math.cos(angleRad) * 0.28, Math.sin(angleRad) * 0.28, 0);
-          logoGroup.add(petal);
-        }
-      } 
-      else if (id === 'meta') {
-        const ringG = new THREE.TorusGeometry(0.35, 0.08, 8, 20);
-        const ringM = new THREE.MeshBasicMaterial({ color });
-        const leftLoop = new THREE.Mesh(ringG, ringM);
-        leftLoop.position.set(-0.3, 0, 0);
-        const rightLoop = new THREE.Mesh(ringG, ringM);
-        rightLoop.position.set(0.3, 0, 0);
-        logoGroup.add(leftLoop, rightLoop);
-      } 
-      else if (id === 'google') {
-        const colors = ['#4285F4', '#EA4335', '#FBBC05', '#34A853'];
-        for (let i = 0; i < 4; i++) {
-          const arcGeo = new THREE.TorusGeometry(0.5, 0.09, 8, 12, Math.PI / 2);
-          const arcMat = new THREE.MeshBasicMaterial({ color: colors[i] });
-          const arc = new THREE.Mesh(arcGeo, arcMat);
-          arc.rotation.z = (i * Math.PI) / 2;
-          logoGroup.add(arc);
-        }
-      } 
-      else if (id === 'aws') {
-        const arrowGeo = new THREE.TorusGeometry(0.5, 0.08, 8, 12, Math.PI / 3);
-        const arrowMat = new THREE.MeshBasicMaterial({ color: '#FF9900' });
-        const arrow = new THREE.Mesh(arrowGeo, arrowMat);
-        arrow.rotation.z = Math.PI * 1.35;
-        logoGroup.add(arrow);
-      } 
-      else if (id === 'nvidia') {
-        const nGeo = new THREE.BoxGeometry(0.7, 0.7, 0.1);
-        const nMat = new THREE.MeshBasicMaterial({ color, wireframe: true });
-        const nMesh = new THREE.Mesh(nGeo, nMat);
-        logoGroup.add(nMesh);
-      } 
-      else {
-        const torusG = new THREE.TorusGeometry(0.4, 0.08, 8, 24);
-        const torusM = new THREE.MeshBasicMaterial({ color });
-        const torus = new THREE.Mesh(torusG, torusM);
-        logoGroup.add(torus);
-      }
-
-      return logoGroup;
-    };
-
-    // --- 8. High-Fidelity Company Skyscraper Towers (REALISTIC CURVED GLASS STYLE) ---
+    // --- 8. High-Fidelity Company Skyscraper Towers ---
     companyConfig.forEach((c) => {
       const towerGroup = new THREE.Group();
 
@@ -723,11 +565,30 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       logoPlaque.position.set(0, c.height * 0.8, c.depth * 0.3 + 0.05);
       towerGroup.add(logoPlaque);
 
-      // Attach detailed logo
-      const brandLogo = createCompanyLogo(c.id, c.color);
-      brandLogo.position.set(0, c.height * 0.8, c.depth * 0.3 + 0.15);
-      (brandLogo as any).userData = { isHolo: true };
-      towerGroup.add(brandLogo);
+      // Apply real downloaded image logo or procedural fallback
+      if (downloadedLogos.includes(c.id)) {
+        const logoTex = textureLoader.load(`/logos/${c.id}.png`);
+        const logoPicGeo = new THREE.PlaneGeometry(c.width * 0.55, 1.8);
+        const logoPicMat = new THREE.MeshStandardMaterial({
+          map: logoTex,
+          transparent: true,
+          roughness: 0.15,
+          metalness: 0.8,
+          side: THREE.DoubleSide
+        });
+        const logoPic = new THREE.Mesh(logoPicGeo, logoPicMat);
+        // Position slightly in front of the plaque to prevent Z-fighting
+        logoPic.position.set(0, c.height * 0.8, c.depth * 0.3 + 0.11);
+        towerGroup.add(logoPic);
+      } else {
+        // Fallback simple torus mesh if logo is not downloaded
+        const ringG = new THREE.TorusGeometry(0.5, 0.1, 8, 20);
+        const ringM = new THREE.MeshBasicMaterial({ color: c.color });
+        const fallbackLogo = new THREE.Mesh(ringG, ringM);
+        fallbackLogo.position.set(0, c.height * 0.8, c.depth * 0.3 + 0.11);
+        (fallbackLogo as any).userData = { isHolo: true };
+        towerGroup.add(fallbackLogo);
+      }
 
       // Blinking beacon light on top
       const beaconGeo = new THREE.SphereGeometry(0.18, 8, 8);
@@ -736,7 +597,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       beacon.position.y = c.height + 0.2;
       towerGroup.add(beacon);
 
-      // Parking / Entrance Area marker ring (Ground glowing circle)
+      // Parking / Entrance Area marker ring
       const ringGeo = new THREE.RingGeometry(6.4, 6.8, 32);
       const ringMat = new THREE.MeshBasicMaterial({
         color: c.color,
@@ -860,7 +721,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     saddle.position.set(0, 1.15, -0.25);
     bike.add(saddle);
 
-    // --- Interactive Pedals/Cranks (Active rotation cranks) ---
+    // Interactive Pedals/Cranks
     const crankMat = new THREE.MeshStandardMaterial({ color: '#64748b', metalness: 0.9, roughness: 0.1 });
     const pedalMatNode = new THREE.MeshStandardMaterial({ color: '#1e293b', roughness: 0.8 });
 
@@ -894,16 +755,16 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     bike.add(rightPedalCrank);
     rightPedalCrankRef.current = rightPedalCrank;
 
-    // --- High-Fidelity Cyber-Athlete Rider (REALISTIC SKIN TONE & MELODY APPAREL) ---
+    // --- High-Fidelity Cyber-Athlete Rider ---
     const rider = new THREE.Group();
     riderGroup.add(rider);
     
     const skinMat = new THREE.MeshStandardMaterial({ color: '#e5c298', roughness: 0.65 });
-    const tShirtMat = new THREE.MeshStandardMaterial({ color: '#2563eb', roughness: 0.7 }); // Blue sporty T-shirt
-    const jeansMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.85 }); // Indigo Jeans
-    const shoeMat = new THREE.MeshStandardMaterial({ color: '#ef4444', roughness: 0.6 }); // Red/white sneakers
+    const tShirtMat = new THREE.MeshStandardMaterial({ color: '#2563eb', roughness: 0.7 });
+    const jeansMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.85 });
+    const shoeMat = new THREE.MeshStandardMaterial({ color: '#ef4444', roughness: 0.6 });
 
-    // Torso (Realistic shaped shoulders)
+    // Torso
     const torsoChest = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.15, 0.65, 10), tShirtMat);
     torsoChest.position.set(0, 1.48, -0.2);
     torsoChest.rotation.x = Math.PI / 15;
@@ -924,7 +785,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     hair.scale.set(1.0, 0.6, 0.9);
     rider.add(hair);
 
-    // Left Arm (Jointed shoulder to handlebar)
+    // Left Arm
     const leftArmGroup = new THREE.Group();
     leftArmGroup.position.set(-0.22, 1.7, -0.15);
     
@@ -941,7 +802,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     
     rider.add(leftArmGroup);
 
-    // Right Arm (Jointed shoulder to handlebar)
+    // Right Arm
     const rightArmGroup = new THREE.Group();
     rightArmGroup.position.set(0.22, 1.7, -0.15);
 
@@ -958,7 +819,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     rider.add(rightArmGroup);
 
-    // Legs (Thighs + Shins + Shoes)
+    // Legs
     const thighGeo = new THREE.CylinderGeometry(0.09, 0.07, 0.5, 8);
     const shinGeo = new THREE.CylinderGeometry(0.07, 0.055, 0.5, 8);
     const footGeo = new THREE.BoxGeometry(0.12, 0.08, 0.28);
@@ -1129,7 +990,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
           leftThighRef.current && leftShinRef.current && leftFootRef.current &&
           rightThighRef.current && rightShinRef.current && rightFootRef.current
         ) {
-          // Left leg kinematics approximation
           leftThighRef.current.rotation.x = Math.PI / 4 + Math.sin(leftAngle) * 0.35;
           const leftKneeY = 0.82 + Math.sin(leftAngle) * 0.18;
           const leftKneeZ = -0.15 + Math.cos(leftAngle) * 0.12;
@@ -1140,7 +1000,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
           leftFootRef.current.position.set(-0.16, 0.5 + Math.sin(leftAngle + Math.PI / 2) * 0.3, -0.2 + Math.cos(leftAngle + Math.PI / 2) * 0.3);
           leftFootRef.current.rotation.x = Math.sin(leftAngle) * 0.15;
 
-          // Right leg kinematics approximation
           rightThighRef.current.rotation.x = Math.PI / 4 + Math.sin(rightAngle) * 0.35;
           const rightKneeY = 0.82 + Math.sin(rightAngle) * 0.18;
           const rightKneeZ = -0.15 + Math.cos(rightAngle) * 0.12;
@@ -1392,6 +1251,14 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 bg-[#02040a] overflow-hidden flex select-none text-slate-100 font-sans">
       
+      {/* Background Audio tag */}
+      <audio 
+        ref={audioRef} 
+        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" 
+        loop 
+        preload="auto" 
+      />
+
       {/* Dynamic Intro Welcome overlay */}
       {showIntro && (
         <div className="absolute inset-0 bg-[#02040a]/98 backdrop-blur-md flex items-center justify-center z-[100] px-4">
@@ -1415,7 +1282,8 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             <button
               onClick={() => {
                 setShowIntro(false);
-                toggleMute();
+                window.focus(); // Set focus to key events immediately
+                toggleMute(); // Auto-unmute on drive click
               }}
               className="w-full py-3 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs sm:text-sm font-extrabold uppercase tracking-widest cursor-pointer shadow-lg shadow-brand-gold/20 transition-all active:scale-95"
             >
@@ -1493,7 +1361,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
           <div className="flex gap-2">
             <button
               onClick={toggleMute}
-              className={`flex items-center justify-center p-2.5 rounded-xl border transition-all cursor-pointer shadow-lg active:scale-95 ${
+              className={`flex items-center justify-center p-2.5 rounded-xl border transition-all cursor-pointer shadow-lg active:scale-95 pointer-events-auto ${
                 musicMuted
                   ? 'bg-slate-900/60 border-slate-700 text-slate-400 hover:text-slate-200'
                   : 'bg-brand-gold/25 border-brand-gold/40 text-brand-gold-bright shadow-brand-gold/10'
@@ -1504,7 +1372,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             </button>
             <button
               onClick={onClose}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-950/40 hover:bg-red-900 border border-red-500/20 hover:border-red-500 text-xs font-bold uppercase tracking-widest text-slate-200 transition-all cursor-pointer shadow-lg active:scale-95"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-950/40 hover:bg-red-900 border border-red-500/20 hover:border-red-500 text-xs font-bold uppercase tracking-widest text-slate-200 transition-all cursor-pointer shadow-lg active:scale-95 pointer-events-auto"
             >
               <ArrowLeft className="w-4 h-4" />
               Exit City
