@@ -12,7 +12,9 @@ import {
   Award, 
   Terminal, 
   Trophy, 
-  CheckCircle
+  CheckCircle,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 
 // Import all leader datasets for data-driven rendering
@@ -119,6 +121,16 @@ const QUESTS: Quest[] = [
   }
 ];
 
+interface ProjectedLabel {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  visible: boolean;
+  color: string;
+  dist: number;
+}
+
 export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   
@@ -129,6 +141,9 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
   const [activeQuestIndex, setActiveQuestIndex] = useState(0);
   const [questCompleted, setQuestCompleted] = useState<Record<string, boolean>>({});
+  
+  // Projected 3D Labels in HTML space
+  const [projectedLabels, setProjectedLabels] = useState<ProjectedLabel[]>([]);
   
   // Selected interior building
   const [insideCompanyId, setInsideCompanyId] = useState<string | null>(null);
@@ -142,6 +157,13 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   const sceneRef = useRef<THREE.Scene | null>(null);
   const playerVehicleRef = useRef<THREE.Group | null>(null);
   
+  // Synthesizer Audio Engine
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const bassOscRef = useRef<OscillatorNode | null>(null);
+  const padOscRef = useRef<OscillatorNode | null>(null);
+  const masterGainRef = useRef<GainNode | null>(null);
+  const [musicMuted, setMusicMuted] = useState(true); // Default to muted to follow autoplay policies
+
   // Body references for rider pedaling
   const leftThighRef = useRef<THREE.Mesh | null>(null);
   const rightThighRef = useRef<THREE.Mesh | null>(null);
@@ -223,24 +245,140 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     };
   }, [nearCompanyId, insideCompanyId, activeQuest]);
 
+  // Synthesize ambient synth track in real-time (No external audio file needed)
+  const startAmbience = () => {
+    if (audioCtxRef.current) return;
+
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const ctx = new AudioContextClass();
+    audioCtxRef.current = ctx;
+
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0.0, ctx.currentTime);
+    masterGain.connect(ctx.destination);
+    masterGainRef.current = masterGain;
+
+    masterGain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 3);
+
+    // Deep Bass Drone (55Hz Triangle)
+    const bassOsc = ctx.createOscillator();
+    bassOsc.type = 'triangle';
+    bassOsc.frequency.setValueAtTime(55, ctx.currentTime);
+    
+    const bassFilter = ctx.createBiquadFilter();
+    bassFilter.type = 'lowpass';
+    bassFilter.frequency.setValueAtTime(140, ctx.currentTime);
+
+    const bassGain = ctx.createGain();
+    bassGain.gain.setValueAtTime(0.35, ctx.currentTime);
+
+    bassOsc.connect(bassFilter);
+    bassFilter.connect(bassGain);
+    bassGain.connect(masterGain);
+    bassOsc.start();
+    bassOscRef.current = bassOsc;
+
+    // Ambient Pad (110Hz Sine)
+    const padOsc = ctx.createOscillator();
+    padOsc.type = 'sine';
+    padOsc.frequency.setValueAtTime(110, ctx.currentTime);
+
+    const padFilter = ctx.createBiquadFilter();
+    padFilter.type = 'peaking';
+    padFilter.frequency.setValueAtTime(250, ctx.currentTime);
+    padFilter.Q.setValueAtTime(1.0, ctx.currentTime);
+
+    const padGain = ctx.createGain();
+    padGain.gain.setValueAtTime(0.25, ctx.currentTime);
+
+    padOsc.connect(padFilter);
+    padFilter.connect(padGain);
+    padGain.connect(masterGain);
+    padOsc.start();
+    padOscRef.current = padOsc;
+
+    // Soft celestial pentatonic plucks
+    const notes = [220, 261.63, 293.66, 329.63, 392.00, 440];
+    const triggerPluck = () => {
+      if (ctx.state === 'suspended') return;
+      
+      const now = ctx.currentTime;
+      const pluckOsc = ctx.createOscillator();
+      pluckOsc.type = 'sine';
+      
+      const note = notes[Math.floor(Math.random() * notes.length)];
+      pluckOsc.frequency.setValueAtTime(note, now);
+
+      const pluckFilter = ctx.createBiquadFilter();
+      pluckFilter.type = 'lowpass';
+      pluckFilter.frequency.setValueAtTime(750, now);
+      pluckFilter.frequency.exponentialRampToValueAtTime(160, now + 2.0);
+
+      const pluckGain = ctx.createGain();
+      pluckGain.gain.setValueAtTime(0.08, now);
+      pluckGain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
+
+      pluckOsc.connect(pluckFilter);
+      pluckFilter.connect(pluckGain);
+      pluckGain.connect(masterGain);
+      
+      pluckOsc.start(now);
+      pluckOsc.stop(now + 2.5);
+    };
+
+    const intervalId = setInterval(triggerPluck, 2800);
+    (ctx as any)._pluckInterval = intervalId;
+  };
+
+  const toggleMute = () => {
+    if (musicMuted) {
+      if (!audioCtxRef.current) {
+        startAmbience();
+      } else if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+      if (masterGainRef.current) {
+        masterGainRef.current.gain.linearRampToValueAtTime(0.2, audioCtxRef.current!.currentTime + 0.5);
+      }
+      setMusicMuted(false);
+    } else {
+      if (masterGainRef.current && audioCtxRef.current) {
+        masterGainRef.current.gain.linearRampToValueAtTime(0.0, audioCtxRef.current.currentTime + 0.5);
+      }
+      setMusicMuted(true);
+    }
+  };
+
+  // Cleanup synthesizer audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioCtxRef.current) {
+        if ((audioCtxRef.current as any)._pluckInterval) {
+          clearInterval((audioCtxRef.current as any)._pluckInterval);
+        }
+        audioCtxRef.current.close();
+      }
+    };
+  }, []);
+
   // Initialize Three.js Game World
   useEffect(() => {
     if (!mountRef.current) return;
 
-    // --- 1. Scene & Environment (Realistic Sunset Dome) ---
+    // --- 1. Scene & Environment (Sunset Dome) ---
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     scene.background = new THREE.Color('#0a1324');
     scene.fog = new THREE.FogExp2('#0a1324', 0.009);
 
-    // --- 1.5. Custom Sunset Sky Dome Shader (High Fidelity Gradient) ---
+    // Sky Dome Shader
     const skyGeo = new THREE.SphereGeometry(280, 32, 15);
-    skyGeo.scale(-1, 1, 1); // Render inside faces
+    skyGeo.scale(-1, 1, 1);
     
     const skyMat = new THREE.ShaderMaterial({
       uniforms: {
-        topColor: { value: new THREE.Color('#050b18') }, // Midnight dark blue
-        bottomColor: { value: new THREE.Color('#853b1b') } // Golden sunset orange
+        topColor: { value: new THREE.Color('#050b18') },
+        bottomColor: { value: new THREE.Color('#853b1b') }
       },
       vertexShader: `
         varying vec3 vWorldPosition;
@@ -310,7 +448,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     const roadGroup = new THREE.Group();
     const createRoadSegment = (w: number, l: number, x: number, z: number, rotY: boolean) => {
-      // Asphalt Road
       const roadGeo = new THREE.PlaneGeometry(w, l);
       const roadMat = new THREE.MeshStandardMaterial({
         color: '#1e293b',
@@ -538,9 +675,8 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     companyConfig.forEach((c) => {
       const towerGroup = new THREE.Group();
 
-      // Rounded Cylinder Tower geometry for hyper-realistic modern shape
       const coreGeo = new THREE.CylinderGeometry(c.width / 2, c.width / 2, c.height, 16);
-      coreGeo.scale(1.0, 1.0, 0.65); // squish it along Z to make it a beautiful oval skyscraper!
+      coreGeo.scale(1.0, 1.0, 0.65);
       
       const coreMat = new THREE.MeshStandardMaterial({
         color: '#040b17',
@@ -557,7 +693,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       coreMesh.receiveShadow = true;
       towerGroup.add(coreMesh);
 
-      // Add horizontal glowing neon bands representing office floors (Clean & Realistic)
+      // Add horizontal glowing neon bands representing office floors
       const floorCount = Math.floor(c.height / 2.8);
       for (let f = 1; f < floorCount; f++) {
         const ringG = new THREE.CylinderGeometry(c.width * 0.505, c.width * 0.505, 0.1, 16, 1, true);
@@ -568,7 +704,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         towerGroup.add(floorRing);
       }
 
-      // Vertical aluminum supporting structural columns (Realistic detail)
       const structGeo = new THREE.BoxGeometry(0.12, c.height, 0.12);
       const structMat = new THREE.MeshStandardMaterial({ color: '#475569', metalness: 0.9, roughness: 0.2 });
       
@@ -615,7 +750,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       scene.add(towerGroup);
     });
 
-    // --- 8.5. Procedural Background Skyscrapers (Oval curved glass shape) ---
+    // --- 8.5. Procedural Background Skyscrapers ---
     const isOverlapWithRoadsOrCompanies = (bx: number, bz: number) => {
       if (Math.abs(bx) < 8.5 || Math.abs(bz) < 8.5) return true;
       if (Math.abs(Math.abs(bx) - 50) < 7.5 || Math.abs(Math.abs(bz) - 50) < 7.5) return true;
@@ -656,14 +791,13 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     }
     scene.add(bgBuildingsGroup);
 
-    // --- 9. Futuristic Cybernetic Bicycle & High-Fidelity Rider (REALISTIC STYLE) ---
+    // --- 9. Futuristic Cybernetic Bicycle & High-Fidelity Rider ---
     const riderGroup = new THREE.Group();
     
     // Bicycle Parts
     const bike = new THREE.Group();
     riderGroup.add(bike);
 
-    // Chrome wheels with thin radial spoke grids
     const wheelGeo = new THREE.TorusGeometry(0.5, 0.06, 8, 24);
     const wheelMat = new THREE.MeshStandardMaterial({ color: '#0f172a', roughness: 0.9 });
     const spokeMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 1.0, roughness: 0.1 });
@@ -723,26 +857,26 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     saddle.position.set(0, 1.15, -0.25);
     bike.add(saddle);
 
-    // --- High-Fidelity Cyber-Athlete Rider (Metallic/Chrome Sci-Fi Suit) ---
+    // --- High-Fidelity Cyber-Athlete Rider ---
     const rider = new THREE.Group();
     riderGroup.add(rider);
     
     const suitMat = new THREE.MeshStandardMaterial({
-      color: '#1e293b', // carbon black base
+      color: '#1e293b',
       metalness: 0.9,
       roughness: 0.15
     });
 
-    const trimMat = new THREE.MeshBasicMaterial({ color: '#00e5ff' }); // glowing neon trim lines
+    const trimMat = new THREE.MeshBasicMaterial({ color: '#00e5ff' });
 
-    // Torso (Sleek armor chestplate)
+    // Torso
     const torsoGeo = new THREE.CylinderGeometry(0.18, 0.14, 0.7, 10);
     const torso = new THREE.Mesh(torsoGeo, suitMat);
     torso.position.set(0, 1.5, -0.2);
     torso.rotation.x = Math.PI / 18;
     rider.add(torso);
 
-    // Legs (Carbon-armor jointed limbs)
+    // Legs
     const legGeo = new THREE.CylinderGeometry(0.07, 0.05, 0.55, 8);
     
     const leftThigh = new THREE.Mesh(legGeo, suitMat);
@@ -767,7 +901,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     rider.add(rightShin);
     rightShinRef.current = rightShin;
 
-    // Head (Realistic Chrome Astronaut Helmet with dark reflective visor)
+    // Head (Realistic Chrome Astronaut Helmet)
     const helmetShellGeo = new THREE.SphereGeometry(0.17, 16, 16);
     const helmetShellMat = new THREE.MeshStandardMaterial({ color: '#e2e8f0', metalness: 1.0, roughness: 0.1 });
     const helmet = new THREE.Mesh(helmetShellGeo, helmetShellMat);
@@ -778,10 +912,10 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     const visorMat = new THREE.MeshStandardMaterial({ color: '#020617', metalness: 1.0, roughness: 0.02 });
     const visor = new THREE.Mesh(visorGeo, visorMat);
     visor.position.set(0, 1.97, 0.02);
-    visor.rotation.x = Math.PI / 12; // tilt visor forward slightly
+    visor.rotation.x = Math.PI / 12;
     rider.add(visor);
 
-    // Glowing cyan neon ring around helmet collar (Futuristic aesthetic)
+    // Collar trim
     const collarGeo = new THREE.TorusGeometry(0.18, 0.02, 6, 16);
     const collar = new THREE.Mesh(collarGeo, trimMat);
     collar.position.set(0, 1.83, -0.1);
@@ -807,11 +941,10 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     scene.add(riderGroup);
     playerVehicleRef.current = riderGroup;
 
-    // --- 10. Floating Knowledge Artifacts ("AI Chips") ---
+    // --- 10. Floating Knowledge Artifacts ---
     const chipsGroup = new THREE.Group();
     const chipMeshMap: Record<string, THREE.Mesh> = {};
     companyConfig.forEach((c) => {
-      // Spawn floating chips in front of each building
       const angleRad = Math.atan2(c.z, c.x);
       const distance = Math.hypot(c.x, c.z);
       const chipDist = Math.max(distance - 8.0, 5.0);
@@ -989,6 +1122,41 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         }
       });
 
+      // --- Project 3D Skyscraper Coordinates to 2D Screen Space ---
+      if (cameraRef.current) {
+        const width = mountRef.current?.clientWidth || window.innerWidth;
+        const height = mountRef.current?.clientHeight || window.innerHeight;
+        const newLabels: ProjectedLabel[] = [];
+
+        companyConfig.forEach((c) => {
+          // Point just above the tower's roof height
+          const pos = new THREE.Vector3(c.x, c.height + 4.5, c.z);
+          pos.project(cameraRef.current!);
+
+          const isBehind = pos.z > 1;
+
+          // Convert to pixel coordinates
+          const screenX = (pos.x * 0.5 + 0.5) * width;
+          const screenY = (pos.y * -0.5 + 0.5) * height;
+
+          let dist = 999;
+          if (playerVehicleRef.current) {
+            dist = playerVehicleRef.current.position.distanceTo(new THREE.Vector3(c.x, 0, c.z));
+          }
+
+          newLabels.push({
+            id: c.id,
+            name: c.name,
+            x: screenX,
+            y: screenY,
+            visible: !isBehind && dist < 160, // show labels within 160m distance
+            color: c.color,
+            dist: Math.round(dist)
+          });
+        });
+        setProjectedLabels(newLabels);
+      }
+
       // --- Chase Camera Follow ---
       if (cameraRef.current && playerVehicleRef.current) {
         const targetPos = playerVehicleRef.current.position;
@@ -1159,7 +1327,10 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
               <p className="text-slate-400">⌨️ <strong className="text-slate-200">E Key:</strong> Enter selected building zone</p>
             </div>
             <button
-              onClick={() => setShowIntro(false)}
+              onClick={() => {
+                setShowIntro(false);
+                toggleMute(); // Auto-unmute sound on start
+              }}
               className="w-full py-3 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs sm:text-sm font-extrabold uppercase tracking-widest cursor-pointer shadow-lg shadow-brand-gold/20 transition-all active:scale-95"
             >
               Start Driving
@@ -1171,10 +1342,37 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       {/* 3D Canvas Mounting Point */}
       <div ref={mountRef} className="w-full h-full relative z-10" />
 
+      {/* Projected HTML Skyscraper Floating HUD Name Tags (AR Guidance HUD) */}
+      <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
+        {projectedLabels.map((lbl) => {
+          if (!lbl.visible) return null;
+          return (
+            <div
+              key={lbl.id}
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center space-y-1"
+              style={{ left: `${lbl.x}px`, top: `${lbl.y}px` }}
+            >
+              <div 
+                className="px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest bg-brand-navy-dark/95 border shadow-xl flex items-center gap-1.5 backdrop-blur-sm"
+                style={{ borderColor: lbl.color, color: '#f8fafc' }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: lbl.color }} />
+                {lbl.name.split(' / ')[0]}
+                <span className="text-[7px] text-slate-500 font-bold">({lbl.dist}m)</span>
+              </div>
+              <div 
+                className="w-0.5 h-4" 
+                style={{ backgroundColor: lbl.color, opacity: 0.6 }}
+              />
+            </div>
+          );
+        })}
+      </div>
+
       {/* Game HUD Overlay */}
       <div className="absolute inset-0 pointer-events-none z-20 flex flex-col justify-between p-4 sm:p-6">
         
-        {/* Top HUD: Level, XP, Exit controls */}
+        {/* Top HUD: Level, XP, Exit controls, Audio controls */}
         <div className="flex items-start justify-between w-full pointer-events-auto">
           {/* Level & Progression tracking */}
           <div className="bg-brand-navy-dark/85 backdrop-blur-md p-4 rounded-2xl border border-brand-gold/15 shadow-xl flex items-center gap-4 w-72">
@@ -1205,8 +1403,19 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             </div>
           </div>
 
-          {/* Right Exit HUD */}
+          {/* Right Exit & Audio Controls */}
           <div className="flex gap-2">
+            <button
+              onClick={toggleMute}
+              className={`flex items-center justify-center p-2.5 rounded-xl border transition-all cursor-pointer shadow-lg active:scale-95 ${
+                musicMuted
+                  ? 'bg-slate-900/60 border-slate-700 text-slate-400 hover:text-slate-200'
+                  : 'bg-brand-gold/25 border-brand-gold/40 text-brand-gold-bright shadow-brand-gold/10'
+              }`}
+              title={musicMuted ? "Unmute Ambient Music" : "Mute Ambient Music"}
+            >
+              {musicMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
             <button
               onClick={onClose}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-950/40 hover:bg-red-900 border border-red-500/20 hover:border-red-500 text-xs font-bold uppercase tracking-widest text-slate-200 transition-all cursor-pointer shadow-lg active:scale-95"
