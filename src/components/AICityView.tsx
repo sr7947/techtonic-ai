@@ -317,6 +317,11 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    
+    // Enable canvas keyboard focus
+    renderer.domElement.tabIndex = 0;
+    renderer.domElement.style.outline = 'none';
+
     mountRef.current.appendChild(renderer.domElement);
 
     // --- 4. Lights ---
@@ -927,10 +932,19 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     const starField = new THREE.Points(starGeo, starMat);
     scene.add(starField);
 
-    // --- Setup Keyboard Listeners Direct Bind (Avoid stale closures or focus bugs) ---
+    // --- Setup Keyboard Listeners on document for high reliability ---
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       keysPressed.current[key] = true;
+      keysPressed.current[e.code.toLowerCase()] = true;
+
+      // Prevent scrolling defaults for arrows and space
+      if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'space', 'keyw', 'keys', 'keya', 'keyd'].includes(key) || 
+          ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'space', 'keyw', 'keys', 'keya', 'keyd'].includes(e.code.toLowerCase())) {
+        e.preventDefault();
+      }
+
+      console.log(`KeyDown registered: ${e.key} / Code: ${e.code}`);
 
       // Handle Enter building on E key
       if (key === 'e' && nearCompanyIdRef.current && !insideCompanyIdRef.current) {
@@ -946,10 +960,11 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     const handleKeyUp = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       keysPressed.current[key] = false;
+      keysPressed.current[e.code.toLowerCase()] = false;
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
+    document.addEventListener('keydown', handleKeyDown, { passive: false });
+    document.addEventListener('keyup', handleKeyUp, { passive: true });
 
     // --- 11. Game Animation & Physics Loop ---
     let frameId: number;
@@ -960,10 +975,10 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       frameIndex++;
 
       // Handle vehicle inputs
-      const isUp = keysPressed.current['w'] || keysPressed.current['arrowup'];
-      const isDown = keysPressed.current['s'] || keysPressed.current['arrowdown'];
-      const isLeft = keysPressed.current['a'] || keysPressed.current['arrowleft'];
-      const isRight = keysPressed.current['d'] || keysPressed.current['arrowright'];
+      const isUp = keysPressed.current['w'] || keysPressed.current['keyw'] || keysPressed.current['arrowup'];
+      const isDown = keysPressed.current['s'] || keysPressed.current['keys'] || keysPressed.current['arrowdown'];
+      const isLeft = keysPressed.current['a'] || keysPressed.current['keya'] || keysPressed.current['arrowleft'];
+      const isRight = keysPressed.current['d'] || keysPressed.current['keyd'] || keysPressed.current['arrowright'];
 
       // Acceleration / Deceleration
       if (isUp) {
@@ -1129,10 +1144,10 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
           vel: velocity.current,
           x: playerVehicleRef.current ? playerVehicleRef.current.position.x : 0,
           z: playerVehicleRef.current ? playerVehicleRef.current.position.z : 10,
-          w: !!keysPressed.current['w'],
-          s: !!keysPressed.current['s'],
-          a: !!keysPressed.current['a'],
-          d: !!keysPressed.current['d']
+          w: !!(keysPressed.current['w'] || keysPressed.current['keyw'] || keysPressed.current['arrowup']),
+          s: !!(keysPressed.current['s'] || keysPressed.current['keys'] || keysPressed.current['arrowdown']),
+          a: !!(keysPressed.current['a'] || keysPressed.current['keya'] || keysPressed.current['arrowleft']),
+          d: !!(keysPressed.current['d'] || keysPressed.current['keyd'] || keysPressed.current['arrowright'])
         });
       }
 
@@ -1145,7 +1160,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         // Calculate tangent (sideways) vector of orientation to offset the camera slightly to the right
         const tangentX = -Math.cos(angle.current);
         const tangentZ = Math.sin(angle.current);
-        const sideOffset = 1.6; // 1.6 meters offset to show beautiful three-quarter bicycle profile
+        const sideOffset = 1.6;
 
         const idealCamX = targetPos.x - Math.sin(angle.current) * camDistance + tangentX * sideOffset;
         const idealCamZ = targetPos.z - Math.cos(angle.current) * camDistance + tangentZ * sideOffset;
@@ -1181,14 +1196,18 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     // Bind click event to container to ensure keyboard focus
     const handleContainerClick = () => {
+      const canvas = mountRef.current?.querySelector('canvas');
+      if (canvas) {
+        canvas.focus();
+      }
       window.focus();
     };
     mountRef.current.addEventListener('click', handleContainerClick);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
       if (mountRef.current) {
         mountRef.current.removeEventListener('click', handleContainerClick);
       }
@@ -1333,7 +1352,13 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             <button
               onClick={() => {
                 setShowIntro(false);
-                window.focus(); // Force browser window focus
+                // Find canvas and focus it
+                const canvas = mountRef.current?.querySelector('canvas');
+                if (canvas) {
+                  canvas.focus();
+                } else {
+                  window.focus();
+                }
                 toggleMute();
               }}
               className="w-full py-3 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs sm:text-sm font-extrabold uppercase tracking-widest cursor-pointer shadow-lg shadow-brand-gold/20 transition-all active:scale-95"
