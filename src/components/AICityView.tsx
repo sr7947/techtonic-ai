@@ -51,19 +51,19 @@ const hubDataMap: Record<string, any> = {
 };
 
 const companyConfig = [
-  { id: 'google', name: 'Google / DeepMind', color: '#4285F4', district: 'Cloud Boulevard', x: 25, z: 25, height: 28, style: 'twin', width: 4, depth: 4 },
-  { id: 'openai', name: 'OpenAI', color: '#10a37f', district: 'Cloud Boulevard', x: 38, z: 28, height: 35, style: 'monolith', width: 4.5, depth: 4.5 },
-  { id: 'anthropic', name: 'Anthropic', color: '#D97706', district: 'Cloud Boulevard', x: 28, z: 42, height: 26, style: 'tower', width: 4, depth: 4 },
+  { id: 'google', name: 'Google / DeepMind', color: '#4285F4', district: 'Cloud Boulevard', x: 25, z: 25, height: 28, style: 'oval', width: 4.5, depth: 4.5 },
+  { id: 'openai', name: 'OpenAI', color: '#10a37f', district: 'Cloud Boulevard', x: 38, z: 28, height: 35, style: 'oval', width: 5.0, depth: 5.0 },
+  { id: 'anthropic', name: 'Anthropic', color: '#D97706', district: 'Cloud Boulevard', x: 28, z: 42, height: 26, style: 'oval', width: 4.5, depth: 4.5 },
   { id: 'meta', name: 'Meta AI', color: '#0668E1', district: 'Open Models', x: 30, z: -30, height: 24, style: 'twin', width: 4, depth: 4 },
-  { id: 'microsoft', name: 'Microsoft AI', color: '#00A4EF', district: 'Cloud Boulevard', x: 42, z: 42, height: 32, style: 'tower', width: 4.2, depth: 4.2 },
-  { id: 'aws', name: 'AWS', color: '#FF9900', district: 'Cloud Boulevard', x: 45, z: 15, height: 29, style: 'monolith', width: 4.2, depth: 4.2 },
-  { id: 'nvidia', name: 'Nvidia AI', color: '#76B900', district: 'Hardware Row', x: -30, z: 30, height: 38, style: 'tower', width: 5, depth: 5 },
+  { id: 'microsoft', name: 'Microsoft AI', color: '#00A4EF', district: 'Cloud Boulevard', x: 42, z: 42, height: 32, style: 'oval', width: 4.8, depth: 4.8 },
+  { id: 'aws', name: 'AWS', color: '#FF9900', district: 'Cloud Boulevard', x: 45, z: 15, height: 29, style: 'oval', width: 4.8, depth: 4.8 },
+  { id: 'nvidia', name: 'Nvidia AI', color: '#76B900', district: 'Hardware Row', x: -30, z: 30, height: 38, style: 'oval', width: 5.5, depth: 5.5 },
   { id: 'apple', name: 'Apple', color: '#f5f5f7', district: 'Tools & IDEs', x: -25, z: -25, height: 25, style: 'twin', width: 4, depth: 4 },
-  { id: 'xai', name: 'xAI / Grok', color: '#ffffff', district: 'Tools & IDEs', x: -38, z: -28, height: 36, style: 'monolith', width: 4.5, depth: 4.5 },
-  { id: 'mistral', name: 'Mistral AI', color: '#f97316', district: 'Open Models', x: 42, z: -38, height: 22, style: 'tower', width: 3.8, depth: 3.8 },
-  { id: 'ibm', name: 'IBM / watsonx', color: '#0f62fe', district: 'Enterprise Alley', x: -40, z: 12, height: 28, style: 'monolith', width: 4.2, depth: 4.2 },
+  { id: 'xai', name: 'xAI / Grok', color: '#ffffff', district: 'Tools & IDEs', x: -38, z: -28, height: 36, style: 'oval', width: 5.0, depth: 5.0 },
+  { id: 'mistral', name: 'Mistral AI', color: '#f97316', district: 'Open Models', x: 42, z: -38, height: 22, style: 'oval', width: 4.2, depth: 4.2 },
+  { id: 'ibm', name: 'IBM / watsonx', color: '#0f62fe', district: 'Enterprise Alley', x: -40, z: 12, height: 28, style: 'oval', width: 4.8, depth: 4.8 },
   { id: 'cohere', name: 'Cohere', color: '#3b82f6', district: 'Enterprise Alley', x: -45, z: 28, height: 24, style: 'twin', width: 4, depth: 4 },
-  { id: 'huggingface', name: 'Hugging Face', color: '#fbbf24', district: 'Open Models', x: 20, z: -42, height: 20, style: 'tower', width: 3.6, depth: 3.6 }
+  { id: 'huggingface', name: 'Hugging Face', color: '#fbbf24', district: 'Open Models', x: 20, z: -42, height: 20, style: 'oval', width: 4.0, depth: 4.0 }
 ];
 
 // Quests mapping
@@ -227,11 +227,41 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   useEffect(() => {
     if (!mountRef.current) return;
 
-    // --- 1. Scene & Environment (Futuristic Sunset/Daylight Style) ---
+    // --- 1. Scene & Environment (Realistic Sunset Dome) ---
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color('#0a1628'); // Deep blue-gray upper sunset horizon
-    scene.fog = new THREE.FogExp2('#0a1628', 0.009);
+    scene.background = new THREE.Color('#0a1324');
+    scene.fog = new THREE.FogExp2('#0a1324', 0.009);
+
+    // --- 1.5. Custom Sunset Sky Dome Shader (High Fidelity Gradient) ---
+    const skyGeo = new THREE.SphereGeometry(280, 32, 15);
+    skyGeo.scale(-1, 1, 1); // Render inside faces
+    
+    const skyMat = new THREE.ShaderMaterial({
+      uniforms: {
+        topColor: { value: new THREE.Color('#050b18') }, // Midnight dark blue
+        bottomColor: { value: new THREE.Color('#853b1b') } // Golden sunset orange
+      },
+      vertexShader: `
+        varying vec3 vWorldPosition;
+        void main() {
+          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+          vWorldPosition = worldPosition.xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vWorldPosition;
+        uniform vec3 topColor;
+        uniform vec3 bottomColor;
+        void main() {
+          float h = normalize(vWorldPosition + vec3(0.0, 30.0, 0.0)).y;
+          gl_FragColor = vec4(mix(bottomColor, topColor, max(h, 0.0)), 1.0);
+        }
+      `
+    });
+    const sky = new THREE.Mesh(skyGeo, skyMat);
+    scene.add(sky);
 
     // --- 2. Camera ---
     const camera = new THREE.PerspectiveCamera(
@@ -250,12 +280,12 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mountRef.current.appendChild(renderer.domElement);
 
-    // --- 4. Lights (Warm Sunset Glow) ---
-    const ambientLight = new THREE.AmbientLight('#a5b4fc', 1.4); // soft ambient indigo blue
+    // --- 4. Lights (Warm sunset direction) ---
+    const ambientLight = new THREE.AmbientLight('#a5b4fc', 1.3);
     scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight('#fed7aa', 2.8); // bright orange sun
-    sunLight.position.set(80, 50, 60);
+    const sunLight = new THREE.DirectionalLight('#fed7aa', 3.0);
+    sunLight.position.set(70, 45, 60);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
@@ -266,13 +296,12 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     centerSpot.position.set(0, 10, 0);
     scene.add(centerSpot);
 
-    // --- 5. Rich Road Network with Glowing Circuit Paths ---
-    // Ground base plane
+    // --- 5. Rich Road Grid & Sidewalks ---
     const groundGeo = new THREE.PlaneGeometry(400, 400);
     const groundMat = new THREE.MeshStandardMaterial({
-      color: '#111827', // Dark charcoal asphalt
-      roughness: 0.9,
-      metalness: 0.1
+      color: '#0f172a',
+      roughness: 0.95,
+      metalness: 0.05
     });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
@@ -281,11 +310,12 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     const roadGroup = new THREE.Group();
     const createRoadSegment = (w: number, l: number, x: number, z: number, rotY: boolean) => {
+      // Asphalt Road
       const roadGeo = new THREE.PlaneGeometry(w, l);
       const roadMat = new THREE.MeshStandardMaterial({
-        color: '#1f2937',
-        roughness: 0.8,
-        metalness: 0.2
+        color: '#1e293b',
+        roughness: 0.78,
+        metalness: 0.15
       });
       const roadMesh = new THREE.Mesh(roadGeo, roadMat);
       roadMesh.rotation.x = -Math.PI / 2;
@@ -294,11 +324,34 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       roadMesh.receiveShadow = true;
       roadGroup.add(roadMesh);
 
-      // Add glowing neon yellow dotted lane separators
+      // Sidewalk borders (Light slate gray slabs)
+      const sideW = 0.8;
+      const sideGeo = new THREE.BoxGeometry(sideW, 0.15, l);
+      const sideMat = new THREE.MeshStandardMaterial({ color: '#64748b', roughness: 0.85 });
+      
+      const leftSidewalk = new THREE.Mesh(sideGeo, sideMat);
+      const rightSidewalk = new THREE.Mesh(sideGeo, sideMat);
+      leftSidewalk.castShadow = true;
+      leftSidewalk.receiveShadow = true;
+      rightSidewalk.castShadow = true;
+      rightSidewalk.receiveShadow = true;
+
+      if (rotY) {
+        leftSidewalk.position.set(x, 0.08, z - w / 2 - sideW / 2);
+        leftSidewalk.rotation.y = Math.PI / 2;
+        rightSidewalk.position.set(x, 0.08, z + w / 2 + sideW / 2);
+        rightSidewalk.rotation.y = Math.PI / 2;
+      } else {
+        leftSidewalk.position.set(x - w / 2 - sideW / 2, 0.08, z);
+        rightSidewalk.position.set(x + w / 2 + sideW / 2, 0.08, z);
+      }
+      roadGroup.add(leftSidewalk, rightSidewalk);
+
+      // Lane dividers (Dotted lines)
       const lineCount = Math.floor(l / 8);
       for (let i = 0; i < lineCount; i++) {
-        const lineGeo = new THREE.PlaneGeometry(0.12, 2.0);
-        const lineMat = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.25 });
+        const lineGeo = new THREE.PlaneGeometry(0.12, 1.8);
+        const lineMat = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.3 });
         const lineMesh = new THREE.Mesh(lineGeo, lineMat);
         lineMesh.rotation.x = -Math.PI / 2;
         
@@ -312,65 +365,39 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         roadGroup.add(lineMesh);
       }
 
-      // Add glowing neon green circuit board lines on road shoulders
-      const circMat = new THREE.MeshBasicMaterial({ color: '#10b981', transparent: true, opacity: 0.5 });
-      const circGeo = new THREE.PlaneGeometry(0.12, l);
+      // Glowing circuit lines on sides
+      const circMat = new THREE.MeshBasicMaterial({ color: '#10b981', transparent: true, opacity: 0.45 });
+      const circGeo = new THREE.PlaneGeometry(0.1, l);
       const circLeft = new THREE.Mesh(circGeo, circMat);
       circLeft.rotation.x = -Math.PI / 2;
       const circRight = new THREE.Mesh(circGeo, circMat);
       circRight.rotation.x = -Math.PI / 2;
       
       if (rotY) {
-        circLeft.position.set(x, 0.04, z - w / 2 + 0.6);
+        circLeft.position.set(x, 0.04, z - w / 2 + 0.5);
         circLeft.rotation.z = Math.PI / 2;
-        circRight.position.set(x, 0.04, z + w / 2 - 0.6);
+        circRight.position.set(x, 0.04, z + w / 2 - 0.5);
         circRight.rotation.z = Math.PI / 2;
       } else {
-        circLeft.position.set(x - w / 2 + 0.6, 0.04, z);
-        circRight.position.set(x + w / 2 - 0.6, 0.04, z);
+        circLeft.position.set(x - w / 2 + 0.5, 0.04, z);
+        circRight.position.set(x + w / 2 - 0.5, 0.04, z);
       }
       roadGroup.add(circLeft, circRight);
-
-      // Add neon blue border lanes on the edges
-      const leftBorderGeo = new THREE.PlaneGeometry(0.08, l);
-      const rightBorderGeo = new THREE.PlaneGeometry(0.08, l);
-      const borderMat = new THREE.MeshBasicMaterial({ color: '#38bdf8', transparent: true, opacity: 0.4 });
-      
-      const leftBorder = new THREE.Mesh(leftBorderGeo, borderMat);
-      leftBorder.rotation.x = -Math.PI / 2;
-      const rightBorder = new THREE.Mesh(rightBorderGeo, borderMat);
-      rightBorder.rotation.x = -Math.PI / 2;
-
-      if (rotY) {
-        leftBorder.position.set(x, 0.03, z - w / 2);
-        leftBorder.rotation.z = Math.PI / 2;
-        rightBorder.position.set(x, 0.03, z + w / 2);
-        rightBorder.rotation.z = Math.PI / 2;
-      } else {
-        leftBorder.position.set(x - w / 2, 0.03, z);
-        rightBorder.position.set(x + w / 2, 0.03, z);
-      }
-      roadGroup.add(leftBorder);
-      roadGroup.add(rightBorder);
     };
 
-    // Main structural highways
-    createRoadSegment(12, 300, 0, 0, false); // N-S Highway
-    createRoadSegment(12, 300, 0, 0, true);  // E-W Highway
-    
-    // Outer grid loop roads
+    createRoadSegment(12, 300, 0, 0, false);
+    createRoadSegment(12, 300, 0, 0, true);
     createRoadSegment(10, 200, 50, 0, false);
     createRoadSegment(10, 200, -50, 0, false);
     createRoadSegment(10, 200, 0, 50, true);
     createRoadSegment(10, 200, 0, -50, true);
-    
     scene.add(roadGroup);
 
-    // --- 5.5. Soft Sunset Clouds in the Sky ---
+    // --- 5.5. Sunset clouds ---
     const cloudsGroup = new THREE.Group();
     const cloudGeo = new THREE.SphereGeometry(15, 8, 8);
     const cloudMat = new THREE.MeshStandardMaterial({
-      color: '#fda4af', // warm sunset pinkish-orange
+      color: '#fda4af',
       transparent: true,
       opacity: 0.12,
       roughness: 0.95
@@ -382,7 +409,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         40 + Math.random() * 20,
         (Math.random() - 0.5) * 300
       );
-      cloud.scale.set(2.0, 0.5, 1.2);
+      cloud.scale.set(2.2, 0.5, 1.2);
       cloudsGroup.add(cloud);
     }
     scene.add(cloudsGroup);
@@ -397,27 +424,24 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       pole.castShadow = true;
       streetlightGroup.add(pole);
 
-      // Light head armature
       const headGeo = new THREE.BoxGeometry(0.3, 0.2, 1.2);
       const head = new THREE.Mesh(headGeo, poleMat);
       head.position.set(x, 7.0, z + (x > 0 ? -0.5 : 0.5));
       streetlightGroup.add(head);
 
-      // Emissive bulb
       const bulbGeo = new THREE.SphereGeometry(0.2, 8, 8);
       const bulbMat = new THREE.MeshBasicMaterial({ color: '#fed7aa' });
       const bulb = new THREE.Mesh(bulbGeo, bulbMat);
       bulb.position.set(x, 6.9, z + (x > 0 ? -0.9 : 0.9));
       streetlightGroup.add(bulb);
 
-      // PointLight casting onto the street
       const light = new THREE.PointLight('#fed7aa', 1.8, 14);
       light.position.set(x, 6.5, z + (x > 0 ? -0.9 : 0.9));
       streetlightGroup.add(light);
     };
 
     for (let pos = -120; pos <= 120; pos += 40) {
-      if (pos === 0) continue; // skip center plaza
+      if (pos === 0) continue;
       addStreetlight(6.5, pos);
       addStreetlight(-6.5, pos);
       addStreetlight(pos, 6.5);
@@ -427,7 +451,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
     // --- 7. Central TechTonic HQ Square Monolith ---
     const hqGroup = new THREE.Group();
-    
     const coreHqGeo = new THREE.BoxGeometry(7, 30, 7);
     const coreHqMat = new THREE.MeshStandardMaterial({
       color: '#030712',
@@ -440,27 +463,18 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     coreHq.position.y = 15;
     hqGroup.add(coreHq);
 
-    // Neon structural accents
     const hqEdges = new THREE.EdgesGeometry(coreHqGeo);
     const hqLineMat = new THREE.LineBasicMaterial({ color: '#bd9a76', linewidth: 3 });
     const hqWire = new THREE.LineSegments(hqEdges, hqLineMat);
     hqWire.position.y = 15;
     hqGroup.add(hqWire);
 
-    // Rotating holographic rings above HQ
     const ringGeo1 = new THREE.TorusGeometry(5, 0.15, 8, 36);
     const ringMat1 = new THREE.MeshBasicMaterial({ color: '#bd9a76', transparent: true, opacity: 0.6 });
     const holoRing1 = new THREE.Mesh(ringGeo1, ringMat1);
     holoRing1.rotation.x = Math.PI / 2;
     holoRing1.position.y = 33;
     hqGroup.add(holoRing1);
-
-    const ringGeo2 = new THREE.TorusGeometry(4, 0.1, 8, 36);
-    const ringMat2 = new THREE.MeshBasicMaterial({ color: '#0ea5e9', transparent: true, opacity: 0.4 });
-    const holoRing2 = new THREE.Mesh(ringGeo2, ringMat2);
-    holoRing2.rotation.x = Math.PI / 2 + 0.2;
-    holoRing2.position.y = 35;
-    hqGroup.add(holoRing2);
 
     scene.add(hqGroup);
 
@@ -469,7 +483,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       const logoGroup = new THREE.Group();
 
       if (id === 'openai') {
-        // Rosette OpenAI Pattern (6 overlapping circles)
         for (let i = 0; i < 6; i++) {
           const petalGeo = new THREE.RingGeometry(0.25, 0.32, 16);
           const petalMat = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
@@ -480,7 +493,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         }
       } 
       else if (id === 'meta') {
-        // Meta Infinity Loop (two toruses side-by-side)
         const ringG = new THREE.TorusGeometry(0.35, 0.08, 8, 20);
         const ringM = new THREE.MeshBasicMaterial({ color });
         const leftLoop = new THREE.Mesh(ringG, ringM);
@@ -490,7 +502,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         logoGroup.add(leftLoop, rightLoop);
       } 
       else if (id === 'google') {
-        // Colorful Google Arc Ring
         const colors = ['#4285F4', '#EA4335', '#FBBC05', '#34A853'];
         for (let i = 0; i < 4; i++) {
           const arcGeo = new THREE.TorusGeometry(0.5, 0.09, 8, 12, Math.PI / 2);
@@ -501,7 +512,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         }
       } 
       else if (id === 'aws') {
-        // Orange Arrow Arc
         const arrowGeo = new THREE.TorusGeometry(0.5, 0.08, 8, 12, Math.PI / 3);
         const arrowMat = new THREE.MeshBasicMaterial({ color: '#FF9900' });
         const arrow = new THREE.Mesh(arrowGeo, arrowMat);
@@ -509,14 +519,12 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         logoGroup.add(arrow);
       } 
       else if (id === 'nvidia') {
-        // Glowing Green Square core
         const nGeo = new THREE.BoxGeometry(0.7, 0.7, 0.1);
         const nMat = new THREE.MeshBasicMaterial({ color, wireframe: true });
         const nMesh = new THREE.Mesh(nGeo, nMat);
         logoGroup.add(nMesh);
       } 
       else {
-        // Generic glowing geometric star/circle logo
         const torusG = new THREE.TorusGeometry(0.4, 0.08, 8, 24);
         const torusM = new THREE.MeshBasicMaterial({ color });
         const torus = new THREE.Mesh(torusG, torusM);
@@ -526,20 +534,22 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       return logoGroup;
     };
 
-    // --- 8. High-Fidelity Company Skyscraper Towers ---
+    // --- 8. High-Fidelity Company Skyscraper Towers (REALISTIC CURVED GLASS STYLE) ---
     companyConfig.forEach((c) => {
       const towerGroup = new THREE.Group();
 
-      // Skyscraper Glass Core
-      const coreGeo = new THREE.BoxGeometry(c.width, c.height, c.depth);
+      // Rounded Cylinder Tower geometry for hyper-realistic modern shape
+      const coreGeo = new THREE.CylinderGeometry(c.width / 2, c.width / 2, c.height, 16);
+      coreGeo.scale(1.0, 1.0, 0.65); // squish it along Z to make it a beautiful oval skyscraper!
+      
       const coreMat = new THREE.MeshStandardMaterial({
-        color: '#080f1d',
+        color: '#040b17',
         metalness: 0.95,
-        roughness: 0.05,
+        roughness: 0.04,
         transparent: true,
         opacity: 0.92,
         emissive: c.color,
-        emissiveIntensity: 0.06
+        emissiveIntensity: 0.04
       });
       const coreMesh = new THREE.Mesh(coreGeo, coreMat);
       coreMesh.position.y = c.height / 2;
@@ -547,24 +557,38 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       coreMesh.receiveShadow = true;
       towerGroup.add(coreMesh);
 
-      // Glowing outline frames
-      const edgesGeo = new THREE.EdgesGeometry(coreGeo);
-      const lineMat = new THREE.LineBasicMaterial({ color: c.color, linewidth: 2 });
-      const wire = new THREE.LineSegments(edgesGeo, lineMat);
-      wire.position.y = c.height / 2;
-      towerGroup.add(wire);
+      // Add horizontal glowing neon bands representing office floors (Clean & Realistic)
+      const floorCount = Math.floor(c.height / 2.8);
+      for (let f = 1; f < floorCount; f++) {
+        const ringG = new THREE.CylinderGeometry(c.width * 0.505, c.width * 0.505, 0.1, 16, 1, true);
+        ringG.scale(1.0, 1.0, 0.65);
+        const ringM = new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.35 });
+        const floorRing = new THREE.Mesh(ringG, ringM);
+        floorRing.position.y = f * 2.8;
+        towerGroup.add(floorRing);
+      }
 
-      // Giant Glowing logo plaque on the front facade
-      const logoPlatGeo = new THREE.BoxGeometry(c.width * 0.75, 2.5, 0.1);
+      // Vertical aluminum supporting structural columns (Realistic detail)
+      const structGeo = new THREE.BoxGeometry(0.12, c.height, 0.12);
+      const structMat = new THREE.MeshStandardMaterial({ color: '#475569', metalness: 0.9, roughness: 0.2 });
+      
+      const colLeft = new THREE.Mesh(structGeo, structMat);
+      colLeft.position.set(-c.width / 2, c.height / 2, 0);
+      const colRight = new THREE.Mesh(structGeo, structMat);
+      colRight.position.set(c.width / 2, c.height / 2, 0);
+      towerGroup.add(colLeft, colRight);
+
+      // Giant Glowing logo plaque on front facade
+      const logoPlatGeo = new THREE.BoxGeometry(c.width * 0.65, 2.2, 0.1);
       const logoPlatMat = new THREE.MeshStandardMaterial({ color: '#030712', metalness: 0.9 });
       const logoPlaque = new THREE.Mesh(logoPlatGeo, logoPlatMat);
-      logoPlaque.position.set(0, c.height * 0.8, c.depth / 2 + 0.05);
+      logoPlaque.position.set(0, c.height * 0.8, c.depth * 0.3 + 0.05);
       towerGroup.add(logoPlaque);
 
       // Attach detailed logo
       const brandLogo = createCompanyLogo(c.id, c.color);
-      brandLogo.position.set(0, c.height * 0.8, c.depth / 2 + 0.15);
-      (brandLogo as any).userData = { isHolo: true }; // rotate it automatically
+      brandLogo.position.set(0, c.height * 0.8, c.depth * 0.3 + 0.15);
+      (brandLogo as any).userData = { isHolo: true };
       towerGroup.add(brandLogo);
 
       // Blinking beacon light on top
@@ -587,17 +611,11 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       ring.position.y = 0.08;
       towerGroup.add(ring);
 
-      // Base spotlight casting upwards
-      const upSpot = new THREE.SpotLight(c.color, 12.0, 18, Math.PI / 6, 0.5, 1.0);
-      upSpot.position.set(0, 0.2, 0);
-      upSpot.target = towerGroup;
-      towerGroup.add(upSpot);
-
       towerGroup.position.set(c.x, 0, c.z);
       scene.add(towerGroup);
     });
 
-    // --- 8.5. Procedural Background Skyscrapers (METROPOLIS SKYLINE Realism) ---
+    // --- 8.5. Procedural Background Skyscrapers (Oval curved glass shape) ---
     const isOverlapWithRoadsOrCompanies = (bx: number, bz: number) => {
       if (Math.abs(bx) < 8.5 || Math.abs(bz) < 8.5) return true;
       if (Math.abs(Math.abs(bx) - 50) < 7.5 || Math.abs(Math.abs(bz) - 50) < 7.5) return true;
@@ -617,64 +635,63 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
       const w = 4.5 + Math.random() * 5;
       const h = 18 + Math.random() * 30;
-      const d = 4.5 + Math.random() * 5;
 
-      const bgGeo = new THREE.BoxGeometry(w, h, d);
+      const bgGeo = new THREE.CylinderGeometry(w / 2, w / 2, h, 16);
+      bgGeo.scale(1.0, 1.0, 0.65);
+      
       const bgMat = new THREE.MeshStandardMaterial({
-        color: '#0c1524',
+        color: '#081121',
         metalness: 0.95,
-        roughness: 0.15,
+        roughness: 0.06,
         transparent: true,
         opacity: 0.92,
-        emissive: '#111827',
-        emissiveIntensity: 0.05
+        emissive: '#1e293b',
+        emissiveIntensity: 0.04
       });
       const bgMesh = new THREE.Mesh(bgGeo, bgMat);
       bgMesh.position.set(bx, h / 2, bz);
       bgMesh.castShadow = true;
       bgMesh.receiveShadow = true;
       bgBuildingsGroup.add(bgMesh);
-
-      // Neon outline edges
-      if (Math.random() > 0.4) {
-        const edges = new THREE.EdgesGeometry(bgGeo);
-        const lineMat = new THREE.LineBasicMaterial({ 
-          color: Math.random() > 0.5 ? '#1e293b' : '#334155',
-          transparent: true,
-          opacity: 0.35
-        });
-        const wireframe = new THREE.LineSegments(edges, lineMat);
-        wireframe.position.set(bx, h / 2, bz);
-        bgBuildingsGroup.add(wireframe);
-      }
     }
     scene.add(bgBuildingsGroup);
 
-    // --- 9. Third-Person Avatar Riding a 3D Bicycle (FROM MP4 INSPIRATION) ---
+    // --- 9. Futuristic Cybernetic Bicycle & High-Fidelity Rider (REALISTIC STYLE) ---
     const riderGroup = new THREE.Group();
     
-    // Bicycle parts
+    // Bicycle Parts
     const bike = new THREE.Group();
     riderGroup.add(bike);
 
-    // Wheels (Torus)
+    // Chrome wheels with thin radial spoke grids
     const wheelGeo = new THREE.TorusGeometry(0.5, 0.06, 8, 24);
-    const wheelMat = new THREE.MeshStandardMaterial({ color: '#111827', roughness: 0.9 });
+    const wheelMat = new THREE.MeshStandardMaterial({ color: '#0f172a', roughness: 0.9 });
+    const spokeMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 1.0, roughness: 0.1 });
     
+    // Front wheel
     const fWheel = new THREE.Mesh(wheelGeo, wheelMat);
     fWheel.position.set(0, 0.5, 0.9);
     fWheel.castShadow = true;
+    
+    const frontSpokes = new THREE.Mesh(new THREE.RingGeometry(0.02, 0.48, 12), spokeMat);
+    frontSpokes.rotation.y = Math.PI / 2;
+    fWheel.add(frontSpokes);
     bike.add(fWheel);
     frontWheelRef.current = fWheel;
 
+    // Back wheel
     const bWheel = new THREE.Mesh(wheelGeo, wheelMat);
     bWheel.position.set(0, 0.5, -0.9);
     bWheel.castShadow = true;
+    
+    const backSpokes = new THREE.Mesh(new THREE.RingGeometry(0.02, 0.48, 12), spokeMat);
+    backSpokes.rotation.y = Math.PI / 2;
+    bWheel.add(backSpokes);
     bike.add(bWheel);
     backWheelRef.current = bWheel;
 
-    // Metallic cyan frame tubes
-    const frameMat = new THREE.MeshStandardMaterial({ color: '#0ea5e9', metalness: 0.9, roughness: 0.1 });
+    // Polished Silver Chrome frame tubes
+    const frameMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 1.0, roughness: 0.05 });
     const tubeGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.2, 8);
     
     const downTube = new THREE.Mesh(tubeGeo, frameMat);
@@ -701,73 +718,85 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     bike.add(bar);
 
     const saddleGeo = new THREE.BoxGeometry(0.2, 0.08, 0.45);
-    const saddleMat = new THREE.MeshStandardMaterial({ color: '#1f2937', roughness: 0.8 });
+    const saddleMat = new THREE.MeshStandardMaterial({ color: '#1e293b', roughness: 0.8 });
     const saddle = new THREE.Mesh(saddleGeo, saddleMat);
     saddle.position.set(0, 1.15, -0.25);
     bike.add(saddle);
 
-    // AI Avatar Rider
+    // --- High-Fidelity Cyber-Athlete Rider (Metallic/Chrome Sci-Fi Suit) ---
     const rider = new THREE.Group();
     riderGroup.add(rider);
     
-    // Torso (Blue Shirt)
-    const shirtMat = new THREE.MeshStandardMaterial({ color: '#2563eb', roughness: 0.7 });
-    const torsoGeo = new THREE.CylinderGeometry(0.18, 0.15, 0.7, 8);
-    const torso = new THREE.Mesh(torsoGeo, shirtMat);
+    const suitMat = new THREE.MeshStandardMaterial({
+      color: '#1e293b', // carbon black base
+      metalness: 0.9,
+      roughness: 0.15
+    });
+
+    const trimMat = new THREE.MeshBasicMaterial({ color: '#00e5ff' }); // glowing neon trim lines
+
+    // Torso (Sleek armor chestplate)
+    const torsoGeo = new THREE.CylinderGeometry(0.18, 0.14, 0.7, 10);
+    const torso = new THREE.Mesh(torsoGeo, suitMat);
     torso.position.set(0, 1.5, -0.2);
     torso.rotation.x = Math.PI / 18;
     rider.add(torso);
 
-    // Legs (Blue Jeans)
-    const pantsMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.8 });
-    const legGeo = new THREE.CylinderGeometry(0.08, 0.06, 0.55, 8);
+    // Legs (Carbon-armor jointed limbs)
+    const legGeo = new THREE.CylinderGeometry(0.07, 0.05, 0.55, 8);
     
-    const leftThigh = new THREE.Mesh(legGeo, pantsMat);
+    const leftThigh = new THREE.Mesh(legGeo, suitMat);
     leftThigh.position.set(-0.16, 1.15, -0.15);
     leftThigh.rotation.x = Math.PI / 3;
     rider.add(leftThigh);
     leftThighRef.current = leftThigh;
 
-    const rightThigh = new THREE.Mesh(legGeo, pantsMat);
+    const rightThigh = new THREE.Mesh(legGeo, suitMat);
     rightThigh.position.set(0.16, 1.15, -0.15);
     rightThigh.rotation.x = Math.PI / 6;
     rider.add(rightThigh);
     rightThighRef.current = rightThigh;
 
-    const leftShin = new THREE.Mesh(legGeo, pantsMat);
+    const leftShin = new THREE.Mesh(legGeo, suitMat);
     leftShin.position.set(-0.16, 0.75, 0.05);
     rider.add(leftShin);
     leftShinRef.current = leftShin;
 
-    const rightShin = new THREE.Mesh(legGeo, pantsMat);
+    const rightShin = new THREE.Mesh(legGeo, suitMat);
     rightShin.position.set(0.16, 0.75, -0.05);
     rider.add(rightShin);
     rightShinRef.current = rightShin;
 
-    // Head (Skin tone)
-    const headGeo = new THREE.SphereGeometry(0.15, 12, 12);
-    const headMat = new THREE.MeshStandardMaterial({ color: '#ddb892', roughness: 0.6 });
-    const head = new THREE.Mesh(headGeo, headMat);
-    head.position.set(0, 1.95, -0.1);
-    rider.add(head);
+    // Head (Realistic Chrome Astronaut Helmet with dark reflective visor)
+    const helmetShellGeo = new THREE.SphereGeometry(0.17, 16, 16);
+    const helmetShellMat = new THREE.MeshStandardMaterial({ color: '#e2e8f0', metalness: 1.0, roughness: 0.1 });
+    const helmet = new THREE.Mesh(helmetShellGeo, helmetShellMat);
+    helmet.position.set(0, 1.95, -0.1);
+    rider.add(helmet);
 
-    // Hair
-    const hairGeo = new THREE.SphereGeometry(0.16, 8, 8);
-    const hairMat = new THREE.MeshStandardMaterial({ color: '#27272a', roughness: 0.9 });
-    const hair = new THREE.Mesh(hairGeo, hairMat);
-    hair.position.set(0, 2.02, -0.12);
-    hair.scale.set(1.0, 0.65, 1.0);
-    rider.add(hair);
+    const visorGeo = new THREE.SphereGeometry(0.12, 16, 16, 0, Math.PI, 0, Math.PI / 2);
+    const visorMat = new THREE.MeshStandardMaterial({ color: '#020617', metalness: 1.0, roughness: 0.02 });
+    const visor = new THREE.Mesh(visorGeo, visorMat);
+    visor.position.set(0, 1.97, 0.02);
+    visor.rotation.x = Math.PI / 12; // tilt visor forward slightly
+    rider.add(visor);
+
+    // Glowing cyan neon ring around helmet collar (Futuristic aesthetic)
+    const collarGeo = new THREE.TorusGeometry(0.18, 0.02, 6, 16);
+    const collar = new THREE.Mesh(collarGeo, trimMat);
+    collar.position.set(0, 1.83, -0.1);
+    collar.rotation.x = Math.PI / 2;
+    rider.add(collar);
 
     // Arms
-    const armGeo = new THREE.CylinderGeometry(0.05, 0.04, 0.65, 8);
-    const leftArm = new THREE.Mesh(armGeo, shirtMat);
+    const armGeo = new THREE.CylinderGeometry(0.04, 0.03, 0.65, 8);
+    const leftArm = new THREE.Mesh(armGeo, suitMat);
     leftArm.position.set(-0.25, 1.45, 0.15);
     leftArm.rotation.x = -Math.PI / 4;
     leftArm.rotation.z = Math.PI / 12;
     rider.add(leftArm);
 
-    const rightArm = new THREE.Mesh(armGeo, shirtMat);
+    const rightArm = new THREE.Mesh(armGeo, suitMat);
     rightArm.position.set(0.25, 1.45, 0.15);
     rightArm.rotation.x = -Math.PI / 4;
     rightArm.rotation.z = -Math.PI / 12;
@@ -848,42 +877,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     const starField = new THREE.Points(starGeo, starMat);
     scene.add(starField);
 
-    // --- 10.7. Flying Traffic Drones ---
-    const dronesCount = 15;
-    const dronesGroup = new THREE.Group();
-    const droneDataList: { mesh: THREE.Group; startZ: number; speed: number; direction: number }[] = [];
-
-    for (let d = 0; d < dronesCount; d++) {
-      const droneMesh = new THREE.Group();
-      
-      const droneBodyGeo = new THREE.BoxGeometry(0.8, 0.2, 1.4);
-      const droneBodyMat = new THREE.MeshStandardMaterial({ color: '#090d16', emissive: '#0ea5e9', emissiveIntensity: 0.2 });
-      const droneBody = new THREE.Mesh(droneBodyGeo, droneBodyMat);
-      droneMesh.add(droneBody);
-
-      const droneLightGeo = new THREE.SphereGeometry(0.15, 8, 8);
-      const droneLightMat = new THREE.MeshBasicMaterial({ color: Math.random() > 0.5 ? '#00e5ff' : '#bd9a76' });
-      const droneLight = new THREE.Mesh(droneLightGeo, droneLightMat);
-      droneLight.position.set(0, 0, 0.7);
-      droneMesh.add(droneLight);
-
-      const roadLane = Math.random() > 0.5 ? 3.0 : -3.0;
-      const startX = Math.random() > 0.5 ? roadLane : (Math.random() - 0.5) * 200;
-      const startZ = Math.random() > 0.5 ? (Math.random() - 0.5) * 200 : roadLane;
-      const height = 5 + Math.random() * 8;
-      
-      droneMesh.position.set(startX, height, startZ);
-      dronesGroup.add(droneMesh);
-
-      droneDataList.push({
-        mesh: droneMesh,
-        startZ: startZ,
-        speed: 0.3 + Math.random() * 0.4,
-        direction: Math.random() > 0.5 ? 1 : -1
-      });
-    }
-    scene.add(dronesGroup);
-
     // --- 11. Game Animation & Physics Loop ---
     let frameId: number;
 
@@ -896,7 +889,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
       const isLeft = keysPressed.current['a'] || keysPressed.current['arrowleft'];
       const isRight = keysPressed.current['d'] || keysPressed.current['arrowright'];
 
-      // Acceleration / Deceleration (Bicycle pedaling speed logic)
+      // Acceleration / Deceleration
       if (isUp) {
         velocity.current = Math.min(velocity.current + acceleration, maxSpeed);
       } else if (isDown) {
@@ -928,7 +921,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         playerVehicleRef.current.position.z += velZ;
         playerVehicleRef.current.rotation.y = angle.current;
 
-        // Apply a gentle hovering bounce animation (sine wave)
         const timeNow = performance.now();
         const bounce = Math.sin(timeNow * 0.005) * 0.02;
         playerVehicleRef.current.position.y = bounce;
@@ -939,7 +931,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
           const leftAngle = pedalCycle;
           const rightAngle = pedalCycle + Math.PI;
 
-          // Leg joints swing back/forth simulating pedals pushing down
           leftThighRef.current.rotation.x = Math.PI / 4 + Math.sin(leftAngle) * 0.35;
           rightThighRef.current.rotation.x = Math.PI / 4 + Math.sin(rightAngle) * 0.35;
           leftShinRef.current.rotation.x = Math.PI / 6 + Math.cos(leftAngle) * 0.25;
@@ -998,22 +989,11 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         }
       });
 
-      // Move background traffic drones
-      droneDataList.forEach((drone) => {
-        drone.mesh.position.z += drone.speed * drone.direction;
-        if (drone.mesh.position.z > 150) {
-          drone.mesh.position.z = -150;
-        } else if (drone.mesh.position.z < -150) {
-          drone.mesh.position.z = 150;
-        }
-        drone.mesh.position.y += Math.sin(performance.now() * 0.003 + drone.startZ) * 0.01;
-      });
-
-      // --- Chase Camera Follow (FITTED TO VIDEO - CLOSER THIRD-PERSON ANGLE) ---
+      // --- Chase Camera Follow ---
       if (cameraRef.current && playerVehicleRef.current) {
         const targetPos = playerVehicleRef.current.position;
-        const camDistance = 8.5; // Closer view matching the MP4
-        const camHeight = 3.6;   // Lower angle directly behind rider
+        const camDistance = 8.5;
+        const camHeight = 3.6;
         
         const idealCamX = targetPos.x - Math.sin(angle.current) * camDistance;
         const idealCamZ = targetPos.z - Math.cos(angle.current) * camDistance;
@@ -1025,7 +1005,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
         const lookTarget = new THREE.Vector3(
           targetPos.x + Math.sin(angle.current) * 1.5,
-          targetPos.y + 1.2, // Look at the torso/handlebars level
+          targetPos.y + 1.2,
           targetPos.z + Math.cos(angle.current) * 1.5
         );
         cameraRef.current.lookAt(lookTarget);
@@ -1382,7 +1362,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
                         href={p.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-200 hover:text-brand-navy-dark bg-brand-navy-light/10 hover:bg-brand-gold transition-all border border-brand-gold/20 hover:border-transparent cursor-pointer"
+                        className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-200 hover:text-brand-navy-dark bg-brand-navy-gold hover:bg-brand-gold-bright transition-all border border-brand-gold/20 hover:border-transparent cursor-pointer"
                       >
                         Launch Platform
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -1427,7 +1407,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
                         href={m.docs_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-200 hover:text-brand-navy-dark bg-brand-navy-light/10 hover:bg-brand-gold transition-all border border-brand-gold/20 hover:border-transparent cursor-pointer"
+                        className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-200 hover:text-brand-navy-dark bg-brand-navy-gold hover:bg-brand-gold-bright transition-all border border-brand-gold/20 hover:border-transparent cursor-pointer"
                       >
                         Read Model Card
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -1493,7 +1473,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
                         href={l.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-200 hover:text-brand-navy-dark bg-brand-navy-light/10 hover:bg-brand-gold transition-all border border-brand-gold/20 hover:border-transparent cursor-pointer"
+                        className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-200 hover:text-brand-navy-dark bg-brand-navy-gold hover:bg-brand-gold-bright transition-all border border-brand-gold/20 hover:border-transparent cursor-pointer"
                       >
                         Access Learning path
                         <ExternalLink className="w-3.5 h-3.5" />
