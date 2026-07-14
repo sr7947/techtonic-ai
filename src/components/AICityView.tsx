@@ -152,12 +152,23 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   // Close-range prompt display
   const [nearCompanyId, setNearCompanyId] = useState<string | null>(null);
 
+  // Live HUD Debug stats to show key presses and velocities
+  const [hudStats, setHudStats] = useState({
+    vel: 0,
+    x: 0,
+    z: 10,
+    w: false,
+    s: false,
+    a: false,
+    d: false
+  });
+
   // References for game loop
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const playerVehicleRef = useRef<THREE.Group | null>(null);
   
-  // High-quality background HTML Audio stream (SoundHelix synth track)
+  // High-quality background HTML Audio stream
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [musicMuted, setMusicMuted] = useState(true);
 
@@ -184,6 +195,11 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
   const deceleration = 0.015;
   const turnSpeed = 0.04;
 
+  // Refs to avoid stale closures in listeners
+  const nearCompanyIdRef = useRef<string | null>(null);
+  const insideCompanyIdRef = useRef<string | null>(null);
+  const activeQuestRef = useRef<Quest | null>(null);
+
   // Active quest selector
   const activeQuest = useMemo(() => {
     if (activeQuestIndex >= QUESTS.length) return null;
@@ -195,6 +211,19 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     if (!insideCompanyId) return null;
     return hubDataMap[insideCompanyId] || null;
   }, [insideCompanyId]);
+
+  // Sync refs with state changes to prevent closure issues
+  useEffect(() => {
+    nearCompanyIdRef.current = nearCompanyId;
+  }, [nearCompanyId]);
+
+  useEffect(() => {
+    insideCompanyIdRef.current = insideCompanyId;
+  }, [insideCompanyId]);
+
+  useEffect(() => {
+    activeQuestRef.current = activeQuest;
+  }, [activeQuest]);
 
   // Handle XP updates and levels
   const addXp = (amount: number) => {
@@ -220,32 +249,6 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     addXp(activeQuest.xpReward);
     setActiveQuestIndex(prev => prev + 1);
   };
-
-  // Setup Keyboard control bindings
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      keysPressed.current[e.key.toLowerCase()] = true;
-      
-      // Enter building on "E" key
-      if (e.key.toLowerCase() === 'e' && nearCompanyId && !insideCompanyId) {
-        setInsideCompanyId(nearCompanyId);
-        if (activeQuest && activeQuest.targetCompanyId === nearCompanyId) {
-          completeCurrentQuest();
-        }
-      }
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      keysPressed.current[e.key.toLowerCase()] = false;
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [nearCompanyId, insideCompanyId, activeQuest]);
 
   const toggleMute = () => {
     if (audioRef.current) {
@@ -577,11 +580,9 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
           side: THREE.DoubleSide
         });
         const logoPic = new THREE.Mesh(logoPicGeo, logoPicMat);
-        // Position slightly in front of the plaque to prevent Z-fighting
         logoPic.position.set(0, c.height * 0.8, c.depth * 0.3 + 0.11);
         towerGroup.add(logoPic);
       } else {
-        // Fallback simple torus mesh if logo is not downloaded
         const ringG = new THREE.TorusGeometry(0.5, 0.1, 8, 20);
         const ringM = new THREE.MeshBasicMaterial({ color: c.color });
         const fallbackLogo = new THREE.Mesh(ringG, ringM);
@@ -926,11 +927,37 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     const starField = new THREE.Points(starGeo, starMat);
     scene.add(starField);
 
+    // --- Setup Keyboard Listeners Direct Bind (Avoid stale closures or focus bugs) ---
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      keysPressed.current[key] = true;
+
+      // Handle Enter building on E key
+      if (key === 'e' && nearCompanyIdRef.current && !insideCompanyIdRef.current) {
+        const targetId = nearCompanyIdRef.current;
+        setInsideCompanyId(targetId);
+        
+        if (activeQuestRef.current && activeQuestRef.current.targetCompanyId === targetId) {
+          completeCurrentQuest();
+        }
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      keysPressed.current[key] = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
     // --- 11. Game Animation & Physics Loop ---
     let frameId: number;
+    let frameIndex = 0;
 
     const gameLoop = () => {
       frameId = requestAnimationFrame(gameLoop);
+      frameIndex++;
 
       // Handle vehicle inputs
       const isUp = keysPressed.current['w'] || keysPressed.current['arrowup'];
@@ -1096,6 +1123,19 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         setProjectedLabels(newLabels);
       }
 
+      // Update real-time HUD stats state for visual debugging (every 6 frames)
+      if (frameIndex % 6 === 0) {
+        setHudStats({
+          vel: velocity.current,
+          x: playerVehicleRef.current ? playerVehicleRef.current.position.x : 0,
+          z: playerVehicleRef.current ? playerVehicleRef.current.position.z : 10,
+          w: !!keysPressed.current['w'],
+          s: !!keysPressed.current['s'],
+          a: !!keysPressed.current['a'],
+          d: !!keysPressed.current['d']
+        });
+      }
+
       // --- Chase Camera Follow (FITTED TO VIDEO - THREE-QUARTER SIDE ANGLE OFFSET) ---
       if (cameraRef.current && playerVehicleRef.current) {
         const targetPos = playerVehicleRef.current.position;
@@ -1139,8 +1179,19 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     };
     window.addEventListener('resize', handleResize);
 
+    // Bind click event to container to ensure keyboard focus
+    const handleContainerClick = () => {
+      window.focus();
+    };
+    mountRef.current.addEventListener('click', handleContainerClick);
+
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      if (mountRef.current) {
+        mountRef.current.removeEventListener('click', handleContainerClick);
+      }
       cancelAnimationFrame(frameId);
       renderer.dispose();
       if (mountRef.current && renderer.domElement.parentNode) {
@@ -1282,8 +1333,8 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             <button
               onClick={() => {
                 setShowIntro(false);
-                window.focus(); // Set focus to key events immediately
-                toggleMute(); // Auto-unmute on drive click
+                window.focus(); // Force browser window focus
+                toggleMute();
               }}
               className="w-full py-3 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs sm:text-sm font-extrabold uppercase tracking-widest cursor-pointer shadow-lg shadow-brand-gold/20 transition-all active:scale-95"
             >
@@ -1295,6 +1346,19 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
 
       {/* 3D Canvas Mounting Point */}
       <div ref={mountRef} className="w-full h-full relative z-10" />
+
+      {/* Real-time Diagnostics HUD Overlay for debugging */}
+      <div className="absolute top-20 left-4 z-30 bg-brand-navy-dark/95 border border-brand-gold/15 p-3.5 rounded-xl font-mono text-[9px] text-slate-300 pointer-events-none space-y-1 shadow-2xl backdrop-blur-sm">
+        <span className="font-extrabold text-[8px] uppercase tracking-wider text-brand-gold block mb-1 border-b border-brand-gold/10 pb-0.5">Vehicle Diagnostics</span>
+        <div>Velocity: <span className="font-bold text-slate-100">{hudStats.vel.toFixed(3)}</span></div>
+        <div>Position: <span className="font-bold text-slate-100">X: {hudStats.x.toFixed(1)} Z: {hudStats.z.toFixed(1)}</span></div>
+        <div className="flex gap-1.5 mt-1 border-t border-brand-gold/5 pt-1 text-[8px]">
+          <span className={`px-1 rounded font-bold ${hudStats.w ? 'bg-brand-gold text-brand-navy-dark' : 'bg-slate-800 text-slate-500'}`}>W</span>
+          <span className={`px-1 rounded font-bold ${hudStats.s ? 'bg-brand-gold text-brand-navy-dark' : 'bg-slate-800 text-slate-500'}`}>S</span>
+          <span className={`px-1 rounded font-bold ${hudStats.a ? 'bg-brand-gold text-brand-navy-dark' : 'bg-slate-800 text-slate-500'}`}>A</span>
+          <span className={`px-1 rounded font-bold ${hudStats.d ? 'bg-brand-gold text-brand-navy-dark' : 'bg-slate-800 text-slate-500'}`}>D</span>
+        </div>
+      </div>
 
       {/* Projected HTML Skyscraper Floating HUD Name Tags */}
       <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
@@ -1380,7 +1444,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Action Prompt (Teleport inside building) */}
+        {/* Action Prompt */}
         {nearCompanyId && !insideCompanyId && (
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-navy-dark/95 border border-brand-gold/40 px-6 py-4 rounded-3xl text-center space-y-2 pointer-events-auto shadow-2xl animate-bounce z-30">
             <MapPin className="w-6 h-6 text-brand-gold mx-auto animate-pulse" />
