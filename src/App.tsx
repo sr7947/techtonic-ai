@@ -23,6 +23,7 @@ import { FrameworksPage } from './pages/FrameworksPage';
 import { InfrastructurePage } from './pages/InfrastructurePage';
 import { CompanyHubPage } from './pages/CompanyHubPage';
 import { LearningPage } from './pages/LearningPage';
+import { TechStackPage } from './pages/TechStackPage';
 
 interface UserProfile {
   name: string;
@@ -253,6 +254,7 @@ function App() {
         {currentPath === '/leaders/cohere' && <CompanyHubPage companyId="cohere" navigate={navigate} />}
         {currentPath === '/leaders/huggingface' && <CompanyHubPage companyId="huggingface" navigate={navigate} />}
         {currentPath === '/learning' && <LearningPage />}
+        {currentPath === '/tech-stack' && <TechStackPage />}
       </main>
 
       {/* Platform Footer */}

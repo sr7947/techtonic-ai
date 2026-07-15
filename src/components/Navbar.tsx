@@ -223,6 +223,45 @@ export const Navbar: React.FC<NavbarProps> = ({
                 AI Learning
               </button>
 
+              {/* Tech Stack Dropdown */}
+              <div className="relative group">
+                <button 
+                  onClick={() => navigate('/tech-stack')}
+                  className={`flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-all py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                    currentPath === '/tech-stack' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
+                  }`}
+                >
+                  Tech Stack
+                  <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="absolute left-0 mt-2 w-64 rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <button
+                    onClick={() => navigate('/tech-stack')}
+                    className="w-full text-left px-4 py-2 text-xs font-bold rounded-xl text-brand-gold-bright hover:bg-brand-gold/10 transition-all duration-200 cursor-pointer border-b border-brand-gold/10 pb-2 mb-1.5"
+                  >
+                    Full Stack Overview
+                  </button>
+                  {[
+                    { id: 'interface', name: 'Interface Layer' },
+                    { id: 'orchestration', name: 'Orchestration Layer' },
+                    { id: 'models', name: 'Foundation Models' },
+                    { id: 'data-memory', name: 'Data & Memory' },
+                    { id: 'ingestion-tools', name: 'Ingestion & Tools' },
+                    { id: 'open-llm-access', name: 'Open LLM Access' },
+                    { id: 'evaluation-safety', name: 'Evaluation & Safety' },
+                    { id: 'infrastructure', name: 'Infrastructure Layer' }
+                  ].map((layer) => (
+                    <button
+                      key={layer.id}
+                      onClick={() => navigate(`/tech-stack?layer=${layer.id}`)}
+                      className="w-full text-left px-4 py-2 text-xs font-semibold rounded-xl text-slate-300 hover:text-brand-navy-dark hover:bg-brand-gold transition-all duration-200 cursor-pointer"
+                    >
+                      {layer.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Technologies Dropdown */}
               <div className="relative group">
                 <button className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-brand-gold transition-all py-1 focus:outline-none cursor-pointer">
@@ -406,7 +445,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               Trending
             </button>
 
-            <button
+             <button
               onClick={() => {
                 setIsOpen(false);
                 navigate('/learning');
@@ -414,6 +453,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
             >
               AI Learning
+            </button>
+
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/tech-stack');
+              }}
+              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
+            >
+              Tech Stack
             </button>
 
             {/* Technologies Accordion */}
@@ -437,6 +486,43 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="w-full text-left block px-6 py-2 text-sm font-medium text-slate-400 hover:text-brand-gold cursor-pointer"
                 >
                   - {tech.name}
+                </button>
+              ))}
+            </div>
+
+            {/* Tech Stack Mobile Accordion */}
+            <div className="border-t border-brand-gold/10 pt-2 mt-2">
+              <span className="block px-4 py-1 text-[10px] uppercase font-bold text-slate-500 tracking-widest">
+                AI Tech Stack
+              </span>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate('/tech-stack');
+                }}
+                className="w-full text-left block px-6 py-2 text-sm font-medium text-slate-400 hover:text-brand-gold cursor-pointer"
+              >
+                - Full Stack Overview
+              </button>
+              {[
+                { name: 'Interface Layer', id: 'interface' },
+                { name: 'Orchestration Layer', id: 'orchestration' },
+                { name: 'Foundation Models', id: 'models' },
+                { name: 'Data & Memory', id: 'data-memory' },
+                { name: 'Ingestion & Tools', id: 'ingestion-tools' },
+                { name: 'Open LLM Access', id: 'open-llm-access' },
+                { name: 'Evaluation & Safety', id: 'evaluation-safety' },
+                { name: 'Infrastructure Layer', id: 'infrastructure' }
+              ].map((layer) => (
+                <button
+                  key={layer.id}
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate(`/tech-stack?layer=${layer.id}`);
+                  }}
+                  className="w-full text-left block px-6 py-2 text-sm font-medium text-slate-400 hover:text-brand-gold cursor-pointer"
+                >
+                  - {layer.name}
                 </button>
               ))}
             </div>
