@@ -166,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-5">
+            <div className="hidden xl:flex items-center gap-3 xl:gap-4.5">
               
               {/* Home-scroll Sections */}
               {[
@@ -187,7 +187,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }, 200);
                     }
                   }}
-                  className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                  className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
                     currentPath === '/' && activeSection === sect.id ? 'text-brand-gold-bright' : 'text-slate-300'
                   }`}
                 >
@@ -198,7 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Dedicated Subpages */}
               <button
                 onClick={() => navigate('/models-hub')}
-                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
                   currentPath === '/models-hub' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
                 }`}
               >
@@ -207,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <button
                 onClick={() => navigate('/trending')}
-                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
                   currentPath === '/trending' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
                 }`}
               >
@@ -216,7 +216,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <button
                 onClick={() => navigate('/learning')}
-                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
                   currentPath === '/learning' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
                 }`}
               >
@@ -227,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="relative group">
                 <button 
                   onClick={() => navigate('/tech-stack')}
-                  className={`flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-all py-1 focus:outline-none hover:text-brand-gold cursor-pointer ${
+                  className={`flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-all py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
                     currentPath === '/tech-stack' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
                   }`}
                 >
@@ -264,7 +264,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               {/* Technologies Dropdown */}
               <div className="relative group">
-                <button className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-brand-gold transition-all py-1 focus:outline-none cursor-pointer">
+                <button className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-brand-gold transition-all py-1 focus:outline-none cursor-pointer whitespace-nowrap">
                   Technologies
                   <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
                 </button>
@@ -381,7 +381,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex md:hidden">
+            <div className="flex xl:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-lg text-slate-300 hover:text-brand-gold hover:bg-brand-navy-light/35 focus:outline-none focus:ring-2 focus:ring-brand-gold/50"
@@ -394,7 +394,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Mobile Drawer Menu */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        <div className={`xl:hidden overflow-hidden transition-all duration-300 ease-in-out ${
           isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="px-2 pt-2 pb-4 space-y-1.5 bg-brand-navy-dark/95 border-b border-brand-gold/10 shadow-2xl backdrop-blur-lg">
