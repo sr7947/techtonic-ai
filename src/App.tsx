@@ -253,6 +253,9 @@ function App() {
         {currentPath === '/leaders/ibm-watsonx' && <CompanyHubPage companyId="ibm-watsonx" navigate={navigate} />}
         {currentPath === '/leaders/cohere' && <CompanyHubPage companyId="cohere" navigate={navigate} />}
         {currentPath === '/leaders/huggingface' && <CompanyHubPage companyId="huggingface" navigate={navigate} />}
+        {currentPath === '/leaders/deepseek' && <CompanyHubPage companyId="deepseek" navigate={navigate} />}
+        {currentPath === '/leaders/moonshot-kimi' && <CompanyHubPage companyId="moonshot-kimi" navigate={navigate} />}
+        {currentPath === '/leaders/alibaba-qwen' && <CompanyHubPage companyId="alibaba-qwen" navigate={navigate} />}
         {currentPath === '/learning' && <LearningPage />}
         {currentPath === '/tech-stack' && <TechStackPage />}
       </main>

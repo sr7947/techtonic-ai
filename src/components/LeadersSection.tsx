@@ -61,7 +61,33 @@ export const LeadersSection: React.FC<LeadersSectionProps> = ({
             {/* Dropdown Card */}
             {dropdownOpen && (
               <div className="absolute left-0 mt-2.5 w-full rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2 shadow-2xl z-40 max-h-72 overflow-y-auto">
-                {leaders.map((leader) => (
+                {/* Global Leaders Group */}
+                <div className="px-3.5 py-1.5 text-[9px] uppercase tracking-wider text-slate-500 font-extrabold border-b border-brand-gold/5 mb-1.5">
+                  US & Global Leaders
+                </div>
+                {leaders.filter(l => !['deepseek', 'moonshot-kimi', 'alibaba-qwen'].includes(l.id)).map((leader) => (
+                  <button
+                    key={leader.id}
+                    onClick={() => {
+                      setSelectedLeaderId(leader.id);
+                      setDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-xs font-semibold rounded-xl text-left transition-all duration-200 cursor-pointer ${
+                      selectedLeaderId === leader.id
+                        ? 'bg-brand-gold text-brand-navy-dark'
+                        : 'text-slate-300 hover:bg-brand-navy-light/20 hover:text-slate-100'
+                    }`}
+                  >
+                    <span className={`w-2 h-2 rounded-full ${selectedLeaderId === leader.id ? 'bg-brand-navy-dark' : 'bg-gradient-to-r ' + leader.logoColor}`} />
+                    <span>{leader.name}</span>
+                  </button>
+                ))}
+
+                {/* Chinese Labs Group */}
+                <div className="px-3.5 py-1.5 text-[9px] uppercase tracking-wider text-slate-500 font-extrabold border-t border-b border-brand-gold/5 my-1.5">
+                  Chinese AI Labs
+                </div>
+                {leaders.filter(l => ['deepseek', 'moonshot-kimi', 'alibaba-qwen'].includes(l.id)).map((leader) => (
                   <button
                     key={leader.id}
                     onClick={() => {
@@ -329,6 +355,54 @@ export const LeadersSection: React.FC<LeadersSectionProps> = ({
                     >
                       <Building className="w-4 h-4" />
                       Explore Hugging Face Ecosystem Hub
+                    </button>
+                  </div>
+                )}
+
+                {activeLeader.id === 'deepseek' && (
+                  <div className="pt-4 flex justify-center md:justify-start">
+                    <button
+                      onClick={() => {
+                        window.history.pushState({}, '', '/leaders/deepseek');
+                        window.dispatchEvent(new Event('pushstate'));
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs font-extrabold uppercase tracking-wider transition-all shadow-md shadow-brand-gold/15 cursor-pointer border border-brand-gold"
+                    >
+                      <Building className="w-4 h-4" />
+                      Explore DeepSeek Ecosystem Hub
+                    </button>
+                  </div>
+                )}
+
+                {activeLeader.id === 'moonshot-kimi' && (
+                  <div className="pt-4 flex justify-center md:justify-start">
+                    <button
+                      onClick={() => {
+                        window.history.pushState({}, '', '/leaders/moonshot-kimi');
+                        window.dispatchEvent(new Event('pushstate'));
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs font-extrabold uppercase tracking-wider transition-all shadow-md shadow-brand-gold/15 cursor-pointer border border-brand-gold"
+                    >
+                      <Building className="w-4 h-4" />
+                      Explore Moonshot AI Ecosystem Hub
+                    </button>
+                  </div>
+                )}
+
+                {activeLeader.id === 'alibaba-qwen' && (
+                  <div className="pt-4 flex justify-center md:justify-start">
+                    <button
+                      onClick={() => {
+                        window.history.pushState({}, '', '/leaders/alibaba-qwen');
+                        window.dispatchEvent(new Event('pushstate'));
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark text-xs font-extrabold uppercase tracking-wider transition-all shadow-md shadow-brand-gold/15 cursor-pointer border border-brand-gold"
+                    >
+                      <Building className="w-4 h-4" />
+                      Explore Alibaba / Qwen Ecosystem Hub
                     </button>
                   </div>
                 )}

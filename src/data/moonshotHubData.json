@@ -1,0 +1,175 @@
+{
+  "company": {
+    "id": "moonshot-kimi",
+    "name": "Moonshot AI / Kimi",
+    "tagline": "Pioneering ultra-long context reasoning, multimodal agent swarms, and visual-to-code platforms.",
+    "overview": "Moonshot AI is a leading Chinese generative AI company that builds the Kimi intelligence suite. Renowned for pioneering massive context window scaling, Moonshot AI creates models that process large books, codebases, and media logs concurrently, enabling advanced visual coding and complex multi-agent planning loops.",
+    "official_site_url": "https://kimi.com",
+    "theme_color": "#06b6d4"
+  },
+  "llms": [
+    {
+      "id": "kimi-k3-frontier",
+      "name": "Kimi K3 (Frontier)",
+      "family": "Kimi-K3",
+      "modality": "multimodal",
+      "type": "proprietary",
+      "tier": "flagship",
+      "short_tagline": "Frontier reasoning and analysis model competing on math and coding.",
+      "description": "Kimi K3 is Moonshot's latest flagship model designed for advanced reasoning, analytical processing, and multi-step math tasks. Competitive with Western frontier models, it acts as the primary cognitive engine for long-document research and complex enterprise integrations.",
+      "primary_use_cases": [
+        "Advanced data analysis and research engines",
+        "Enterprise-level software engineering assists",
+        "Complex mathematical and logical reasoning"
+      ],
+      "docs_url": "https://platform.kimi.ai/docs/models"
+    },
+    {
+      "id": "kimi-k2-6-thinking",
+      "name": "Kimi K2.6 Thinking",
+      "family": "Kimi-K2",
+      "modality": "text",
+      "type": "proprietary",
+      "tier": "balanced",
+      "short_tagline": "Reasoning-focused LLM with 256K token context window.",
+      "description": "Kimi K2.6 Thinking is a specialized reasoning model that integrates deep logical planning with a 256K token context window. It allows developers to feed hours of meeting recordings, source code clusters, or large PDF manuals to construct rich semantic search contexts.",
+      "primary_use_cases": [
+        "Structured code generation from architectural logs",
+        "Long-context RAG and retrieval queries",
+        "Complex meeting transcription and briefings"
+      ],
+      "docs_url": "https://platform.kimi.ai/docs/models"
+    },
+    {
+      "id": "kimi-k2-5-visual",
+      "name": "Kimi K2.5 Visual Agentic",
+      "family": "Kimi-K2",
+      "modality": "multimodal",
+      "type": "open-weight",
+      "tier": "cost-optimized",
+      "short_tagline": "Open-weights multimodal model optimized for visual coding.",
+      "description": "Kimi K2.5 Visual is an open-weights model designed specifically to handle visual inputs for agentic tasks. It excels at parsing UI layouts, reading dashboard charts, and converting wireframes directly to clean code, making it a key component for GUI automation agents.",
+      "primary_use_cases": [
+        "Visual coding and front-end interface generation",
+        "Graphical User Interface (GUI) automation agents",
+        "Multi-modal document parser and RAG pipelines"
+      ],
+      "docs_url": "https://platform.kimi.ai/docs/models"
+    },
+    {
+      "id": "kimi-chat-app",
+      "name": "Kimi Chat & Workspace",
+      "family": "Kimi-Apps",
+      "modality": "text",
+      "type": "proprietary",
+      "tier": "cost-optimized",
+      "short_tagline": "Consumer and developer app surface supporting large context.",
+      "description": "The Kimi Chat app is a highly popular web app interface that leverages Kimi's large context engines. It supports file uploads, real-time web browsing, and custom agent plugins, providing a powerful sandbox for testing prompt behaviors.",
+      "primary_use_cases": [
+        "Interactive document and PDF research",
+        "Prompt prototyping and validation",
+        "Web search and data gathering"
+      ],
+      "docs_url": "https://kimi.com"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "moonshot-developer-platform",
+      "name": "Moonshot AI Developer Platform",
+      "category": "dev-portal",
+      "short_tagline": "Developer console for API keys, billing, and models testing.",
+      "description": "The Moonshot Developer Platform manages developer API tokens, playground environments, and usage limits. It offers high-throughput endpoints for deploying Kimi reasoning models into customer-facing production systems.",
+      "url": "https://platform.kimi.ai/docs/models",
+      "ideal_for": [
+        "developers",
+        "MLOps"
+      ],
+      "badges": [
+        "High-Throughput",
+        "Developer Portal"
+      ]
+    },
+    {
+      "id": "kimi-workspace-suite",
+      "name": "Kimi Workspace Suite",
+      "category": "fm-platform",
+      "short_tagline": "Cloud sandbox for long-document analysis.",
+      "description": "Kimi Workspace is an interactive interface built for compiling, parsing, and reasoning over large file packages. It allows developers to configure persistent contexts and run multi-file prompt benchmarks.",
+      "url": "https://kimi.com",
+      "ideal_for": [
+        "researchers",
+        "engineers"
+      ],
+      "badges": [
+        "Cloud-based",
+        "Workspace"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "kimi-api-tutorials",
+      "name": "Kimi API Reference Recipes",
+      "type": "docs-guides",
+      "short_tagline": "Python templates for long-context file ingestion.",
+      "description": "Technical recipes and Python code samples for handling large file payloads, chunking inputs, managing context windows, and building chatbot agents.",
+      "url": "https://platform.kimi.ai/docs/models",
+      "focus_areas": [
+        "docs-guides"
+      ],
+      "level": "all-levels"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "moonshot-context-engine",
+      "name": "Moonshot Context Scaling Engine",
+      "type": "framework",
+      "short_tagline": "Linear attention mechanism scaling context windows.",
+      "description": "Moonshot's proprietary context-scaling technology that optimizes model attention layers. By reducing quadratic memory overheads, it enables stable, high-accuracy retrieval across massive document histories.",
+      "url": "https://github.com/MoonshotAI",
+      "related_platform_ids": [
+        "moonshot-developer-platform"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "kimi-docs-home",
+      "name": "Kimi Platform & API Docs",
+      "type": "docs",
+      "short_tagline": "Model references and integration APIs.",
+      "description": "The primary developer guide for accessing Moonshot API endpoints and model specifications.",
+      "url": "https://platform.kimi.ai/docs/models",
+      "highlight": true
+    },
+    {
+      "id": "kimi-official-site",
+      "name": "Official Kimi Website",
+      "type": "docs",
+      "short_tagline": "Kimi Chat consumer application home.",
+      "description": "The main Kimi web chat app, providing browser-based document research and prompt testing.",
+      "url": "https://kimi.com",
+      "highlight": true
+    },
+    {
+      "id": "moonshot-official-site",
+      "name": "Moonshot AI Website",
+      "type": "docs",
+      "short_tagline": "Moonshot AI corporate homepage.",
+      "description": "The corporate portal of Moonshot AI, sharing company profiles, hiring, and research mission.",
+      "url": "https://www.moonshot.cn/en",
+      "highlight": false
+    },
+    {
+      "id": "moonshot-github-org",
+      "name": "Model Releases / Open-Source Hub",
+      "type": "github-org",
+      "short_tagline": "Open source libraries and weights adapters.",
+      "description": "Access open-source codebases, model tools, and library adapters on GitHub.",
+      "url": "https://github.com/MoonshotAI",
+      "highlight": true
+    }
+  ]
+}

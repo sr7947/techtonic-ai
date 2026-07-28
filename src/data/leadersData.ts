@@ -164,5 +164,38 @@ export const LEADER_PROFILES: AILeaderData[] = [
     docsUrl: 'https://huggingface.co/docs',
     blogUrl: 'https://huggingface.co/blog',
     githubUrl: 'https://github.com/huggingface'
+  },
+  {
+    id: 'deepseek',
+    name: 'DeepSeek',
+    logoColor: 'from-[#005BFF] to-[#00C2FF]',
+    overview: 'A Shanghai-based AI research lab focused on scaling frontier intelligence with extreme efficiency. DeepSeek is renowned for its proprietary Mixture-of-Experts routing architectures and cost-effective API services.',
+    corePlatforms: ['DeepSeek V4 Pro / High (2025–2026)', 'DeepSeek V4 Flash (Max)', 'DeepSeek V3 / V3.2', 'DeepSeek R1 Reasoning'],
+    officialSite: 'https://www.deepseek.com/en',
+    docsUrl: 'https://api-docs.deepseek.com/',
+    blogUrl: 'https://www.deepseek.com/blog',
+    githubUrl: 'https://github.com/deepseek-ai'
+  },
+  {
+    id: 'moonshot-kimi',
+    name: 'Moonshot AI / Kimi',
+    logoColor: 'from-[#06b6d4] to-[#a855f7]',
+    overview: 'A leading generative AI organization specializing in ultra-long context window reasoning models. Moonshot AI powers the Kimi conversational suite, advancing visual coding and multi-agent swarm platforms.',
+    corePlatforms: ['Kimi K3 (Frontier)', 'Kimi K2.6 Thinking (256K Context)', 'Kimi K2.5 Visual Agentic (Open)', 'Kimi Chat & Workspace Sandbox'],
+    officialSite: 'https://kimi.com',
+    docsUrl: 'https://platform.kimi.ai/docs/models',
+    blogUrl: 'https://www.moonshot.cn/en',
+    githubUrl: 'https://github.com/MoonshotAI'
+  },
+  {
+    id: 'alibaba-qwen',
+    name: 'Alibaba / Qwen',
+    logoColor: 'from-[#f59e0b] to-[#ea580c]',
+    overview: "Alibaba Cloud's highly versatile open-weights model ecosystem. Spanning from compact edge parameters to massive cloud Mixture-of-Experts, Qwen supports permissive Apache-2.0 self-hosted deployments.",
+    corePlatforms: ['Qwen3.7 Max (Proprietary)', 'Qwen3.5 Reasoning (397B MoE)', 'Qwen2.5-72B (Open-Source)', 'Qwen Coder & Qwen-VL Vision'],
+    officialSite: 'https://qwen-ai.com/',
+    docsUrl: 'https://help.aliyun.com/document_detail/2712534.html',
+    blogUrl: 'https://qwenlm.github.io/blog/',
+    githubUrl: 'https://github.com/QwenLM'
   }
 ];

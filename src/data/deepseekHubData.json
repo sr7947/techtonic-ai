@@ -1,0 +1,187 @@
+{
+  "company": {
+    "id": "deepseek",
+    "name": "DeepSeek",
+    "tagline": "Pioneering highly cost-efficient frontier intelligence and open-weight mixture-of-experts architectures.",
+    "overview": "DeepSeek is a Shanghai-based AI research lab focused on scaling frontier intelligence with extreme efficiency. Known for introducing high-performance open-weight models, DeepSeek advances machine learning through proprietary Mixture-of-Experts (MoE) routing, specialized coding engines, and top-tier mathematical reasoning pipelines.",
+    "official_site_url": "https://www.deepseek.com/en",
+    "theme_color": "#00c2ff"
+  },
+  "llms": [
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro / High",
+      "family": "DeepSeek-V4",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "flagship",
+      "short_tagline": "Frontier text model optimized for advanced reasoning and coding.",
+      "description": "DeepSeek V4 Pro represents their flagship open-weight general text model. Engineered to compete with proprietary Western models on coding, logical inference, and multilingual tasks, it delivers state-of-the-art parameters for self-hosted enterprise workloads.",
+      "primary_use_cases": [
+        "Advanced software engineering agents",
+        "Multi-language text translation and generation",
+        "Complex structured data extraction"
+      ],
+      "docs_url": "https://api-docs.deepseek.com/"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash (Max)",
+      "family": "DeepSeek-V4",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "cost-optimized",
+      "short_tagline": "High-speed MoE model supporting a 1M token context window.",
+      "description": "DeepSeek V4 Flash is a latency-optimized Mixture-of-Experts (MoE) model built for real-time conversational agents. Featuring an expansive 1-million token context window, it enables extremely fast retrieval and reasoning over massive document bundles at a fraction of standard API costs.",
+      "primary_use_cases": [
+        "High-frequency chat and support agents",
+        "Long-document context retrieval and analysis",
+        "Low-latency autonomous workflows"
+      ],
+      "docs_url": "https://api-docs.deepseek.com/"
+    },
+    {
+      "id": "deepseek-r1-reasoning",
+      "name": "DeepSeek R1 Reasoning",
+      "family": "DeepSeek-R1",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "flagship",
+      "short_tagline": "Open reasoning model generating detailed logical thinking chains.",
+      "description": "DeepSeek R1 is a specialized reasoning model designed to solve complex mathematics, logical reasoning, and programming challenges. By generating explicit, structured step-by-step thinking processes before outputting answers, it provides highly reliable logic checks for agent planners.",
+      "primary_use_cases": [
+        "Mathematical and scientific computing",
+        "Agentic planning and self-correction loops",
+        "Complex code logic verification"
+      ],
+      "docs_url": "https://api-docs.deepseek.com/"
+    },
+    {
+      "id": "deepseek-v3-series",
+      "name": "DeepSeek V3 / V3.2",
+      "family": "DeepSeek-V3",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "balanced",
+      "short_tagline": "Proven open-weights model with excellent developer benchmarks.",
+      "description": "DeepSeek V3 represents a stable, highly capable open-weights model family. Widely adopted for coding assists and prompt completion tasks, it offers balanced parameters that run efficiently on standard enterprise GPU nodes.",
+      "primary_use_cases": [
+        "Local copilot integration and autocomplete",
+        "Instruction tuning and dataset generation",
+        "General-purpose semantic processing"
+      ],
+      "docs_url": "https://api-docs.deepseek.com/"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "deepseek-developer-platform",
+      "name": "DeepSeek Developer Platform",
+      "category": "dev-portal",
+      "short_tagline": "Low-cost OpenAI-compatible API hosting gateway.",
+      "description": "The DeepSeek Developer Platform provides high-availability API endpoints for integrating DeepSeek models into developer applications. Featuring OpenAI API compatibility, it allows developers to swap endpoints with one line of code, benefiting from industry-lowest token pricing.",
+      "url": "https://api-docs.deepseek.com/",
+      "ideal_for": [
+        "app developers",
+        "infra teams"
+      ],
+      "badges": [
+        "OpenAI-Compatible",
+        "Cost-Efficient"
+      ]
+    },
+    {
+      "id": "deepseek-chat-ui",
+      "name": "DeepSeek Chat Hub",
+      "category": "fm-platform",
+      "short_tagline": "Direct conversational interface for model testing.",
+      "description": "DeepSeek Chat is the web-accessible chat interface for interacting with DeepSeek models directly. Developers use it to run quick prompt engineering experiments, benchmark responses against API tasks, and test multimodal capabilities.",
+      "url": "https://chat.deepseek.com/",
+      "ideal_for": [
+        "prompt engineers",
+        "builders"
+      ],
+      "badges": [
+        "Web-based",
+        "Interactive"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "deepseek-api-quickstart",
+      "name": "DeepSeek API Quickstart Guides",
+      "type": "docs-guides",
+      "short_tagline": "Code recipes for python, node, and curl integrations.",
+      "description": "Official guides explaining API authentication, model parameters, streaming setups, and error handling. Developers use these recipes to configure robust API integrations in minutes.",
+      "url": "https://api-docs.deepseek.com/",
+      "focus_areas": [
+        "docs-guides"
+      ],
+      "level": "all-levels"
+    },
+    {
+      "id": "deepseek-research-news",
+      "name": "DeepSeek Newsroom & Research",
+      "type": "blog",
+      "short_tagline": "Official research papers and architecture updates.",
+      "description": "The official DeepSeek newsroom containing research announcements, architectural disclosures (like DeepSeekMoE), and detailed model evaluation benchmarks.",
+      "url": "https://www.deepseek.com/blog",
+      "focus_areas": [
+        "generative-ai"
+      ],
+      "level": "intermediate-advanced"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "deepseek-moe-infra",
+      "name": "DeepSeekMoE Architecture",
+      "type": "framework",
+      "short_tagline": "Optimized Mixture-of-Experts routing framework.",
+      "description": "DeepSeek's proprietary Mixture-of-Experts (MoE) framework designed to reduce compute costs. By routing tokens to specialized shared and fine-grained experts, it achieves frontier performance with a fraction of active parameters.",
+      "url": "https://github.com/deepseek-ai",
+      "related_platform_ids": [
+        "deepseek-developer-platform"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "deepseek-docs-home",
+      "name": "Developer Docs Portal",
+      "type": "docs",
+      "short_tagline": "API specifications and SDK integrations.",
+      "description": "The primary developer hub for accessing API guides, billing setups, and model capabilities.",
+      "url": "https://api-docs.deepseek.com/",
+      "highlight": true
+    },
+    {
+      "id": "deepseek-official-site",
+      "name": "Official AI Website",
+      "type": "docs",
+      "short_tagline": "DeepSeek homepage and platform portal.",
+      "description": "The global portal for DeepSeek, providing downloads, chat web apps, and researcher contact.",
+      "url": "https://www.deepseek.com/en",
+      "highlight": true
+    },
+    {
+      "id": "deepseek-github-org",
+      "name": "Model Hub / Open-Weight Releases",
+      "type": "github-org",
+      "short_tagline": "Git repositories and open weights models.",
+      "description": "Access official model weight codes, research configurations, and model pipelines on GitHub.",
+      "url": "https://github.com/deepseek-ai",
+      "highlight": true
+    },
+    {
+      "id": "deepseek-blog-home",
+      "name": "Product & Research Blog",
+      "type": "blog",
+      "short_tagline": "Engineering posts and evaluation tables.",
+      "description": "Technical announcements and engineering updates on model releases and training insights.",
+      "url": "https://www.deepseek.com/blog",
+      "highlight": false
+    }
+  ]
+}

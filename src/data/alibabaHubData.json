@@ -1,0 +1,175 @@
+{
+  "company": {
+    "id": "alibaba-qwen",
+    "name": "Alibaba / Qwen",
+    "tagline": "Championing versatile Apache-2.0 open-weight model portfolios from edge sizes to high-end clouds.",
+    "overview": "Alibaba Cloud develops the Qwen model family, China's most popular open-weights AI ecosystem. Spanning from tiny edge models to massive cloud-based Mixture-of-Experts, Qwen supports Apache-2.0 licensing, offering high-end reasoning, visual understanding, and developer frameworks for global AI deployments.",
+    "official_site_url": "https://qwen-ai.com/",
+    "theme_color": "#ea580c"
+  },
+  "llms": [
+    {
+      "id": "qwen3.7-max",
+      "name": "Qwen3.7 Max (Proprietary)",
+      "family": "Qwen-3.7",
+      "modality": "text",
+      "type": "proprietary",
+      "tier": "flagship",
+      "short_tagline": "Flagship closed model scoring top on Chinese BenchLM tests.",
+      "description": "Qwen3.7 Max is Alibaba's top-end closed-weights model family. Accessed via DashScope cloud endpoints, it delivers premier performance on complex logical analysis, Chinese linguistic structures, and high-concurrency enterprise reasoning tasks.",
+      "primary_use_cases": [
+        "High-performance corporate copilot grids",
+        "Chinese language parsing and translations",
+        "Enterprise-grade data processing hubs"
+      ],
+      "docs_url": "https://qwen-ai.com/"
+    },
+    {
+      "id": "qwen3.5-reasoning-open",
+      "name": "Qwen3.5 Reasoning (Open-Weight)",
+      "family": "Qwen-3.5",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "flagship",
+      "short_tagline": "397B parameters reasoning model for self-hosted compute.",
+      "description": "Qwen3.5 Reasoning represents Alibaba's frontier open-weight reasoning model. Utilizing a Mixture-of-Experts (MoE) configuration with 397 billion parameters, it is engineered for on-premise high-end coding, mathematical calculations, and autonomous agent coordination.",
+      "primary_use_cases": [
+        "Self-hosted enterprise agent systems",
+        "Deep logical and mathematical research",
+        "Private code generation and testing"
+      ],
+      "docs_url": "https://qwen-ai.com/"
+    },
+    {
+      "id": "qwen2.5-72b-opensource",
+      "name": "Qwen2.5-72B (Open-Source)",
+      "family": "Qwen-2.5",
+      "modality": "text",
+      "type": "open-weight",
+      "tier": "balanced",
+      "short_tagline": "Highly popular open weights model for general tasks.",
+      "description": "Qwen2.5-72B is a widely-used open weights model comparable to Llama-3.1-70B. It excels at multi-turn dialogue, general knowledge retrieval, and coding support, serving as a robust foundation for building cost-effective local agents.",
+      "primary_use_cases": [
+        "General-purpose developer chatbots",
+        "High-performance local text processing",
+        "Standard multi-turn dialogue agents"
+      ],
+      "docs_url": "https://qwen-ai.com/"
+    },
+    {
+      "id": "qwen-coder-vl-series",
+      "name": "Qwen Coder / Qwen-VL",
+      "family": "Qwen-Specialized",
+      "modality": "multimodal",
+      "type": "open-weight",
+      "tier": "cost-optimized",
+      "short_tagline": "Domain-specific coding and vision-language model checkpoints.",
+      "description": "The Qwen Specialized collection includes Qwen-Coder (engineered for multi-language code synthesis) and Qwen-VL (engineered for visual-language reasoning). These models offer compact parameter sizes optimized for edge servers and mobile apps.",
+      "primary_use_cases": [
+        "Edge-computing code completions",
+        "Visual chart analysis and transcription",
+        "Mobile-based vision-language assistants"
+      ],
+      "docs_url": "https://qwen-ai.com/"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "alibaba-dashscope-platform",
+      "name": "Alibaba DashScope Portal",
+      "category": "dev-portal",
+      "short_tagline": "Unified cloud API endpoint managing Qwen deployments.",
+      "description": "DashScope is Alibaba Cloud's model service platform. It provides developers with secure, high-concurrency API access to Qwen flagship models, offering built-in data protection, logging monitors, and custom fine-tuning runtimes.",
+      "url": "https://help.aliyun.com/document_detail/2712534.html",
+      "ideal_for": [
+        "enterprise developers",
+        "infra teams"
+      ],
+      "badges": [
+        "Enterprise-Cloud",
+        "Managed-API"
+      ]
+    },
+    {
+      "id": "modelscope-hub-registry",
+      "name": "Alibaba ModelScope Hub",
+      "category": "fm-platform",
+      "short_tagline": "China's leading open-source model registry.",
+      "description": "ModelScope is Alibaba's open-source machine learning hub. It hosts thousands of community models and datasets, providing Git-based workflows and pre-configured cloud containers for rapid model evaluation.",
+      "url": "https://modelscope.cn/",
+      "ideal_for": [
+        "ML researchers",
+        "data scientists"
+      ],
+      "badges": [
+        "Open-source",
+        "Community-Hub"
+      ]
+    }
+  ],
+  "learning": [
+    {
+      "id": "qwen-deployment-tutorials",
+      "name": "Qwen Deployment Guides",
+      "type": "docs-guides",
+      "short_tagline": "Step-by-step instructions for local serving and fine-tuning.",
+      "description": "Technical guides detailing how to serve Qwen models using vLLM, configure LoRA adapters, run quantization pipelines, and deploy models on consumer hardware.",
+      "url": "https://qwen-ai.com/",
+      "focus_areas": [
+        "docs-guides"
+      ],
+      "level": "all-levels"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "qwen-agent-framework",
+      "name": "Qwen Agent Framework",
+      "type": "framework",
+      "short_tagline": "Open-source toolkit for building LLM agents.",
+      "description": "A Python-based framework developed by Alibaba for building agents with tool calling, memory management, and multi-agent planning. It is optimized to utilize Qwen models' native function-calling capabilities.",
+      "url": "https://github.com/QwenLM/qwen-agent",
+      "related_platform_ids": [
+        "alibaba-dashscope-platform"
+      ]
+    }
+  ],
+  "docsAndNews": [
+    {
+      "id": "qwen-docs-home",
+      "name": "Official Qwen Website",
+      "type": "docs",
+      "short_tagline": "Primary landing portal for the Qwen project.",
+      "description": "The official Qwen website containing benchmarks, research paper links, and web demos.",
+      "url": "https://qwen-ai.com/",
+      "highlight": true
+    },
+    {
+      "id": "dashscope-docs-portal",
+      "name": "Developer Docs & DashScope",
+      "type": "docs",
+      "short_tagline": "Alibaba DashScope model service guides.",
+      "description": "Access DashScope API references, SDK installation guidelines, and quickstarts.",
+      "url": "https://help.aliyun.com/document_detail/2712534.html",
+      "highlight": true
+    },
+    {
+      "id": "qwen-modelscope-collection",
+      "name": "Model Cards & Open-Weight Hub",
+      "type": "github-org",
+      "short_tagline": "Hugging Face model collection repository.",
+      "description": "The Qwen model repository on Hugging Face, hosting weights checkpoints and safety reports.",
+      "url": "https://huggingface.co/Qwen",
+      "highlight": true
+    },
+    {
+      "id": "qwen-blog-updates",
+      "name": "Qwen Blog / Updates",
+      "type": "blog",
+      "short_tagline": "Engineering blog posts and release logs.",
+      "description": "Technical insights, benchmark disclosures, and version release notes from the Qwen team.",
+      "url": "https://qwenlm.github.io/blog/",
+      "highlight": false
+    }
+  ]
+}

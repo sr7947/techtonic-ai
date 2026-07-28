@@ -12,6 +12,9 @@ import mistralHubData from '../data/mistralHubData.json';
 import ibmHubData from '../data/ibmHubData.json';
 import cohereHubData from '../data/cohereHubData.json';
 import huggingfaceHubData from '../data/huggingfaceHubData.json';
+import deepseekHubData from '../data/deepseekHubData.json';
+import moonshotHubData from '../data/moonshotHubData.json';
+import alibabaHubData from '../data/alibabaHubData.json';
 import { 
   Building, 
   ExternalLink, 
@@ -58,7 +61,13 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
                         ? cohereHubData
                         : companyId === 'huggingface'
                           ? huggingfaceHubData
-                          : googleHubData;
+                          : companyId === 'deepseek'
+                            ? deepseekHubData
+                            : companyId === 'moonshot-kimi'
+                              ? moonshotHubData
+                              : companyId === 'alibaba-qwen'
+                                ? alibabaHubData
+                                : googleHubData;
   const { company, llms, platforms, learning, technologies, docsAndNews } = hubData;
   const hardware = (hubData as any).hardware || null;
 
