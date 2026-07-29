@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { analyzeAndStageYoutubeVideo } from './_youtube-analyzer.js';
+import { analyzeAndStageTwitterPost } from './_twitter-analyzer.js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -48,6 +49,41 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             chat_id: chatId,
             text: `❌ <b>Analysis Failed</b>:\nUnable to summarize the YouTube video. Details: ${err.message}`,
+            parse_mode: 'HTML'
+          })
+        });
+      }
+
+      return res.status(200).send('OK');
+    }
+
+    // Intercept and handle text messages containing Twitter / X links
+    const twitterMatch = text.match(/https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/[a-zA-Z0-9_]+\/status\/\d+/i);
+    if (twitterMatch) {
+      const tweetUrl = twitterMatch[0];
+      
+      // Send processing alert
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: `⏳ *Analyzing X / Twitter Post...*\nFetching details from oEmbed API and summarizing with Gemini AI...`,
+          parse_mode: 'Markdown'
+        })
+      });
+
+      const geminiKey = process.env.GEMINI_API_KEY;
+      try {
+        await analyzeAndStageTwitterPost(tweetUrl, chatId, botToken, geminiKey);
+      } catch (err) {
+        console.error("Direct tweet analysis failed:", err.message);
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `❌ <b>Analysis Failed</b>:\nUnable to summarize the tweet. Details: ${err.message}`,
             parse_mode: 'HTML'
           })
         });
@@ -104,6 +140,41 @@ export default async function handler(req, res) {
       const parts = (article.source_name || '').split('::');
       const sourceName = parts[0] || 'YouTube';
       const categoryName = parts[1] || 'Models';
+
+      if (sourceName === 'Tweet') {
+        // Insert into production trending_tweets table
+        const { error: insertErr } = await supabase
+          .from('trending_tweets')
+          .insert([{
+            tag: categoryName || '#AI',
+            tweet_url: article.article_url,
+            created_at: new Date().toISOString()
+          }]);
+
+        if (insertErr) {
+          console.error("Failed to insert into trending_tweets:", insertErr.message);
+          throw insertErr;
+        }
+
+        // Delete from pending table
+        await supabase
+          .from('pending_articles')
+          .delete()
+          .eq('id', pendingId);
+
+        // Edit Telegram message to show confirmation
+        await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            message_id: messageId,
+            text: `✅ <b>Tweet Ingested & Saved Live to Trending!</b>\n\n<b>Tag</b>: ${categoryName}\n<b>URL</b>: ${article.article_url}\n\nThe trending tweets section has been updated successfully.`,
+            parse_mode: 'HTML'
+          })
+        });
+        return res.status(200).send('OK');
+      }
 
       // Insert into production ai_articles table
       const { error: insertErr } = await supabase
@@ -175,16 +246,24 @@ export default async function handler(req, res) {
         const sourceName = parts[0] || 'YouTube';
         const categoryName = parts[1] || 'Models';
 
-        // Save to live DB
-        await supabase.from('ai_articles').insert([{
-          title: article.title,
-          summary: article.summary,
-          article_url: article.article_url,
-          source_name: sourceName,
-          published_at: article.published_at,
-          image_url: article.image_url,
-          category: categoryName
-        }]);
+        // Save to live DB or trending tweets
+        if (sourceName === 'Tweet') {
+          await supabase.from('trending_tweets').insert([{
+            tag: categoryName || '#AI',
+            tweet_url: article.article_url,
+            created_at: new Date().toISOString()
+          }]);
+        } else {
+          await supabase.from('ai_articles').insert([{
+            title: article.title,
+            summary: article.summary,
+            article_url: article.article_url,
+            source_name: sourceName,
+            published_at: article.published_at,
+            image_url: article.image_url,
+            category: categoryName
+          }]);
+        }
         // Remove from pending
         await supabase.from('pending_articles').delete().eq('id', pendingId);
       }
@@ -199,13 +278,16 @@ export default async function handler(req, res) {
       }
 
       // Edit Telegram message to show confirmation
+      const isTweet = (article?.source_name || '').startsWith('Tweet::');
       await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
           message_id: messageId,
-          text: `🚀 <b>Ingested & Production Deploy Triggered!</b>\n\n<b>Article</b>: ${articleTitle}\n\nThe Vercel build is now compiling. Your update will go live in 1-2 minutes!`,
+          text: isTweet 
+            ? `🚀 <b>Tweet Ingested & Production Deploy Triggered!</b>\n\n<b>Tweet URL</b>: ${article?.article_url || 'URL'}\n\nThe Vercel build is now compiling. Your trending tweet will go live in 1-2 minutes!`
+            : `🚀 <b>Ingested & Production Deploy Triggered!</b>\n\n<b>Article</b>: ${articleTitle}\n\nThe Vercel build is now compiling. Your update will go live in 1-2 minutes!`,
           parse_mode: 'HTML'
         })
       });
