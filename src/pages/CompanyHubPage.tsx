@@ -109,7 +109,7 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
               <Building className="w-3.5 h-3.5" />
               Enterprise Hub
             </div>
-            <h1 className="font-serif text-4xl sm:text-6xl font-extrabold text-slate-100 uppercase tracking-wide leading-tight">
+            <h1 className="font-display text-4xl sm:text-6xl font-extrabold text-slate-100 uppercase tracking-wide leading-tight">
               {company.name}
             </h1>
             <p className="text-brand-gold-bright font-medium text-sm sm:text-lg tracking-wide">
@@ -174,7 +174,7 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
           {/* LLMs Section */}
           {(activeTab === 'all' || activeTab === 'llms') && (
             <div className="space-y-6">
-              <h2 className="font-serif text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
                 <Cpu className="w-5 h-5 text-brand-gold" />
                 {company.name} Model Families
               </h2>
@@ -234,7 +234,7 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
           {/* Platforms Section */}
           {(activeTab === 'all' || activeTab === 'platforms') && (
             <div className="space-y-6">
-              <h2 className="font-serif text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
                 <Layers className="w-5 h-5 text-brand-gold" />
                 IDE & Developer Platforms
               </h2>
@@ -289,7 +289,7 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
           {/* Hardware & Systems Section */}
           {hardware && (activeTab === 'all' || activeTab === 'hardware') && (
             <div className="space-y-6">
-              <h2 className="font-serif text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
                 <Database className="w-5 h-5 text-brand-gold" />
                 Accelerated Hardware & Architectures
               </h2>
@@ -357,7 +357,7 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
           {/* Technologies Section */}
           {(activeTab === 'all' || activeTab === 'technologies') && (
             <div className="space-y-6">
-              <h2 className="font-serif text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
                 <Database className="w-5 h-5 text-brand-gold" />
                 Integration Kits & Developer APIs
               </h2>
@@ -401,7 +401,7 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
           {/* Learning Section */}
           {(activeTab === 'all' || activeTab === 'learning') && (
             <div className="space-y-6">
-              <h2 className="font-serif text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
                 <GraduationCap className="w-5 h-5 text-brand-gold" />
                 Educational Resources & Sandbox Labs
               </h2>
@@ -457,7 +457,7 @@ export const CompanyHubPage: React.FC<CompanyHubPageProps> = ({ companyId, navig
           {/* Docs & News Links */}
           {activeTab === 'all' && (
             <div className="space-y-6 pt-6 border-t border-brand-gold/10">
-              <h2 className="font-serif text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
                 <FileText className="w-5 h-5 text-brand-gold" />
                 Official Technical Docs, Channels & Blog Hub
               </h2>

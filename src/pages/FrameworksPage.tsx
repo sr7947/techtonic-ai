@@ -68,7 +68,7 @@ export const FrameworksPage: React.FC = () => {
           <GitFork className="w-3.5 h-3.5" />
           Code Frameworks
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
           AI & Agentic <span className="gold-gradient-text">Frameworks</span>
         </h1>
         <p className="text-slate-400 text-sm mt-3 leading-relaxed">
@@ -84,7 +84,7 @@ export const FrameworksPage: React.FC = () => {
           
           {/* Column 1: Model/ML Frameworks */}
           <div className="space-y-6">
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-slate-200 uppercase tracking-wide flex items-center gap-2">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-200 uppercase tracking-wide flex items-center gap-2">
               <Cpu className="w-5 h-5 text-brand-gold" />
               1. Compute & Machine Learning
             </h2>
@@ -97,7 +97,7 @@ export const FrameworksPage: React.FC = () => {
               {FRAMEWORKS.filter(f => f.category === 'Machine Learning').map(f => (
                 <div key={f.name} className="p-6 rounded-2xl glass-panel border border-brand-gold/10 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-serif text-lg font-bold text-slate-200">{f.name}</h3>
+                    <h3 className="font-display text-lg font-bold text-slate-200">{f.name}</h3>
                     <span className={`text-[10px] uppercase font-bold border px-2.5 py-0.5 rounded-full ${f.badgeColor}`}>
                       {f.role}
                     </span>
@@ -118,7 +118,7 @@ export const FrameworksPage: React.FC = () => {
 
           {/* Column 2: Orchestration Frameworks */}
           <div className="space-y-6">
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-slate-200 uppercase tracking-wide flex items-center gap-2">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-200 uppercase tracking-wide flex items-center gap-2">
               <Layers className="w-5 h-5 text-brand-gold" />
               2. Agentic & RAG Orchestration
             </h2>
@@ -131,7 +131,7 @@ export const FrameworksPage: React.FC = () => {
               {FRAMEWORKS.filter(f => f.category === 'Agent Orchestration').map(f => (
                 <div key={f.name} className="p-6 rounded-2xl glass-panel border border-brand-gold/10 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-serif text-lg font-bold text-slate-200">{f.name}</h3>
+                    <h3 className="font-display text-lg font-bold text-slate-200">{f.name}</h3>
                     <span className={`text-[10px] uppercase font-bold border px-2.5 py-0.5 rounded-full ${f.badgeColor}`}>
                       {f.role}
                     </span>

@@ -10,7 +10,7 @@ export const McpPage: React.FC = () => {
           <Server className="w-3.5 h-3.5" />
           Model Context Protocol
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
           Model Context <span className="gold-gradient-text">Protocol (MCP)</span>
         </h1>
         <p className="text-slate-400 text-sm mt-3 leading-relaxed">
@@ -24,7 +24,7 @@ export const McpPage: React.FC = () => {
         {/* Left Side: Summary & Protocol Flow */}
         <div className="lg:col-span-7 space-y-8">
           <div className="p-6 rounded-2xl glass-panel border border-brand-gold/10 bg-brand-navy-deep/20 space-y-4">
-            <h2 className="font-serif text-xl md:text-2xl font-bold text-slate-200 uppercase tracking-wide">
+            <h2 className="font-display text-xl md:text-2xl font-bold text-slate-200 uppercase tracking-wide">
               What is MCP?
             </h2>
             <p className="text-slate-300 text-sm leading-relaxed">
@@ -39,7 +39,7 @@ export const McpPage: React.FC = () => {
           </div>
 
           <div className="p-6 rounded-2xl glass-panel border border-brand-gold/10 bg-brand-navy-deep/20 space-y-4">
-            <h2 className="font-serif text-xl md:text-2xl font-bold text-slate-200 uppercase tracking-wide">
+            <h2 className="font-display text-xl md:text-2xl font-bold text-slate-200 uppercase tracking-wide">
               Adoption Across Major Providers
             </h2>
             <div className="space-y-4 text-sm text-slate-300">
@@ -62,7 +62,7 @@ export const McpPage: React.FC = () => {
         {/* Right Side: Quick Links & Setup Code */}
         <div className="lg:col-span-5 space-y-6">
           <div className="p-6 rounded-2xl glass-panel border border-brand-gold/10 space-y-6">
-            <h3 className="font-serif text-sm font-bold tracking-wider text-slate-200 uppercase border-b border-brand-gold/10 pb-3">
+            <h3 className="font-display text-sm font-bold tracking-wider text-slate-200 uppercase border-b border-brand-gold/10 pb-3">
               Official SDKs & Links
             </h3>
             

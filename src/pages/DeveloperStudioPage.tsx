@@ -62,7 +62,7 @@ export const DeveloperStudioPage: React.FC = () => {
           <Terminal className="w-3.5 h-3.5" />
           IDE & Terminal Stacks
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
           Developer <span className="gold-gradient-text">Studios & IDEs</span>
         </h1>
         <p className="text-slate-400 text-sm mt-3 leading-relaxed">
@@ -96,7 +96,7 @@ export const DeveloperStudioPage: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="font-serif text-xl font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
+                <h3 className="font-display text-xl font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
                   {t.name}
                 </h3>
 

@@ -179,7 +179,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-8">
           <div className="text-center lg:text-left max-w-2xl space-y-4">
-            <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
+            <h2 className="font-display text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
               Latest AI & <span className="gold-gradient-text">Tech Updates</span>
             </h2>
             <div className="w-20 h-[3px] bg-brand-gold rounded-full lg:mx-0 mx-auto" />
@@ -243,7 +243,13 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
         </div>
 
         {/* 3D Carousel Cover Flow Container */}
-        {filteredUpdates.length > 0 ? (
+        {updates.length === 0 && articles.length === 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="skeleton-card h-48 w-full" />
+            ))}
+          </div>
+        ) : filteredUpdates.length > 0 ? (
           <div className="space-y-12">
             
             {/* Carousel Viewport */}
@@ -346,7 +352,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                                 })()}
                               </div>
                             )}
-                            <h3 className="font-serif text-xs sm:text-sm font-bold leading-snug text-slate-200 line-clamp-3 flex-1">
+                            <h3 className="font-display text-xs sm:text-sm font-bold leading-snug text-slate-200 line-clamp-3 flex-1">
                               {update.title}
                             </h3>
                           </div>
@@ -427,7 +433,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                       </span>
                     </div>
 
-                    <h3 className="font-serif text-xl sm:text-2xl font-bold leading-snug text-slate-100">
+                    <h3 className="font-display text-xl sm:text-2xl font-bold leading-snug text-slate-100">
                       {activeLeader.title}
                     </h3>
 
@@ -483,7 +489,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
               <Clock className="w-8 h-8 animate-pulse" />
             </div>
             <div className="space-y-2">
-              <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-200">No Recent Updates Found</h3>
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-slate-200">No Recent Updates Found</h3>
               <p className="text-slate-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
                 {feedType === 'live'
                   ? `There are no new AI news releases in the last ${showOlder ? 'month' : '48 hours'} for this category.`

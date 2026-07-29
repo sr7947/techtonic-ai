@@ -21,7 +21,7 @@ export const YouTubeSection: React.FC<YouTubeSectionProps> = ({ videos = YOUTUBE
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div className="text-center md:text-left max-w-2xl space-y-4">
-            <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
+            <h2 className="font-display text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
               Featured <span className="gold-gradient-text">YouTube Content</span>
             </h2>
             <div className="w-20 h-[3px] bg-brand-gold rounded-full md:mx-0 mx-auto" />
@@ -83,7 +83,7 @@ export const YouTubeSection: React.FC<YouTubeSectionProps> = ({ videos = YOUTUBE
 
               {/* Title & Info */}
               <div className="p-5 flex-grow flex flex-col justify-between space-y-5">
-                <h3 className="font-serif text-base md:text-lg font-bold leading-snug text-slate-200 group-hover:text-brand-gold-bright transition-colors duration-300">
+                <h3 className="font-display text-base md:text-lg font-bold leading-snug text-slate-200 group-hover:text-brand-gold-bright transition-colors duration-300">
                   {video.title}
                 </h3>
                 

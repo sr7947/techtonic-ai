@@ -1321,7 +1321,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
             <div className="w-16 h-16 rounded-full bg-brand-gold/10 border border-brand-gold/30 flex items-center justify-center mx-auto text-brand-gold-bright shadow-lg shadow-brand-gold/5">
               <Compass className="w-8 h-8 animate-spin-slow" />
             </div>
-            <h2 className="font-serif text-2.5xl font-bold uppercase tracking-wider text-slate-200">
+            <h2 className="font-display text-2.5xl font-bold uppercase tracking-wider text-slate-200">
               Welcome to TechTonic City
             </h2>
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
@@ -1457,7 +1457,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
         {nearCompanyId && !insideCompanyId && (
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-navy-dark/95 border border-brand-gold/40 px-6 py-4 rounded-3xl text-center space-y-2 pointer-events-auto shadow-2xl animate-bounce z-30">
             <MapPin className="w-6 h-6 text-brand-gold mx-auto animate-pulse" />
-            <h4 className="font-serif text-sm font-bold text-slate-100 uppercase tracking-wider">
+            <h4 className="font-display text-sm font-bold text-slate-100 uppercase tracking-wider">
               {companyConfig.find(c => c.id === nearCompanyId)?.name}
             </h4>
             <p className="text-[10px] text-slate-400">
@@ -1527,7 +1527,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-brand-gold">
                   District: {companyConfig.find(c => c.id === insideCompanyId)?.district}
                 </span>
-                <h2 className="font-serif text-2xl font-extrabold uppercase tracking-wider text-slate-200">
+                <h2 className="font-display text-2xl font-extrabold uppercase tracking-wider text-slate-200">
                   {insideData.company.name} Building Interior
                 </h2>
               </div>
@@ -1573,7 +1573,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 border-b border-brand-gold/10 pb-2">
                   <Layers className="w-5 h-5 text-brand-gold" />
-                  <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-slate-300">Platform Garage</h3>
+                  <h3 className="font-display text-lg font-bold uppercase tracking-wider text-slate-300">Platform Garage</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {insideData.platforms.map((p: any) => (
@@ -1614,7 +1614,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 border-b border-brand-gold/10 pb-2">
                   <Cpu className="w-5 h-5 text-brand-gold" />
-                  <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-slate-300">Models & Tech Lab</h3>
+                  <h3 className="font-display text-lg font-bold uppercase tracking-wider text-slate-300">Models & Tech Lab</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {insideData.llms.map((m: any) => (
@@ -1659,7 +1659,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 border-b border-brand-gold/10 pb-2">
                   <Terminal className="w-5 h-5 text-brand-gold" />
-                  <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-slate-300">Docs Control Room</h3>
+                  <h3 className="font-display text-lg font-bold uppercase tracking-wider text-slate-300">Docs Control Room</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {insideData.docsAndNews.map((d: any) => (
@@ -1686,7 +1686,7 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 border-b border-brand-gold/10 pb-2">
                   <Award className="w-5 h-5 text-brand-gold" />
-                  <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-slate-300">Learning Arcade</h3>
+                  <h3 className="font-display text-lg font-bold uppercase tracking-wider text-slate-300">Learning Arcade</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {insideData.learning.map((l: any) => (
@@ -1752,3 +1752,5 @@ export const AICityView: React.FC<AICityViewProps> = ({ onClose }) => {
     </div>
   );
 };
+
+export default AICityView;

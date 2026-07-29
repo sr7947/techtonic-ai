@@ -137,7 +137,7 @@ export const TrendingPage: React.FC = () => {
           <TrendingUp className="w-3.5 h-3.5 animate-pulse" />
           Market Trends
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
           Trending in <span className="gold-gradient-text">AI & GenAI</span>
         </h1>
         <p className="text-slate-400 text-sm mt-3 leading-relaxed">
@@ -205,7 +205,7 @@ CREATE POLICY "Allow public write access" ON public.trending_tweets FOR ALL USIN
                     }`}
                   >
                     <Hash className={`w-4 h-4 ${isActive ? 'text-brand-gold-bright' : 'text-brand-gold'}`} />
-                    <span className="font-serif font-bold text-sm tracking-wider uppercase">{tag.replace('#', '')}</span>
+                    <span className="font-display font-bold text-sm tracking-wider uppercase">{tag.replace('#', '')}</span>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                       isActive ? 'bg-brand-navy-dark text-brand-gold-bright' : 'bg-brand-navy-light/45 text-slate-500'
                     }`}>{count} {count === 1 ? 'tweet' : 'tweets'}</span>
@@ -224,7 +224,7 @@ CREATE POLICY "Allow public write access" ON public.trending_tweets FOR ALL USIN
                     <TwitterIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg md:text-xl font-bold tracking-wider text-slate-100 uppercase">
+                    <h3 className="font-display text-lg md:text-xl font-bold tracking-wider text-slate-100 uppercase">
                       Curated Tweets for <span className="gold-gradient-text">{activeTab}</span>
                     </h3>
                     <p className="text-slate-500 text-xs mt-0.5">

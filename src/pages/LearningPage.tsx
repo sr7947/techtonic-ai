@@ -286,7 +286,7 @@ export const LearningPage: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" />
             Curated Directory
           </div>
-          <h1 className="font-serif text-4xl sm:text-6xl font-extrabold text-slate-100 uppercase tracking-wide leading-tight">
+          <h1 className="font-display text-4xl sm:text-6xl font-extrabold text-slate-100 uppercase tracking-wide leading-tight">
             AI Learning <span className="gold-gradient-text">Center</span>
           </h1>
           <p className="text-slate-400 text-sm sm:text-lg leading-relaxed max-w-2xl mx-auto">
@@ -298,7 +298,7 @@ export const LearningPage: React.FC = () => {
         <div className="space-y-8">
           <div className="border-b border-brand-gold/10 pb-4 flex items-center gap-3">
             <Award className="w-6 h-6 text-brand-gold" />
-            <h2 className="font-serif text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
+            <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
               Official Company AI Portals
             </h2>
           </div>
@@ -318,7 +318,7 @@ export const LearningPage: React.FC = () => {
                       {portal.badge}
                     </span>
                   </div>
-                  <h3 className="font-serif text-lg font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
+                  <h3 className="font-display text-lg font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
                     {portal.name}
                   </h3>
                   <p className="text-slate-400 text-xs leading-relaxed">
@@ -349,7 +349,7 @@ export const LearningPage: React.FC = () => {
           <div className="space-y-6 relative z-10">
             <div className="flex items-center gap-2.5">
               <Star className="w-5 h-5 text-brand-gold fill-brand-gold" />
-              <h3 className="font-serif text-lg sm:text-xl font-bold uppercase tracking-wider text-slate-100">
+              <h3 className="font-display text-lg sm:text-xl font-bold uppercase tracking-wider text-slate-100">
                 Recommended Starting Path (Editor's Pick)
               </h3>
             </div>
@@ -380,7 +380,7 @@ export const LearningPage: React.FC = () => {
           <div className="border-b border-brand-gold/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <YoutubeIcon className="w-6 h-6 text-red-500 fill-red-500" />
-              <h2 className="font-serif text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
+              <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
                 AI & Machine Learning YouTube Channels
               </h2>
             </div>
@@ -431,7 +431,7 @@ export const LearningPage: React.FC = () => {
                       {ch.category}
                     </span>
                   </div>
-                  <h3 className="font-serif text-base font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
+                  <h3 className="font-display text-base font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
                     {ch.name}
                   </h3>
                   <p className="text-slate-400 text-[11px] leading-relaxed">
@@ -454,7 +454,7 @@ export const LearningPage: React.FC = () => {
 
           {filteredChannels.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-slate-400 font-serif text-lg">No YouTube channels found matching your filters.</p>
+              <p className="text-slate-400 font-display text-lg">No YouTube channels found matching your filters.</p>
             </div>
           )}
         </div>

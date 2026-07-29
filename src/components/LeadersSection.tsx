@@ -30,7 +30,7 @@ export const LeadersSection: React.FC<LeadersSectionProps> = ({
             <Building className="w-3.5 h-3.5 animate-pulse" />
             AI Directories
           </div>
-          <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
+          <h2 className="font-display text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
             Major AI <span className="gold-gradient-text">Industry Leaders</span>
           </h2>
           <div className="w-20 h-[3px] bg-brand-gold rounded-full md:mx-0 mx-auto" />
@@ -128,7 +128,7 @@ export const LeadersSection: React.FC<LeadersSectionProps> = ({
               <div className="lg:col-span-8 space-y-6">
                 <div>
                   <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block mb-2">Company Overview</span>
-                  <h3 className="font-serif text-2xl md:text-3xl font-extrabold text-slate-100 leading-snug">
+                  <h3 className="font-display text-2xl md:text-3xl font-extrabold text-slate-100 leading-snug">
                     {activeLeader.name}
                   </h3>
                   <p className="text-slate-400 text-sm md:text-base leading-relaxed mt-4">

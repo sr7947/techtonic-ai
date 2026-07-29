@@ -239,7 +239,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ resources = LEARNING_R
         
         {/* Section Header */}
         <div className="text-center md:text-left max-w-3xl mb-16 space-y-4">
-          <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
+          <h2 className="font-display text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
             AI <span className="gold-gradient-text">Developers</span>
           </h2>
           <div className="w-20 h-[3px] bg-brand-gold rounded-full md:mx-0 mx-auto" />
@@ -315,7 +315,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ resources = LEARNING_R
                   </div>
 
                   {/* Tool Name */}
-                  <h3 className="font-serif text-lg md:text-xl font-bold tracking-wide text-slate-100 group-hover:text-brand-gold-bright transition-colors">
+                  <h3 className="font-display text-lg md:text-xl font-bold tracking-wide text-slate-100 group-hover:text-brand-gold-bright transition-colors">
                     {resource.toolName}
                   </h3>
 
@@ -390,7 +390,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ resources = LEARNING_R
 
         {filteredResources.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-slate-400 font-serif text-lg">No ecosystem resources found in this category.</p>
+            <p className="text-slate-400 font-display text-lg">No ecosystem resources found in this category.</p>
           </div>
         )}
 

@@ -342,7 +342,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-brand-gold/15 pb-4 mb-6">
           <div>
-            <h2 className="font-serif text-lg sm:text-2xl font-bold tracking-widest text-brand-gold uppercase">
+            <h2 className="font-display text-lg sm:text-2xl font-bold tracking-widest text-brand-gold uppercase">
               Admin Content Panel
             </h2>
             <p className="text-slate-400 text-xs mt-1">

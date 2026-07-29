@@ -14,7 +14,7 @@ export const TrendingTopics: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center md:text-left max-w-3xl mb-16 space-y-4">
-          <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
+          <h2 className="font-display text-3xl md:text-5xl font-bold tracking-wider text-slate-100 uppercase">
             Trending <span className="gold-gradient-text">Ecosystem Topics</span>
           </h2>
           <div className="w-20 h-[3px] bg-brand-gold rounded-full md:mx-0 mx-auto" />
@@ -41,7 +41,7 @@ export const TrendingTopics: React.FC = () => {
               <div className="p-1.5 rounded-lg bg-brand-navy-light/35 border border-brand-gold/10 text-slate-400 group-hover:text-brand-gold-bright transition-colors">
                 <Hash className="w-4 h-4" />
               </div>
-              <span className="font-serif text-sm md:text-base font-semibold tracking-wider text-slate-300 group-hover:text-white transition-colors">
+              <span className="font-display text-sm md:text-base font-semibold tracking-wider text-slate-300 group-hover:text-white transition-colors">
                 {topic}
               </span>
               
@@ -64,7 +64,7 @@ export const TrendingTopics: React.FC = () => {
               <TrendingUp className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-serif text-slate-200 text-sm font-semibold tracking-wide uppercase">Looking for custom tutorials?</h4>
+              <h4 className="font-display text-slate-200 text-sm font-semibold tracking-wide uppercase">Looking for custom tutorials?</h4>
               <p className="text-slate-400 text-xs mt-0.5">Let us know what topic you want to see detailed code implementation blueprints on.</p>
             </div>
           </div>

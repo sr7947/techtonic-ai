@@ -312,7 +312,7 @@ export const ModelsHub: React.FC = () => {
         <div className="space-y-4">
           {error && (
             <div className="p-6 border border-red-500/20 bg-red-500/5 rounded-2xl text-center space-y-2">
-              <p className="text-red-400 font-serif text-sm">Failed to connect to model catalog.</p>
+              <p className="text-red-400 font-display text-sm">Failed to connect to model catalog.</p>
               <button 
                 onClick={() => fetchModels(currentPage, pageCursors[currentPage] || '')}
                 className="text-xs text-brand-gold hover:underline font-bold"
@@ -364,7 +364,7 @@ export const ModelsHub: React.FC = () => {
                       <div className="space-y-1.5 min-w-0">
                         
                         {/* Title Creator/ModelName */}
-                        <h4 className="font-serif text-sm md:text-base font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors truncate">
+                        <h4 className="font-display text-sm md:text-base font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors truncate">
                           <span className="text-slate-500 font-normal">{creator}/</span>
                           {modelName}
                         </h4>
@@ -537,7 +537,7 @@ export const ModelsHub: React.FC = () => {
                 <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest">
                   Model Profile Details
                 </span>
-                <h3 className="font-serif text-2xl md:text-3xl font-bold text-slate-100">
+                <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-100">
                   {activeModel.id.split('/')[1] || activeModel.id}
                 </h3>
                 <span className="text-slate-500 text-sm block">

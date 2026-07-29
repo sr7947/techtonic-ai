@@ -75,7 +75,7 @@ export const SkillsPage: React.FC = () => {
           <Layers className="w-3.5 h-3.5" />
           API Capabilities
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
           Agentic AI <span className="gold-gradient-text">Skills & Tools</span>
         </h1>
         <p className="text-slate-400 text-sm mt-3 leading-relaxed">
@@ -96,7 +96,7 @@ export const SkillsPage: React.FC = () => {
                   {p.name}
                 </span>
                 
-                <h3 className="font-serif text-lg md:text-xl font-bold text-slate-200">
+                <h3 className="font-display text-lg md:text-xl font-bold text-slate-200">
                   {p.conceptName}
                 </h3>
                 

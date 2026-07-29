@@ -7,10 +7,6 @@ export const Hero: React.FC = () => {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-12 overflow-hidden z-10">
       
-      {/* Decorative Orbs */}
-      <div className="glow-orb top-1/4 left-10" />
-      <div className="glow-orb bottom-10 right-10" style={{ transform: 'translate(20%, 20%)' }} />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
@@ -35,13 +31,18 @@ export const Hero: React.FC = () => {
                 <img 
                   src="/logo.png" 
                   alt="TechTonic AI" 
+                  width={80}
+                  height={80}
                   className="w-16 h-16 md:w-20 md:h-20 object-contain rounded-xl border-2 border-brand-gold/30 shadow-2xl"
                 />
-                <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-widest text-slate-100 uppercase leading-none">
+                <h1 
+                  aria-label="TechTonic AI — Exploring frontiers, code standards, and the autonomous future"
+                  className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-wide text-slate-100 uppercase leading-none"
+                >
                   TECHTONIC <span className="gold-gradient-text">AI</span>
                 </h1>
               </div>
-              <p className="font-serif text-lg md:text-xl text-brand-gold/80 italic font-medium tracking-wide">
+              <p className="font-display text-lg md:text-xl text-brand-gold/80 italic font-medium tracking-wide">
                 Exploring frontiers, code standards, and the autonomous future.
               </p>
             </div>
@@ -73,15 +74,15 @@ export const Hero: React.FC = () => {
             {/* Quick Metrics */}
             <div className="grid grid-cols-3 gap-6 pt-8 border-t border-brand-gold/10 max-w-md">
               <div>
-                <div className="font-serif text-2xl font-bold text-brand-gold-bright">10+</div>
+                <div className="font-display text-2xl font-bold text-brand-gold-bright">10+</div>
                 <div className="text-xs text-slate-400 uppercase tracking-wider mt-1">AI Leaders Tracked</div>
               </div>
               <div>
-                <div className="font-serif text-2xl font-bold text-brand-gold-bright">100%</div>
+                <div className="font-display text-2xl font-bold text-brand-gold-bright">100%</div>
                 <div className="text-xs text-slate-400 uppercase tracking-wider mt-1">Hype-Free Coding</div>
               </div>
               <div>
-                <div className="font-serif text-2xl font-bold text-brand-gold-bright">Official</div>
+                <div className="font-display text-2xl font-bold text-brand-gold-bright">Official</div>
                 <div className="text-xs text-slate-400 uppercase tracking-wider mt-1">Doc Integration</div>
               </div>
             </div>
@@ -89,7 +90,7 @@ export const Hero: React.FC = () => {
           
           {/* 3D Sphere Component */}
           <motion.div 
-            className="lg:col-span-5 flex items-center justify-center"
+            className="hidden lg:flex lg:col-span-5 items-center justify-center"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}

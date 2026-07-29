@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThreeBackground } from './components/ThreeBackground';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { AICityView } from './components/AICityView';
+const AICityView = React.lazy(() => import('./components/AICityView'));
 import { UpdatesSection } from './components/UpdatesSection';
 import { LeadersSection } from './components/LeadersSection';
 import { LearningHub } from './components/LearningHub';
@@ -205,6 +205,13 @@ function App() {
 
   return (
     <div className="relative min-h-screen bg-brand-navy-dark text-slate-100 selection:bg-brand-gold/30 selection:text-brand-gold-bright overflow-hidden">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-gold focus:text-brand-navy-dark focus:rounded-lg focus:font-semibold focus:text-sm"
+      >
+        Skip to content
+      </a>
+
       {/* 3D Connecting Particle Network Background */}
       <ThreeBackground />
 
@@ -221,7 +228,7 @@ function App() {
       />
 
       {/* Main Content Layout */}
-      <main className="relative z-10">
+      <main id="main-content" className="relative z-10">
         {currentPath === '/' && (
           <>
             <Hero />
@@ -258,6 +265,31 @@ function App() {
         {currentPath === '/leaders/alibaba-qwen' && <CompanyHubPage companyId="alibaba-qwen" navigate={navigate} />}
         {currentPath === '/learning' && <LearningPage />}
         {currentPath === '/tech-stack' && <TechStackPage />}
+
+        {![
+          '/', '/models-hub', '/trending', '/learning', '/tech-stack',
+          '/technologies/developer-studio', '/technologies/mcp',
+          '/technologies/skills', '/technologies/frameworks',
+          '/technologies/infrastructure',
+          '/leaders/google-deepmind', '/leaders/openai', '/leaders/anthropic-claude',
+          '/leaders/meta-llama', '/leaders/microsoft-azure-ai', '/leaders/nvidia-ai',
+          '/leaders/aws-ai', '/leaders/apple-intelligence', '/leaders/xai-grok',
+          '/leaders/mistral-ai', '/leaders/ibm-watsonx', '/leaders/cohere',
+          '/leaders/huggingface', '/leaders/deepseek', '/leaders/moonshot-kimi',
+          '/leaders/alibaba-qwen'
+        ].includes(currentPath) && (
+          <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 gap-6">
+            <div className="font-display text-8xl font-bold text-brand-gold/20">404</div>
+            <h2 className="text-2xl font-bold text-slate-200">Page Not Found</h2>
+            <p className="text-slate-400 max-w-md">This page doesn't exist on TechTonic AI. Head back to explore AI news, models, and tools.</p>
+            <button
+              onClick={() => navigate('/')}
+              className="px-6 py-3 bg-brand-gold text-brand-navy-dark font-semibold rounded-xl hover:bg-brand-gold-bright transition-all"
+            >
+              Back to Home
+            </button>
+          </div>
+        )}
       </main>
 
       {/* Platform Footer */}
@@ -277,7 +309,11 @@ function App() {
       )}
 
       {/* 3D AI City View Overlay Mode */}
-      {cityMode && <AICityView onClose={() => setCityMode(false)} />}
+      {cityMode && (
+        <React.Suspense fallback={<div className="fixed inset-0 bg-brand-navy-dark/90 flex items-center justify-center text-brand-gold text-sm">Loading AI City...</div>}>
+          <AICityView onClose={() => setCityMode(false)} />
+        </React.Suspense>
+      )}
     </div>
   );
 }

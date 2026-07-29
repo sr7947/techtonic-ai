@@ -48,7 +48,7 @@ export const Footer: React.FC = () => {
                 alt="TechTonic AI Logo" 
                 className="w-10 h-10 object-contain rounded-md border border-brand-gold/20"
               />
-              <span className="font-serif text-lg font-bold tracking-widest text-brand-gold">
+              <span className="font-display text-lg font-bold tracking-widest text-brand-gold">
                 TECHTONIC AI
               </span>
             </div>
@@ -79,7 +79,7 @@ export const Footer: React.FC = () => {
 
           {/* Quick Nav */}
           <div>
-            <h4 className="font-serif text-slate-200 text-sm font-semibold tracking-wider uppercase mb-5">
+            <h4 className="font-display text-slate-200 text-sm font-semibold tracking-wider uppercase mb-5">
               Platform
             </h4>
             <ul className="space-y-3 text-sm">
@@ -103,7 +103,7 @@ export const Footer: React.FC = () => {
 
           {/* AI Leaders */}
           <div>
-            <h4 className="font-serif text-slate-200 text-sm font-semibold tracking-wider uppercase mb-5">
+            <h4 className="font-display text-slate-200 text-sm font-semibold tracking-wider uppercase mb-5">
               AI Leaders
             </h4>
             <ul className="space-y-3 text-sm">
@@ -127,7 +127,7 @@ export const Footer: React.FC = () => {
 
           {/* Dev Resources */}
           <div>
-            <h4 className="font-serif text-slate-200 text-sm font-semibold tracking-wider uppercase mb-5">
+            <h4 className="font-display text-slate-200 text-sm font-semibold tracking-wider uppercase mb-5">
               Official Docs
             </h4>
             <ul className="space-y-3 text-sm">

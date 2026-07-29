@@ -44,7 +44,7 @@ export const CommunitySection: React.FC = () => {
                 </span>
               </div>
               
-              <h2 className="font-serif text-2xl md:text-4xl font-bold tracking-wider text-slate-100 uppercase leading-snug">
+              <h2 className="font-display text-2xl md:text-4xl font-bold tracking-wider text-slate-100 uppercase leading-snug">
                 Join the <span className="gold-gradient-text">Future of Tech</span>
               </h2>
               
@@ -71,7 +71,7 @@ export const CommunitySection: React.FC = () => {
               {!subscribed ? (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2 text-center lg:text-left">
-                    <h3 className="font-serif text-slate-200 text-base md:text-lg font-semibold tracking-wide uppercase">
+                    <h3 className="font-display text-slate-200 text-base md:text-lg font-semibold tracking-wide uppercase">
                       Weekly Tech Newsletter
                     </h3>
                     <p className="text-slate-400 text-xs">
@@ -111,7 +111,7 @@ export const CommunitySection: React.FC = () => {
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-serif text-slate-200 text-lg font-bold uppercase">Success!</h3>
+                    <h3 className="font-display text-slate-200 text-lg font-bold uppercase">Success!</h3>
                     <p className="text-slate-400 text-xs max-w-xs mx-auto">
                       Thank you for joining. Your email has been added to our weekly tech briefing newsletter.
                     </p>

@@ -54,7 +54,7 @@ export const InfrastructurePage: React.FC = () => {
           <HardDrive className="w-3.5 h-3.5" />
           Hardware & Cloud Stacks
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
           AI & Compute <span className="gold-gradient-text">Infrastructure</span>
         </h1>
         <p className="text-slate-400 text-sm mt-3 leading-relaxed">
@@ -81,7 +81,7 @@ export const InfrastructurePage: React.FC = () => {
                   <span className="text-xs text-slate-400 font-medium italic">{c.flagshipService}</span>
                 </div>
 
-                <h3 className="font-serif text-xl font-bold text-slate-200">
+                <h3 className="font-display text-xl font-bold text-slate-200">
                   {c.name.split(' (')[0]}
                 </h3>
 

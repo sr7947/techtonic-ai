@@ -88,7 +88,7 @@ export const TechStackPage: React.FC = () => {
             <LayoutGrid className="w-3.5 h-3.5" />
             Interactive Blueprint
           </div>
-          <h1 className="font-serif text-3.5xl sm:text-5xl font-extrabold uppercase tracking-wider text-slate-100 bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">
+          <h1 className="font-display text-3.5xl sm:text-5xl font-extrabold uppercase tracking-wider text-slate-100 bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">
             Agentic & AI Tech Stack
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
@@ -158,7 +158,7 @@ export const TechStackPage: React.FC = () => {
                   <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold via-blue-500 to-brand-gold" />
                   <div className="flex justify-between items-center border-b border-brand-gold/10 pb-4">
                     <div>
-                      <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-slate-200">Unified Architecture</h3>
+                      <h3 className="font-display text-lg font-bold uppercase tracking-wider text-slate-200">Unified Architecture</h3>
                       <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">Click any layer band to drill down</p>
                     </div>
                     <span className="px-3 py-1 rounded-full bg-brand-navy-light border border-slate-700 text-[10px] font-mono text-slate-400">
@@ -189,7 +189,7 @@ export const TechStackPage: React.FC = () => {
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
                                 <span className="text-[9px] font-mono text-brand-gold font-bold">L0{l.order}</span>
-                                <h4 className="font-serif text-sm font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors uppercase tracking-wider">
+                                <h4 className="font-display text-sm font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors uppercase tracking-wider">
                                   {l.name}
                                 </h4>
                               </div>
@@ -240,7 +240,7 @@ export const TechStackPage: React.FC = () => {
                         </div>
                         <div>
                           <span className="text-[10px] font-mono text-brand-gold font-bold uppercase tracking-wider">Layer 0{activeLayer.order} of 08</span>
-                          <h2 className="font-serif text-xl sm:text-2xl font-extrabold uppercase tracking-wider text-slate-100">
+                          <h2 className="font-display text-xl sm:text-2xl font-extrabold uppercase tracking-wider text-slate-100">
                             {activeLayer.name}
                           </h2>
                         </div>
@@ -300,7 +300,7 @@ export const TechStackPage: React.FC = () => {
 
                         {/* Name and Tagline */}
                         <div className="space-y-1.5">
-                          <h4 className="font-serif text-lg font-bold text-slate-100 group-hover:text-brand-gold-bright transition-colors">
+                          <h4 className="font-display text-lg font-bold text-slate-100 group-hover:text-brand-gold-bright transition-colors">
                             {tech.name}
                           </h4>
                           <p className="text-slate-200 text-xs font-semibold leading-relaxed border-l-2 border-brand-gold/30 pl-2">
@@ -402,7 +402,7 @@ export const TechStackPage: React.FC = () => {
                       </div>
                       <div>
                         <span className="text-[8px] font-mono text-brand-gold font-bold">L0{l.order}</span>
-                        <h4 className="font-serif text-sm font-bold text-slate-200 uppercase tracking-wider">{l.name}</h4>
+                        <h4 className="font-display text-sm font-bold text-slate-200 uppercase tracking-wider">{l.name}</h4>
                       </div>
                     </div>
                     <ChevronRight className={`w-5 h-5 text-slate-400 transition-transform ${isSelected ? 'rotate-90 text-brand-gold-bright' : ''}`} />
@@ -423,7 +423,7 @@ export const TechStackPage: React.FC = () => {
                                 {tech.category}
                               </span>
                             </div>
-                            <h5 className="font-serif text-sm font-bold text-slate-200">{tech.name}</h5>
+                            <h5 className="font-display text-sm font-bold text-slate-200">{tech.name}</h5>
                             <p className="text-slate-200 text-xs italic border-l border-brand-gold/25 pl-1.5">{tech.shortTagline}</p>
                             <p className="text-slate-400 text-[11px] leading-relaxed">{tech.description}</p>
                             <div className="flex gap-2 pt-2 border-t border-brand-gold/5">

@@ -156,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="w-10 h-10 object-contain rounded-md border border-brand-gold/20 group-hover:border-brand-gold/50 transition-colors"
               />
               <div className="flex flex-col">
-                <span className="font-serif text-lg md:text-xl font-bold tracking-widest text-brand-gold group-hover:text-brand-gold-bright transition-colors">
+                <span className="font-display text-lg md:text-xl font-bold tracking-widest text-brand-gold group-hover:text-brand-gold-bright transition-colors">
                   TECHTONIC AI
                 </span>
                 <span className="text-[9px] uppercase tracking-[0.25em] text-slate-400 group-hover:text-brand-gold/80 transition-colors">
@@ -323,7 +323,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {showDropdown && (
                     <div className="absolute right-0 mt-2 w-56 rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-3 duration-250">
                       <div className="px-3.5 py-2.5 border-b border-brand-gold/10 mb-2">
-                        <div className="font-serif text-slate-200 text-xs font-bold truncate uppercase tracking-wide">
+                        <div className="font-display text-slate-200 text-xs font-bold truncate uppercase tracking-wide">
                           {user.name}
                         </div>
                         <div className="text-[10px] text-slate-500 truncate mt-0.5">
@@ -359,7 +359,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <button
                 onClick={onCityModeToggle}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 focus:outline-none active:scale-95 border cursor-pointer ${
+                className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 focus:outline-none active:scale-95 border cursor-pointer ${
                   cityMode
                     ? 'bg-brand-gold/25 text-brand-gold-bright border-brand-gold/40 shadow-[0_0_10px_rgba(189,154,118,0.1)]'
                     : 'bg-brand-navy-light/45 text-slate-300 border-brand-gold/10 hover:border-brand-gold/30 hover:bg-brand-navy-light/70'
@@ -367,6 +367,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <Compass className="w-4 h-4 text-brand-gold" />
                 {cityMode ? '2D View' : '3D City'}
+                {!cityMode && (
+                  <span className="absolute -top-1.5 -right-1.5 px-1 py-0.5 text-[8px] font-bold bg-brand-gold text-brand-navy-dark rounded-full uppercase tracking-wide leading-none">
+                    NEW
+                  </span>
+                )}
               </button>
 
               <a

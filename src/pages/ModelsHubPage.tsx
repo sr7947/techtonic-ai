@@ -6,7 +6,7 @@ export const ModelsHubPage: React.FC = () => {
     <div className="pt-24 min-h-screen bg-brand-navy-dark">
       {/* Page Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6 border-b border-brand-gold/10">
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">
           Frontier & Open <span className="gold-gradient-text">Models Hub</span>
         </h1>
         <p className="text-slate-400 text-sm mt-3 flex items-center gap-2">
