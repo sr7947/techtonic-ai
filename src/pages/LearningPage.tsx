@@ -1,9 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { BookOpen, ArrowUpRight, Search, Award, Sparkles, Star, Play, CheckCircle2 } from 'lucide-react';
+import { GithubReposDirectory } from '../components/GithubReposDirectory';
 
 const YoutubeIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
     <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507A3.003 3.003 0 0 0 .503 6.163C0 8.037 0 12 0 12s0 3.963.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.387.507 9.387.507s7.517 0 9.387-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.963 24 12 24 12s0-3.963-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+  </svg>
+);
+
+const GithubIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
   </svg>
 );
 
@@ -23,6 +30,7 @@ interface YouTubeChannel {
 }
 
 export const LearningPage: React.FC = () => {
+  const [activeMainTab, setActiveMainTab] = useState<'courses' | 'github'>('courses');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
@@ -294,170 +302,204 @@ export const LearningPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Section 1: Company Official Portals */}
-        <div className="space-y-8">
-          <div className="border-b border-brand-gold/10 pb-4 flex items-center gap-3">
-            <Award className="w-6 h-6 text-brand-gold" />
-            <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
-              Official Company AI Portals
-            </h2>
+        {/* Main Section Tabs Switcher */}
+        <div className="flex justify-center border-b border-brand-gold/10 pb-6 select-none">
+          <div className="flex bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/15 shadow-inner">
+            <button
+              onClick={() => setActiveMainTab('courses')}
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                activeMainTab === 'courses'
+                  ? 'bg-brand-gold text-brand-navy-dark shadow-md font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Developer Courses
+            </button>
+            <button
+              onClick={() => setActiveMainTab('github')}
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                activeMainTab === 'github'
+                  ? 'bg-brand-gold text-brand-navy-dark shadow-md font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <GithubIcon className="w-4 h-4" />
+              GitHub Repos
+            </button>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {companyPortals.map((portal) => (
-              <div 
-                key={portal.name}
-                className="group p-6 rounded-2xl glass-panel border border-brand-gold/10 hover:border-brand-gold/30 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                      Official Training
-                    </span>
-                    <span className="px-2 py-0.5 rounded text-[9px] font-extrabold bg-brand-gold/10 border border-brand-gold/20 text-brand-gold-bright uppercase tracking-wider">
-                      {portal.badge}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-lg font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
-                    {portal.name}
-                  </h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">
-                    {portal.description}
-                  </p>
-                </div>
-
-                <a 
-                  href={portal.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-300 hover:text-brand-gold-bright bg-brand-navy-light/10 hover:bg-brand-navy-light/35 border border-brand-gold/10 hover:border-brand-gold/45 transition-all duration-300 cursor-pointer"
-                >
-                  <BookOpen className="w-3.5 h-3.5" />
-                  Access Course Portal
-                  <ArrowUpRight className="w-3 h-3 opacity-60" />
-                </a>
+        {activeMainTab === 'courses' ? (
+          <>
+            {/* Section 1: Company Official Portals */}
+            <div className="space-y-8">
+              <div className="border-b border-brand-gold/10 pb-4 flex items-center gap-3">
+                <Award className="w-6 h-6 text-brand-gold" />
+                <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
+                  Official Company AI Portals
+                </h2>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Section 2: Editor Recommendation Box */}
-        <div className="p-8 rounded-3xl border border-brand-gold/15 bg-gradient-to-r from-brand-navy-deep/90 to-brand-navy-light/20 overflow-hidden shadow-2xl relative">
-          <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-gold via-indigo-500 to-emerald-500" />
-          <div className="absolute top-0 right-0 w-1/4 h-full bg-[radial-gradient(circle_at_right,_var(--tw-gradient-stops))] from-brand-gold/5 via-transparent to-transparent pointer-events-none" />
-          
-          <div className="space-y-6 relative z-10">
-            <div className="flex items-center gap-2.5">
-              <Star className="w-5 h-5 text-brand-gold fill-brand-gold" />
-              <h3 className="font-display text-lg sm:text-xl font-bold uppercase tracking-wider text-slate-100">
-                Recommended Starting Path (Editor's Pick)
-              </h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
-              {recommendations.map((rec) => (
-                <div key={rec.channel} className="bg-brand-navy-dark/45 p-4 rounded-xl border border-brand-gold/5 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                    <span className="font-bold text-slate-200 text-xs sm:text-sm uppercase tracking-wide">
-                      {rec.channel}
-                    </span>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {companyPortals.map((portal) => (
+                  <div 
+                    key={portal.name}
+                    className="group p-6 rounded-2xl glass-panel border border-brand-gold/10 hover:border-brand-gold/30 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                          Official Training
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[9px] font-extrabold bg-brand-gold/10 border border-brand-gold/20 text-brand-gold-bright uppercase tracking-wider">
+                          {portal.badge}
+                        </span>
+                      </div>
+                      <h3 className="font-display text-lg font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
+                        {portal.name}
+                      </h3>
+                      <p className="text-slate-400 text-xs leading-relaxed">
+                        {portal.description}
+                      </p>
+                    </div>
+
+                    <a 
+                      href={portal.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-6 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-300 hover:text-brand-gold-bright bg-brand-navy-light/10 hover:bg-brand-navy-light/35 border border-brand-gold/10 hover:border-brand-gold/45 transition-all duration-300 cursor-pointer"
+                    >
+                      <BookOpen className="w-3.5 h-3.5" />
+                      Access Course Portal
+                      <ArrowUpRight className="w-3 h-3 opacity-60" />
+                    </a>
                   </div>
-                  <span className="text-[10px] font-extrabold uppercase text-brand-gold-bright block">
-                    {rec.focus}
-                  </span>
-                  <p className="text-slate-400 text-xs leading-relaxed">
-                    {rec.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Section 3: YouTube Channels */}
-        <div className="space-y-8">
-          <div className="border-b border-brand-gold/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <YoutubeIcon className="w-6 h-6 text-red-500 fill-red-500" />
-              <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
-                AI & Machine Learning YouTube Channels
-              </h2>
-            </div>
-
-            {/* Search Input */}
-            <div className="relative w-full md:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search channels..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-brand-navy-light/10 border border-brand-gold/10 focus:border-brand-gold/50 text-slate-200 placeholder-slate-500 focus:outline-none transition-all"
-              />
-            </div>
-          </div>
-
-          {/* Categories Tab Navigation */}
-          <div className="flex flex-wrap gap-1.5 bg-brand-navy-deep/20 p-2 rounded-xl border border-brand-gold/5 w-fit">
-            {['All', 'Math & Theory', 'Code & Hands-on', 'Research & News', 'General AI'].map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-bold tracking-wider transition-all duration-200 cursor-pointer border ${
-                  activeCategory === cat
-                    ? 'bg-brand-gold/20 text-brand-gold-bright border-brand-gold/50 shadow-[0_0_10px_rgba(189,154,118,0.1)]'
-                    : 'bg-brand-navy-light/5 hover:bg-brand-navy-light/20 text-slate-400 hover:text-slate-200 border-transparent'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Grid of channels */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredChannels.map((ch) => (
-              <div 
-                key={ch.name}
-                className="group bg-brand-navy-deep/30 p-5 rounded-2xl border border-brand-gold/5 hover:border-brand-gold/25 transition-all duration-300 flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[9px] font-extrabold uppercase text-slate-500 tracking-wider">
-                      #{ch.rank} Creator
-                    </span>
-                    <span className="px-2 py-0.5 rounded text-[8px] font-bold bg-brand-navy-light border border-slate-700 text-slate-400">
-                      {ch.category}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-base font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
-                    {ch.name}
-                  </h3>
-                  <p className="text-slate-400 text-[11px] leading-relaxed">
-                    {ch.description}
-                  </p>
-                </div>
-
-                <a 
-                  href={ch.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg text-[10px] font-bold text-red-500 hover:text-red-400 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/25 transition-all duration-200 cursor-pointer"
-                >
-                  <Play className="w-3.5 h-3.5 fill-red-500 text-red-500" />
-                  Visit YouTube Channel
-                </a>
+                ))}
               </div>
-            ))}
-          </div>
-
-          {filteredChannels.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-slate-400 font-display text-lg">No YouTube channels found matching your filters.</p>
             </div>
-          )}
-        </div>
+
+            {/* Section 2: Editor Recommendation Box */}
+            <div className="p-8 rounded-3xl border border-brand-gold/15 bg-gradient-to-r from-brand-navy-deep/90 to-brand-navy-light/20 overflow-hidden shadow-2xl relative">
+              <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-gold via-indigo-500 to-emerald-500" />
+              <div className="absolute top-0 right-0 w-1/4 h-full bg-[radial-gradient(circle_at_right,_var(--tw-gradient-stops))] from-brand-gold/5 via-transparent to-transparent pointer-events-none" />
+              
+              <div className="space-y-6 relative z-10">
+                <div className="flex items-center gap-2.5">
+                  <Star className="w-5 h-5 text-brand-gold fill-brand-gold" />
+                  <h3 className="font-display text-lg sm:text-xl font-bold uppercase tracking-wider text-slate-100">
+                    Recommended Starting Path (Editor's Pick)
+                  </h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+                  {recommendations.map((rec) => (
+                    <div key={rec.channel} className="bg-brand-navy-dark/45 p-4 rounded-xl border border-brand-gold/5 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                        <span className="font-bold text-slate-200 text-xs sm:text-sm uppercase tracking-wide">
+                          {rec.channel}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-extrabold uppercase text-brand-gold-bright block">
+                        {rec.focus}
+                      </span>
+                      <p className="text-slate-400 text-xs leading-relaxed">
+                        {rec.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: YouTube Channels */}
+            <div className="space-y-8">
+              <div className="border-b border-brand-gold/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <YoutubeIcon className="w-6 h-6 text-red-500 fill-red-500" />
+                  <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-wider text-slate-100">
+                    AI & Machine Learning YouTube Channels
+                  </h2>
+                </div>
+
+                {/* Search Input */}
+                <div className="relative w-full md:w-80">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search channels..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-brand-navy-light/10 border border-brand-gold/10 focus:border-brand-gold/50 text-slate-200 placeholder-slate-500 focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Categories Tab Navigation */}
+              <div className="flex flex-wrap gap-1.5 bg-brand-navy-deep/20 p-2 rounded-xl border border-brand-gold/5 w-fit">
+                {['All', 'Math & Theory', 'Code & Hands-on', 'Research & News', 'General AI'].map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-3.5 py-1.5 rounded-lg text-[10px] md:text-xs font-bold tracking-wider transition-all duration-200 cursor-pointer border ${
+                      activeCategory === cat
+                        ? 'bg-brand-gold/20 text-brand-gold-bright border-brand-gold/50 shadow-[0_0_10px_rgba(189,154,118,0.1)]'
+                        : 'bg-brand-navy-light/5 hover:bg-brand-navy-light/20 text-slate-400 hover:text-slate-200 border-transparent'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Grid of channels */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {filteredChannels.map((ch) => (
+                  <div 
+                    key={ch.name}
+                    className="group bg-brand-navy-deep/30 p-5 rounded-2xl border border-brand-gold/5 hover:border-brand-gold/25 transition-all duration-300 flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[9px] font-extrabold uppercase text-slate-500 tracking-wider">
+                          #{ch.rank} Creator
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[8px] font-bold bg-brand-navy-light border border-slate-700 text-slate-400">
+                          {ch.category}
+                        </span>
+                      </div>
+                      <h3 className="font-display text-base font-bold text-slate-200 group-hover:text-brand-gold-bright transition-colors">
+                        {ch.name}
+                      </h3>
+                      <p className="text-slate-400 text-[11px] leading-relaxed">
+                        {ch.description}
+                      </p>
+                    </div>
+
+                    <a 
+                      href={ch.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-6 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg text-[10px] font-bold text-red-500 hover:text-red-400 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/25 transition-all duration-200 cursor-pointer"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-red-500 text-red-500" />
+                      Visit YouTube Channel
+                    </a>
+                  </div>
+                ))}
+              </div>
+
+              {filteredChannels.length === 0 && (
+                <div className="text-center py-20">
+                  <p className="text-slate-400 font-display text-lg">No YouTube channels found matching your filters.</p>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <GithubReposDirectory />
+        )}
 
       </div>
     </div>
