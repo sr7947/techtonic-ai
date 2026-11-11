@@ -129,11 +129,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       setPublishing(true);
       setPublishStatus('idle');
       try {
+        // Clean URL to strip tracking query parameters (e.g. ?ref_src=...)
+        const cleanTweetUrl = tweetUrl.trim().split('?')[0];
+
         const { error } = await supabase
           .from('trending_tweets')
           .insert([{
             tag: tweetTag.startsWith('#') ? tweetTag : `#${tweetTag}`,
-            tweet_url: tweetUrl.trim(),
+            tweet_url: cleanTweetUrl,
             created_at: new Date().toISOString()
           }]);
 

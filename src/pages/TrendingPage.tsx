@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, Hash, RefreshCw, ShieldAlert, PlusCircle, Trash2 } from 'lucide-react';
+import { TrendingUp, Hash, RefreshCw, ShieldAlert, PlusCircle, Trash2, ExternalLink } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const TwitterIcon = ({ className }: { className?: string }) => (
@@ -244,29 +244,51 @@ CREATE POLICY "Allow public write access" ON public.trending_tweets FOR ALL USIN
 
               {/* Tweets List */}
               <div className="relative w-full max-w-2xl mx-auto space-y-6">
-                {filteredTweets.map((tweet) => (
-                  <div 
-                    key={tweet.id} 
-                    className="w-full flex justify-center flex-col items-center bg-brand-navy-deep/20 rounded-3xl p-5 border border-brand-gold/15 shadow-xl glass-panel relative overflow-visible group"
-                  >
-                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold/30 to-transparent" />
-                    
-                    <button
-                      onClick={() => handleDeleteTweet(tweet.id)}
-                      disabled={deletingId === tweet.id}
-                      className="absolute top-3 right-3 p-2 rounded-lg bg-red-500/10 hover:bg-red-500/25 border border-red-500/20 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer duration-200 z-10"
-                      title="Remove this tweet"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                {filteredTweets.map((tweet) => {
+                  const cleanUrl = (tweet.tweet_url || '').split('?')[0];
 
-                    <blockquote className="twitter-tweet w-full" data-theme="dark" data-align="center" data-conversation="none">
-                      <a href={tweet.tweet_url} className="text-xs text-slate-500 hover:text-brand-gold transition-colors">
-                        Click to load tweet: {tweet.tweet_url}
-                      </a>
-                    </blockquote>
-                  </div>
-                ))}
+                  return (
+                    <div 
+                      key={tweet.id} 
+                      className="w-full flex justify-center flex-col items-center bg-brand-navy-deep/20 rounded-3xl p-5 border border-brand-gold/15 shadow-xl glass-panel relative overflow-visible group"
+                    >
+                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold/30 to-transparent" />
+                      
+                      <button
+                        onClick={() => handleDeleteTweet(tweet.id)}
+                        disabled={deletingId === tweet.id}
+                        className="absolute top-3 right-3 p-2 rounded-lg bg-red-500/10 hover:bg-red-500/25 border border-red-500/20 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer duration-200 z-10"
+                        title="Remove this tweet"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+
+                      <blockquote 
+                        className="twitter-tweet w-full" 
+                        data-theme="dark" 
+                        data-align="center"
+                        data-dnt="true"
+                      >
+                        <a href={cleanUrl} className="text-xs text-slate-500 hover:text-brand-gold transition-colors">
+                          Click to load post: {cleanUrl}
+                        </a>
+                      </blockquote>
+
+                      <div className="w-full flex items-center justify-between pt-3 px-2 border-t border-brand-gold/10 text-xs text-slate-400 mt-2">
+                        <span className="text-[11px] text-slate-400 font-semibold">{tweet.tag}</span>
+                        <a
+                          href={cleanUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-brand-gold/10 hover:bg-brand-gold/20 text-brand-gold-bright text-xs font-bold transition-all border border-brand-gold/25"
+                        >
+                          <span>Open Post / Full Article on X</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
 
                 <div className="flex items-center gap-2 p-3 rounded-2xl bg-brand-navy-light/10 border border-brand-gold/10 text-slate-500 text-[10px] max-w-xl mx-auto text-center justify-center select-none">
                   <ShieldAlert className="w-4.5 h-4.5 flex-shrink-0 text-brand-gold/50" />
