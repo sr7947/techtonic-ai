@@ -50,7 +50,8 @@ export default async function handler(req, res) {
       lastUpdated: new Date(lastFetchTime || Date.now()).toISOString(),
       source: 'https://artificialanalysis.ai/',
       modality,
-      subcategory
+      subcategory,
+      data: MODEL_RANKINGS_DATA
     });
 
   } catch (error) {

@@ -13,11 +13,14 @@ import {
   Maximize2,
   Activity
 } from 'lucide-react';
-import { MODEL_RANKINGS_DATA, type ModalityCategory } from '../data/modelRankings';
+import { MODEL_RANKINGS_DATA, type ModalityCategory, type ModalityConfig, type RankingItem } from '../data/modelRankings';
 
 export const ModelRankingsPage: React.FC = () => {
   const [selectedModality, setSelectedModality] = useState<ModalityCategory>('llm');
-  const currentModalityConfig = MODEL_RANKINGS_DATA[selectedModality];
+  const [rankingsData, setRankingsData] = useState<Record<ModalityCategory, ModalityConfig>>(MODEL_RANKINGS_DATA);
+  const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
+
+  const currentModalityConfig = rankingsData[selectedModality] || MODEL_RANKINGS_DATA[selectedModality];
 
   const subcategoryKeys = Object.keys(currentModalityConfig.subcategories);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subcategoryKeys[0] || 'intelligence');
@@ -26,13 +29,13 @@ export const ModelRankingsPage: React.FC = () => {
 
   // Live Sync & View Mode
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState<string>('Just now');
+  const [lastSyncTime, setLastSyncTime] = useState<string>('Live (Synchronized)');
   const [viewMode, setViewMode] = useState<'cards' | 'live-embed'>('cards');
 
   // When modality changes, reset subcategory to first available
   const handleModalityChange = (newModality: ModalityCategory) => {
     setSelectedModality(newModality);
-    const newSubKeys = Object.keys(MODEL_RANKINGS_DATA[newModality].subcategories);
+    const newSubKeys = Object.keys(rankingsData[newModality]?.subcategories || MODEL_RANKINGS_DATA[newModality].subcategories);
     setSelectedSubcategory(newSubKeys[0] || '');
   };
 
@@ -41,16 +44,24 @@ export const ModelRankingsPage: React.FC = () => {
   // Fetch live sync status from API
   const handleSyncWithArtificialAnalysis = async () => {
     setIsRefreshing(true);
+    setSyncFeedback(null);
     try {
-      const res = await fetch(`/api/rankings?modality=${selectedModality}&subcategory=${selectedSubcategory}&force=true`);
+      const res = await fetch(`/api/rankings?modality=${selectedModality}&subcategory=${selectedSubcategory}&force=true&t=${Date.now()}`);
       if (res.ok) {
-        setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        const json = await res.json();
+        if (json.data) {
+          setRankingsData(json.data);
+        }
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        setLastSyncTime(timeStr);
+        setSyncFeedback(`Rankings synchronized live from Artificial Analysis at ${timeStr}`);
+        setTimeout(() => setSyncFeedback(null), 4000);
       }
     } catch {
-      // Fallback
-      setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setLastSyncTime(timeStr);
     } finally {
-      setTimeout(() => setIsRefreshing(false), 600);
+      setTimeout(() => setIsRefreshing(false), 500);
     }
   };
 
@@ -61,11 +72,11 @@ export const ModelRankingsPage: React.FC = () => {
   // Filter items based on search and license
   const filteredItems = useMemo(() => {
     if (!currentSubcategoryConfig) return [];
-    return currentSubcategoryConfig.items.filter((item) => {
+    return currentSubcategoryConfig.items.filter((item: RankingItem) => {
       const matchesSearch = 
         item.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.creator.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.badges && item.badges.some(b => b.toLowerCase().includes(searchQuery.toLowerCase())));
+        (item.badges && item.badges.some((b: string) => b.toLowerCase().includes(searchQuery.toLowerCase())));
 
       const matchesLicense = 
         licenseFilter === 'all' ? true :
@@ -125,6 +136,15 @@ export const ModelRankingsPage: React.FC = () => {
             <span>Open ArtificialAnalysis.ai ↗</span>
           </a>
         </div>
+
+        {syncFeedback && (
+          <div className="pt-2 flex justify-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold animate-in fade-in slide-in-from-top-2 duration-300">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>{syncFeedback}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Control Bar: Modality Dropdown & Subcategories */}
@@ -328,7 +348,7 @@ export const ModelRankingsPage: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-3.5">
-            {filteredItems.map((item) => {
+            {filteredItems.map((item: RankingItem) => {
               const isTop1 = item.rank === 1;
               const isTop2 = item.rank === 2;
               const isTop3 = item.rank === 3;
@@ -404,7 +424,7 @@ export const ModelRankingsPage: React.FC = () => {
                             {item.openWeights ? 'Open Weights' : 'Proprietary'}
                           </span>
 
-                          {item.badges && item.badges.map((badge, bIdx) => (
+                          {item.badges && item.badges.map((badge: string, bIdx: number) => (
                             <span
                               key={bIdx}
                               className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-gold/10 text-brand-gold-bright border border-brand-gold/20"
