@@ -51,50 +51,50 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
   llm: {
     id: 'llm',
     label: 'LLM (Language Models)',
-    description: 'Independent quality, speed, and pricing benchmarks across frontier and open-weights Large Language Models.',
-    sourceUrl: 'https://artificialanalysis.ai/',
+    description: 'Independent quality, speed, and pricing benchmarks across frontier reasoning models and open-weights LLMs.',
+    sourceUrl: 'https://artificialanalysis.ai/#intelligence',
     subcategories: {
       intelligence: {
         id: 'intelligence',
         label: 'Intelligence (Quality)',
-        description: 'Composite Intelligence Index tracking coding, mathematics, reasoning, and knowledge evaluation.',
+        description: 'Composite Intelligence Index tracking reasoning, mathematics, coding, and scientific problem-solving from Artificial Analysis.',
         sourceUrl: 'https://artificialanalysis.ai/#intelligence',
         primaryMetricLabel: 'Quality Index',
         items: [
           {
-            id: 'claude-3-7-sonnet',
+            id: 'openai-o1',
             rank: 1,
+            model: 'OpenAI o1 (Full Reasoning)',
+            creator: 'OpenAI',
+            creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
+            openWeights: false,
+            primaryMetric: { label: 'Quality Index', value: '93.1', numeric: 93.1 },
+            secondaryMetric: { label: 'GPQA Diamond', value: '75.7%' },
+            costMetric: { label: 'Price / 1M Tokens', value: '$15.00 / $60.00' },
+            speedMetric: { label: 'Output Speed', value: '38 tok/s' },
+            contextWindow: '200k',
+            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/o1',
+            badges: ['#1 Reasoning', 'PhD Level STEM']
+          },
+          {
+            id: 'claude-3-7-sonnet',
+            rank: 2,
             model: 'Claude 3.7 Sonnet (Hybrid Reasoning)',
             creator: 'Anthropic',
             creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg',
             openWeights: false,
             primaryMetric: { label: 'Quality Index', value: '92.4', numeric: 92.4 },
-            secondaryMetric: { label: 'GPQA Diamond', value: '68.4%' },
+            secondaryMetric: { label: 'SWE-bench Verified', value: '70.3%' },
             costMetric: { label: 'Price / 1M Tokens', value: '$3.00 / $15.00' },
             speedMetric: { label: 'Output Speed', value: '78 tok/s' },
             contextWindow: '200k',
             artificialAnalysisUrl: 'https://artificialanalysis.ai/models/claude-3-7-sonnet',
-            badges: ['#1 Frontier', 'Hybrid Reasoning']
-          },
-          {
-            id: 'gpt-4-5',
-            rank: 2,
-            model: 'GPT-4.5 (Orion)',
-            creator: 'OpenAI',
-            creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
-            openWeights: false,
-            primaryMetric: { label: 'Quality Index', value: '91.8', numeric: 91.8 },
-            secondaryMetric: { label: 'MMLU-Pro', value: '82.6%' },
-            costMetric: { label: 'Price / 1M Tokens', value: '$75.00 / $150.00' },
-            speedMetric: { label: 'Output Speed', value: '45 tok/s' },
-            contextWindow: '128k',
-            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/gpt-4-5',
-            badges: ['Top Knowledge']
+            badges: ['Hybrid Thinking', 'Coding Leader']
           },
           {
             id: 'deepseek-r1',
             rank: 3,
-            model: 'DeepSeek-R1 (Full 671B)',
+            model: 'DeepSeek-R1 (671B Full)',
             creator: 'DeepSeek',
             creatorLogo: 'https://raw.githubusercontent.com/deepseek-ai/DeepSeek-V3/main/figures/logo.svg',
             openWeights: true,
@@ -104,22 +104,22 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
             speedMetric: { label: 'Output Speed', value: '48 tok/s' },
             contextWindow: '128k',
             artificialAnalysisUrl: 'https://artificialanalysis.ai/models/deepseek-r1',
-            badges: ['#1 Open Weights', 'STEM Reasoning']
+            badges: ['#1 Open Weights', 'Extreme Value']
           },
           {
-            id: 'gemini-2-flash-thinking',
+            id: 'openai-o3-mini',
             rank: 4,
-            model: 'Gemini 2.0 Flash Thinking',
-            creator: 'Google DeepMind',
-            creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg',
+            model: 'OpenAI o3-mini (High Effort)',
+            creator: 'OpenAI',
+            creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
             openWeights: false,
-            primaryMetric: { label: 'Quality Index', value: '89.6', numeric: 89.6 },
-            secondaryMetric: { label: 'GPQA Diamond', value: '64.8%' },
-            costMetric: { label: 'Price / 1M Tokens', value: '$0.10 / $0.40' },
-            speedMetric: { label: 'Output Speed', value: '142 tok/s' },
-            contextWindow: '1,000k',
-            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/gemini-2-0-flash',
-            badges: ['1M Context', 'Fast Reasoning']
+            primaryMetric: { label: 'Quality Index', value: '90.8', numeric: 90.8 },
+            secondaryMetric: { label: 'AIME 2024', value: '87.3%' },
+            costMetric: { label: 'Price / 1M Tokens', value: '$1.10 / $4.40' },
+            speedMetric: { label: 'Output Speed', value: '55 tok/s' },
+            contextWindow: '200k',
+            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/o3-mini',
+            badges: ['Math & Code Champ', 'Cost-Efficient Reasoning']
           },
           {
             id: 'claude-3-5-sonnet',
@@ -134,11 +134,26 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
             speedMetric: { label: 'Output Speed', value: '84 tok/s' },
             contextWindow: '200k',
             artificialAnalysisUrl: 'https://artificialanalysis.ai/models/claude-3-5-sonnet',
-            badges: ['Coding Benchmark']
+            badges: ['Standard Coding']
+          },
+          {
+            id: 'gemini-2-flash',
+            rank: 6,
+            model: 'Gemini 2.0 Flash',
+            creator: 'Google DeepMind',
+            creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg',
+            openWeights: false,
+            primaryMetric: { label: 'Quality Index', value: '88.5', numeric: 88.5 },
+            secondaryMetric: { label: 'Context Window', value: '1,000,000' },
+            costMetric: { label: 'Price / 1M Tokens', value: '$0.10 / $0.40' },
+            speedMetric: { label: 'Output Speed', value: '168 tok/s' },
+            contextWindow: '1,000k',
+            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/gemini-2-0-flash',
+            badges: ['1M Context', 'Fastest Frontier']
           },
           {
             id: 'deepseek-v3',
-            rank: 6,
+            rank: 7,
             model: 'DeepSeek-V3 (671B MoE)',
             creator: 'DeepSeek',
             creatorLogo: 'https://raw.githubusercontent.com/deepseek-ai/DeepSeek-V3/main/figures/logo.svg',
@@ -149,11 +164,26 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
             speedMetric: { label: 'Output Speed', value: '62 tok/s' },
             contextWindow: '128k',
             artificialAnalysisUrl: 'https://artificialanalysis.ai/models/deepseek-v3',
-            badges: ['Max Value', 'Open Weights']
+            badges: ['Open Weights Value']
+          },
+          {
+            id: 'gpt-4o',
+            rank: 8,
+            model: 'GPT-4o (Omni)',
+            creator: 'OpenAI',
+            creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
+            openWeights: false,
+            primaryMetric: { label: 'Quality Index', value: '88.2', numeric: 88.2 },
+            secondaryMetric: { label: 'MMLU', value: '88.7%' },
+            costMetric: { label: 'Price / 1M Tokens', value: '$2.50 / $10.00' },
+            speedMetric: { label: 'Output Speed', value: '105 tok/s' },
+            contextWindow: '128k',
+            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/gpt-4o',
+            badges: ['Multimodal Flagship']
           },
           {
             id: 'llama-3-3-70b',
-            rank: 7,
+            rank: 9,
             model: 'Llama 3.3 70B Instruct',
             creator: 'Meta',
             creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg',
@@ -164,22 +194,22 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
             speedMetric: { label: 'Output Speed', value: '110 tok/s' },
             contextWindow: '128k',
             artificialAnalysisUrl: 'https://artificialanalysis.ai/models/llama-3-3-70b-instruct',
-            badges: ['Enterprise Open']
+            badges: ['Enterprise Open Source']
           },
           {
-            id: 'qwen-2-5-max',
-            rank: 8,
-            model: 'Qwen 2.5 Max',
+            id: 'qwen-2-5-72b',
+            rank: 10,
+            model: 'Qwen 2.5 72B Instruct',
             creator: 'Alibaba Cloud',
             creatorLogo: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Alibaba_Group_logo.svg',
-            openWeights: false,
+            openWeights: true,
             primaryMetric: { label: 'Quality Index', value: '86.1', numeric: 86.1 },
             secondaryMetric: { label: 'Arena Elo', value: '1312' },
             costMetric: { label: 'Price / 1M Tokens', value: '$0.35 / $0.40' },
             speedMetric: { label: 'Output Speed', value: '72 tok/s' },
             contextWindow: '128k',
-            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/qwen-2-5-max',
-            badges: ['Bilingual Champ']
+            artificialAnalysisUrl: 'https://artificialanalysis.ai/models/qwen-2-5-72b-instruct',
+            badges: ['Open Weights Multilingual']
           }
         ]
       },
@@ -219,7 +249,7 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
             badges: ['LPU Engine', 'Realtime Chat']
           },
           {
-            id: 'gemini-2-flash',
+            id: 'gemini-2-flash-speed',
             rank: 3,
             model: 'Gemini 2.0 Flash',
             creator: 'Google DeepMind',
@@ -540,7 +570,7 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
             creator: 'Black Forest Labs',
             openWeights: false,
             primaryMetric: { label: 'Editing Elo', value: '1,152', numeric: 1152 },
-            secondaryMetric: { label: 'Edge Blending', value: 'Seamless Seamlessness' },
+            secondaryMetric: { label: 'Edge Blending', value: 'Seamless' },
             costMetric: { label: 'Cost / Edit', value: '$0.04' },
             speedMetric: { label: 'Gen Time', value: '6.2s' },
             artificialAnalysisUrl: 'https://artificialanalysis.ai/?category=image#image-editing',
@@ -886,7 +916,7 @@ export const MODEL_RANKINGS_DATA: Record<ModalityCategory, ModalityConfig> = {
             costMetric: { label: 'Cost / 1M Chars', value: '$30.00' },
             speedMetric: { label: 'TTFA Latency', value: '140ms' },
             artificialAnalysisUrl: 'https://artificialanalysis.ai/?category=speech#text-to-speech',
-            badges: ['Crisp Clarity']
+            badges: ['Studio Quality']
           },
           {
             id: 'qwen-audio-tts',
