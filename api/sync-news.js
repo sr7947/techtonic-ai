@@ -2,11 +2,10 @@ import Parser from 'rss-parser';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-function generateThemedImageUrl(title) {
-  const cleanTitle = (title || 'futuristic artificial intelligence concept')
-    .replace(/[^\w\s-]/g, '')
-    .trim();
-  return `https://image.pollinations.ai/p/${encodeURIComponent(cleanTitle + ', premium high-tech concept illustration, dark cyber navy and gold theme, minimalist 3d render')}?width=800&height=450&nologo=true`;
+function generateThemedImageUrl(_title) {
+  // Return null to avoid hitting third-party rate limits (like pollinations.ai 45s cooldown)
+  // Cards without authentic images will cleanly render the official WenzdayLab brand banner
+  return null;
 }
 
 // Initialize Supabase client
@@ -260,7 +259,7 @@ export default async function handler(req, res) {
             const chatId = process.env.TELEGRAM_CHAT_ID;
             if (token && chatId) {
               const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
-              const text = `🔔 *New Official AI Update Found!*\n\n*Source*: ${article.source_name}\n*Category*: ${article.category}\n*Title*: ${article.title || 'Untitled'}\n*Date*: ${new Date(article.published_at).toLocaleDateString()}\n\n*Summary*: ${article.summary}\n\n*Link*: ${article.article_url}\n\nApprove or reject this news for TechTonic AI?`;
+              const text = `🔔 *New Official AI Update Found!*\n\n*Source*: ${article.source_name}\n*Category*: ${article.category}\n*Title*: ${article.title || 'Untitled'}\n*Date*: ${new Date(article.published_at).toLocaleDateString()}\n\n*Summary*: ${article.summary}\n\n*Link*: ${article.article_url}\n\nApprove or reject this news for WenzdayLab?`;
               
               const payload = {
                 chat_id: chatId,

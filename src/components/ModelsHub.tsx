@@ -69,7 +69,7 @@ export const ModelsHub: React.FC = () => {
   // Helper: Get base64 URL or fallback URL for local dev proxy
   const getApiUrl = (pageCursor: string) => {
     const apiBase = window.location.hostname === 'localhost' 
-      ? 'https://techtonic-ai.vercel.app' 
+      ? 'https://www.wenzdaylab.in' 
       : '';
     
     let url = `${apiBase}/api/models?sort=${selectedSort}&limit=10`;

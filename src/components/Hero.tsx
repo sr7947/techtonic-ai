@@ -39,14 +39,14 @@ export const Hero: React.FC = () => {
         >
           <div className="flex items-center justify-center gap-3 mb-2">
             <img 
-              src="/logo.png" 
-              alt="TechTonic AI" 
+              src="/wenzdaylab-logo.svg" 
+              alt="WenzdayLab" 
               width={80}
               height={80}
               className="w-14 h-14 md:w-16 md:h-16 object-contain rounded-xl border border-brand-gold/30 shadow-2xl"
             />
             <span className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-200 uppercase tracking-wider">
-              TECHTONIC <span className="gold-gradient-text">AI</span>
+              WENZDAY<span className="gold-gradient-text">LAB</span>
             </span>
           </div>
 

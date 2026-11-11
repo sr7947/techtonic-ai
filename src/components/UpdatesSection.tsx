@@ -36,10 +36,24 @@ const SafeImage: React.FC<{ src: string; alt: string; className: string }> = ({ 
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  if (error || !src) {
+  // Prevent rate-limit graphic from third-party image generation services (like pollinations.ai)
+  const isRateLimited = typeof src === 'string' && (src.includes('pollinations.ai') || src.includes('free limit reached'));
+
+  if (error || !src || isRateLimited) {
     return (
-      <div className={`${className} bg-gradient-to-br from-brand-navy-light/40 to-brand-navy-deep flex items-center justify-center border border-brand-gold/10`}>
-        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">TechTonic AI</div>
+      <div className={`${className} bg-gradient-to-br from-[#0A1124] via-[#050814] to-[#0F1B38] flex flex-col items-center justify-center border border-brand-gold/15 p-4 relative overflow-hidden group`}>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(212,175,55,0.06),_transparent)] pointer-events-none" />
+        <img 
+          src="/wenzdaylab-logo.svg" 
+          alt="WenzdayLab" 
+          className="w-10 h-10 object-contain mb-1.5 opacity-85 group-hover:scale-110 transition-transform drop-shadow-[0_0_12px_rgba(212,175,55,0.3)]" 
+        />
+        <div className="text-xs font-display font-extrabold tracking-widest text-brand-gold uppercase">
+          WENZDAY<span className="text-slate-100">LAB</span>
+        </div>
+        <div className="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-semibold mt-0.5">
+          Official Industry Update
+        </div>
       </div>
     );
   }

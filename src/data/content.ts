@@ -359,7 +359,7 @@ export const LEARNING_RESOURCES: LearningResource[] = [
 export const YOUTUBE_VIDEOS: YouTubeVideo[] = [
   {
     id: 'yt-1',
-    title: "TechTonic AI: Let's Explore Future Together",
+    title: "WenzdayLab: Let's Explore Future Together",
     duration: '2:15',
     category: 'AI News',
     publishDate: 'Just now',

@@ -130,13 +130,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-3 group focus:outline-none rounded-xl p-1 text-left cursor-pointer"
             >
               <img 
-                src="/logo.png" 
-                alt="TechTonic AI Logo" 
+                src="/wenzdaylab-logo.svg" 
+                alt="WenzdayLab Logo" 
                 className="w-10 h-10 object-contain rounded-xl border border-brand-gold/30 shadow-md group-hover:scale-105 transition-transform"
               />
               <div className="flex flex-col">
                 <span className="font-display text-lg sm:text-xl font-extrabold tracking-wider text-slate-100 group-hover:text-brand-gold transition-colors">
-                  TECHTONIC <span className="gold-gradient-text">AI</span>
+                  WENZDAY<span className="gold-gradient-text">LAB</span>
                 </span>
                 <span className="text-[9px] uppercase tracking-[0.25em] text-slate-400 font-semibold group-hover:text-brand-gold/80 transition-colors">
                   Frontier Intelligence
@@ -336,8 +336,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <div className="text-center space-y-2">
-              <img src="/logo.png" alt="TechTonic AI" className="w-12 h-12 mx-auto rounded-xl border border-brand-gold/30" />
-              <h3 className="font-display text-xl font-bold text-slate-100">Sign in to TechTonic AI</h3>
+              <img src="/wenzdaylab-logo.svg" alt="WenzdayLab" className="w-12 h-12 mx-auto rounded-xl border border-brand-gold/30" />
+              <h3 className="font-display text-xl font-bold text-slate-100">Sign in to WenzdayLab</h3>
               <p className="text-xs text-slate-400">Choose your account to access curated news and admin publishing.</p>
             </div>
 

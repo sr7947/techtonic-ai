@@ -58,7 +58,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const rawData = {
       title: upTitle,
       category: upCategory,
-      source_name: upSource || 'TechTonic Editorial',
+      source_name: upSource || 'WenzdayLab Editorial',
       summary: upSummary,
       article_url: upUrl || `https://wenzdaylab.in/updates/${Date.now()}`,
       image_url: upImageUrl || null,
@@ -198,9 +198,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-brand-gold/15">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-lg border border-brand-gold/30" />
+            <img src="/wenzdaylab-logo.svg" alt="Logo" className="w-8 h-8 rounded-lg border border-brand-gold/30" />
             <div>
-              <h3 className="font-display text-lg sm:text-xl font-bold text-slate-100">TechTonic Admin Panel</h3>
+              <h3 className="font-display text-lg sm:text-xl font-bold text-slate-100">WenzdayLab Admin Panel</h3>
               <p className="text-[11px] text-slate-400">Manage live news, trending tweets, and database hygiene.</p>
             </div>
           </div>

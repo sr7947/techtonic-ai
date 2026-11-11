@@ -16,11 +16,9 @@ const parser = new Parser({
   }
 });
 
-function generateThemedImageUrl(title) {
-  const cleanTitle = (title || 'futuristic artificial intelligence concept')
-    .replace(/[^\w\s-]/g, '')
-    .trim();
-  return `https://image.pollinations.ai/p/${encodeURIComponent(cleanTitle + ', premium high-tech concept illustration, dark cyber navy and gold theme, minimalist 3d render')}?width=800&height=450&nologo=true`;
+function generateThemedImageUrl(_title) {
+  // Avoid third-party rate-limited image generation
+  return null;
 }
 
 export default async function handler(req, res) {
@@ -114,7 +112,7 @@ export default async function handler(req, res) {
 
           // Format interactive buttons markup (Accept, Go Live, Reject)
           const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
-          const text = `🔔 *New Official AI Update Found!*\n\n*Source*: ${source.name}\n*Title*: ${item.title || 'Untitled'}\n\n*Link*: ${articleUrl}\n\nApprove or reject this news for TechTonic AI?`;
+          const text = `🔔 *New Official AI Update Found!*\n\n*Source*: ${source.name}\n*Title*: ${item.title || 'Untitled'}\n\n*Link*: ${articleUrl}\n\nApprove or reject this news for WenzdayLab?`;
 
           const payload = {
             chat_id: chatId,

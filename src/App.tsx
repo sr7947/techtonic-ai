@@ -23,7 +23,7 @@ function App() {
   // Authentication State loaded from LocalStorage
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
-      const stored = localStorage.getItem('techtonic_user');
+      const stored = localStorage.getItem('wenzdaylab_user') || localStorage.getItem('techtonic_user');
       return stored ? JSON.parse(stored) : null;
     } catch {
       return null;
@@ -63,8 +63,9 @@ function App() {
   // Synchronize authentication status with LocalStorage
   useEffect(() => {
     if (user) {
-      localStorage.setItem('techtonic_user', JSON.stringify(user));
+      localStorage.setItem('wenzdaylab_user', JSON.stringify(user));
     } else {
+      localStorage.removeItem('wenzdaylab_user');
       localStorage.removeItem('techtonic_user');
     }
   }, [user]);
@@ -163,7 +164,7 @@ function App() {
             <div className="font-display text-8xl font-black text-brand-gold/20">404</div>
             <h2 className="text-2xl font-bold text-slate-200">Page Redesigned</h2>
             <p className="text-slate-400 max-w-md text-sm">
-              TechTonic AI has been redesigned into 4 dedicated tabs: Latest Updates, Trending, Model Hubs, and Model Rankings.
+              WenzdayLab has been redesigned into 4 dedicated tabs: Latest Updates, Trending, Model Hubs, and Model Rankings.
             </p>
             <button
               onClick={() => navigate('/')}

@@ -1,5 +1,5 @@
 -- ============================================================================
--- SQL Schema: TechTonic AI Database Reset & Source Seeding
+-- SQL Schema: WenzdayLab Database Reset & Source Seeding
 -- Run this script in your Supabase SQL Editor (Dashboard -> SQL Editor)
 -- This will wipe old data and seed the 43 official AI news sources.
 -- ============================================================================

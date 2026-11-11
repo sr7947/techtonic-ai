@@ -37,12 +37,12 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <img 
-                src="/logo.png" 
-                alt="TechTonic AI Logo" 
+                src="/wenzdaylab-logo.svg" 
+                alt="WenzdayLab Logo" 
                 className="w-10 h-10 object-contain rounded-xl border border-brand-gold/30 shadow-md"
               />
               <span className="font-display text-lg font-bold tracking-widest text-brand-gold">
-                TECHTONIC AI
+                WENZDAYLAB
               </span>
             </div>
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm">
@@ -150,7 +150,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-brand-gold/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            © {currentYear} TechTonic AI. All rights reserved.
+            © {currentYear} WenzdayLab. All rights reserved.
           </div>
           <button
             onClick={handleScrollToTop}
