@@ -86,7 +86,11 @@ export const DEFAULT_OFFICIAL_SOURCES = [
   { name: 'OpenClaw Press', feed_url: 'https://openclaw.ai/press/rss.xml', site_url: 'https://openclaw.ai/press', category: 'Media', logo_color: 'from-[#C026D3] to-[#86198F]' },
   { name: 'Hermes AI', feed_url: 'https://hermes-ai.net/news/rss.xml', site_url: 'https://hermes-ai.net/news/', category: 'AI Labs', logo_color: 'from-[#14B8A6] to-[#0D9488]' },
   { name: 'World Labs', feed_url: 'https://worldlabs.ai/blog/rss.xml', site_url: 'https://worldlabs.ai/blog', category: 'Creative AI', logo_color: 'from-[#6366F1] to-[#312E81]' },
-  { name: 'LangChain Blog', feed_url: 'https://blog.langchain.dev/rss/', site_url: 'https://www.langchain.com/blog', category: 'Developer Tools', logo_color: 'from-[#00A86B] to-[#007F50]' }
+  { name: 'LangChain Blog', feed_url: 'https://blog.langchain.dev/rss/', site_url: 'https://www.langchain.com/blog', category: 'Developer Tools', logo_color: 'from-[#00A86B] to-[#007F50]' },
+  { name: 'Emergent', feed_url: 'https://emergent.sh/news', site_url: 'https://emergent.sh/news', category: 'AI Labs', logo_color: 'from-[#3B82F6] to-[#1D4ED8]' },
+  { name: 'ElevenLabs', feed_url: 'https://elevenlabs.io/blog/rss.xml', site_url: 'https://elevenlabs.io/blog', category: 'AI Labs', logo_color: 'from-[#000000] to-[#374151]' },
+  { name: 'Cloudflare AI', feed_url: 'https://blog.cloudflare.com/tag/ai/rss/', site_url: 'https://blog.cloudflare.com/tag/ai/', category: 'Developer Tools', logo_color: 'from-[#F38020] to-[#FAAE40]' },
+  { name: 'BlenderAI', feed_url: 'https://blenderai.org/sitemap.xml', site_url: 'https://blenderai.org/blog', category: 'Creative AI', logo_color: 'from-[#EA7600] to-[#E87D0D]' }
 ];
 
 export default async function handler(req, res) {
@@ -100,20 +104,17 @@ export default async function handler(req, res) {
   const startTime = new Date();
 
   try {
-    // 1. Fetch active sources from Supabase
+    // 1. Fetch active sources from Supabase and merge with DEFAULT_OFFICIAL_SOURCES
     let { data: dbSources } = await supabase.from('ai_sources').select('*');
 
-    // If database is fresh or empty, auto-seed the official 43 sources
-    if (!dbSources || dbSources.length === 0) {
-      console.log("Seeding official sources into ai_sources table...");
-      const { data: newSources } = await supabase
-        .from('ai_sources')
-        .upsert(DEFAULT_OFFICIAL_SOURCES, { onConflict: 'name' })
-        .select();
-      dbSources = newSources || DEFAULT_OFFICIAL_SOURCES;
+    const sourceMap = new Map();
+    for (const s of DEFAULT_OFFICIAL_SOURCES) {
+      sourceMap.set(s.name, s);
     }
-
-    const sources = [...(dbSources || [])];
+    for (const s of (dbSources || [])) {
+      sourceMap.set(s.name, { ...sourceMap.get(s.name), ...s });
+    }
+    const sources = Array.from(sourceMap.values());
 
     // 2. Fetch existing titles from the last 7 days for deduplication
     const sevenDaysAgo = new Date();

@@ -90,7 +90,8 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
   // Combine live ingested articles and admin-curated updates
   const allRawItems = useMemo(() => {
-    const combined = [...articles, ...updates];
+    // If live articles exist in Supabase, strictly use them to avoid mixing in static test data
+    const combined = articles.length > 0 ? articles : updates;
     
     // Deduplicate by URL or Title
     const seen = new Set<string>();
@@ -117,18 +118,18 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
       }
     }
 
-    // Filter to news from the LAST 7 DAYS ONLY (168 hours)
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const sevenDaysThreshold = sevenDaysAgo.getTime();
+    // Filter strictly to news from the LAST 3 DAYS ONLY (72 hours) as per user instruction
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    threeDaysAgo.setHours(0, 0, 0, 0);
+    const threeDaysThreshold = threeDaysAgo.getTime();
 
-    const last7DaysItems = unique.filter((item) => {
-      const dateVal = item.published_at ? new Date(item.published_at).getTime() : Date.now();
-      return !isNaN(dateVal) && dateVal >= sevenDaysThreshold;
+    const last3DaysItems = unique.filter((item) => {
+      const dateVal = item.published_at ? new Date(item.published_at).getTime() : 0;
+      return !isNaN(dateVal) && dateVal >= threeDaysThreshold;
     });
 
-    // If database was recently reset and has fewer items, still gracefully show all available items
-    const displayPool = last7DaysItems.length > 0 ? last7DaysItems : unique;
+    const displayPool = last3DaysItems.length > 0 ? last3DaysItems : unique;
 
     // SORT STRICTLY WITH LATEST NEWS AS PER DATE & TIME AT THE TOP
     return displayPool.sort((a, b) => {
@@ -144,8 +145,10 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
     'OpenAI',
     'Anthropic',
     'Google DeepMind',
-    'Microsoft',
     'NVIDIA',
+    'Microsoft',
+    'Amazon',
+    'ElevenLabs',
     'Meta',
     'DeepSeek',
     'xAI',

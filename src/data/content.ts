@@ -44,69 +44,58 @@ export interface YouTubeVideo {
 export const LATEST_UPDATES: AIUpdate[] = [
   {
     id: 'upd-1',
-    title: 'Introducing Claude 3.7 Sonnet: Hybrid Thinking and Advanced Coding Capabilities',
-    category: 'Models',
-    date: 'June 18, 2026',
-    source: 'Anthropic Blog',
-    summary: 'Anthropic has launched Claude 3.7 Sonnet, their first model with custom hybrid reasoning. It allows developers to configure response budgets for deep step-by-step thinking or instant replies, setting new benchmarks in agentic execution and complex codebases.',
-    url: 'https://www.anthropic.com/news/claude-3-7-sonnet',
-    readTime: '4 min read',
-    tag: 'Claude 3.7'
+    title: 'AlphaGenome 2: Deciphering how cells read DNA to better understand disease',
+    category: 'Research',
+    date: 'Nov 11, 2026',
+    source: 'Google DeepMind',
+    summary: 'Google DeepMind introduces AlphaGenome 2, advancing biological foundation models to decode complex genetic sequences and predict disease phenotypes with unprecedented accuracy.',
+    url: 'https://deepmind.google/blog/',
+    readTime: '5 min read',
+    tag: 'DeepMind'
   },
   {
     id: 'upd-2',
-    title: 'Gemini 2.0 Flash Now Available: Faster Inference, Multimodal Agentic Tools',
-    category: 'Models',
-    date: 'May 28, 2026',
-    source: 'Google DeepMind',
-    summary: 'Google released Gemini 2.0 Flash, optimized for speed and real-time multimodal interaction. Featuring built-in audio-to-audio streaming and native tool use, it represents a massive leap for real-time AI agents built on Google AI Studio.',
-    url: 'https://deepmind.google/technologies/gemini/',
-    readTime: '3 min read',
-    tag: 'Gemini 2.0'
+    title: 'Validating GPU Platforms with Runtime AI Inventory via the NVIDIA DSX AI Factory',
+    category: 'Developer Tools',
+    date: 'Nov 11, 2026',
+    source: 'NVIDIA Developer Blog',
+    summary: 'NVIDIA announces runtime verification and inventory automation tools for high-density GPU superclusters, optimizing multi-tenant inference and training pipelines.',
+    url: 'https://developer.nvidia.com/blog',
+    readTime: '4 min read',
+    tag: 'NVIDIA'
   },
   {
     id: 'upd-3',
-    title: 'Model Context Protocol (MCP): The New Standard for Connecting AI to Data',
-    category: 'Developer Tools',
-    date: 'April 14, 2026',
-    source: 'Open Source Initiative',
-    summary: 'An open-source standard created to bridge the gap between LLMs and local/remote developer tools. MCP allows IDEs and AI clients to easily interface with secure servers providing database contexts, filesystem actions, and API executions.',
-    url: 'https://modelcontextprotocol.org/',
-    readTime: '6 min read',
-    tag: 'MCP Standard'
+    title: 'Introducing the ElevenLabs Marketplace for Enterprise-Ready AI Applications',
+    category: 'Enterprise AI',
+    date: 'Nov 11, 2026',
+    source: 'ElevenLabs',
+    summary: 'ElevenLabs expands into enterprise conversational infrastructure with its new application marketplace, partnering with global consulting and systems integrators.',
+    url: 'https://elevenlabs.io/blog',
+    readTime: '3 min read',
+    tag: 'ElevenLabs'
   },
   {
     id: 'upd-4',
-    title: 'Llama 4.0 Preview: Meta Teases Next-Gen Open Weights Architecture',
-    category: 'Research',
-    date: 'June 05, 2026',
-    source: 'Meta AI',
-    summary: 'Mark Zuckerberg announced initial pre-training details for Llama 4.0. Built on a hybrid architecture integrating dense attention and sparse mixtures, it aims to deliver frontier-class reasoning in an open-weights format.',
-    url: 'https://ai.meta.com/llama/',
-    readTime: '5 min read',
-    tag: 'Llama 4'
+    title: 'Introducing Claude Fable 5.2 and Claude Mythos 5.2',
+    category: 'Models',
+    date: 'Nov 09, 2026',
+    source: 'Anthropic',
+    summary: 'Anthropic unveils Claude Fable 5.2 and Mythos 5.2, bringing cutting-edge frontier reasoning and domain-specialized autonomous code analysis to developer workflows.',
+    url: 'https://www.anthropic.com/news',
+    readTime: '4 min read',
+    tag: 'Claude'
   },
   {
     id: 'upd-5',
-    title: 'OpenAI o3-mini Releases Internationally: Low-Latency Reasoning for Developers',
-    category: 'Developer Tools',
-    date: 'March 10, 2026',
-    source: 'OpenAI Developer Docs',
-    summary: 'OpenAI launched o3-mini, a cost-effective, high-speed reasoning model. It excels in math, science, and coding, making complex thinking accessible for programmatic workflows through developer APIs with fine-grained temperature controls.',
-    url: 'https://openai.com/blog/openai-o3-mini',
-    readTime: '4 min read',
-    tag: 'o3-mini'
-  },
-  {
-    id: 'upd-6',
-    title: 'NVIDIA NIMs Accelerate Enterprise Deployment of Agentic Workflows',
+    title: 'Gilbert + Tobin rethinks the business of law with AI',
     category: 'Enterprise AI',
-    date: 'May 02, 2026',
-    source: 'NVIDIA Newsroom',
-    summary: 'NVIDIA announced expanding NIMs (Inference Microservices) to support real-time orchestration frameworks. Standardized containers optimized for TensorRT-LLM now support seamless orchestration on Kubernetes with minimal cold starts.',
-    url: 'https://developer.nvidia.com/nims',
-    readTime: '5 min read',
-    tag: 'NVIDIA NIM'
+    date: 'Nov 12, 2026',
+    source: 'OpenAI',
+    summary: 'Leading law firm Gilbert + Tobin deploys OpenAI custom model architectures to dramatically streamline contract discovery and high-stakes legal operations.',
+    url: 'https://openai.com/news/',
+    readTime: '4 min read',
+    tag: 'OpenAI'
   }
 ];
 

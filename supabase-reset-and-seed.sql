@@ -165,7 +165,11 @@ insert into public.ai_sources (name, feed_url, site_url, category, logo_color) v
 ('OpenClaw Press', 'https://openclaw.ai/press/rss.xml', 'https://openclaw.ai/press', 'Media', 'from-[#C026D3] to-[#86198F]'),
 ('Hermes AI', 'https://hermes-ai.net/news/rss.xml', 'https://hermes-ai.net/news/', 'AI Labs', 'from-[#14B8A6] to-[#0D9488]'),
 ('World Labs', 'https://worldlabs.ai/blog/rss.xml', 'https://worldlabs.ai/blog', 'Creative AI', 'from-[#6366F1] to-[#312E81]'),
-('LangChain Blog', 'https://blog.langchain.dev/rss/', 'https://www.langchain.com/blog', 'Developer Tools', 'from-[#00A86B] to-[#007F50]')
+('LangChain Blog', 'https://blog.langchain.dev/rss/', 'https://www.langchain.com/blog', 'Developer Tools', 'from-[#00A86B] to-[#007F50]'),
+('Emergent', 'https://emergent.sh/news', 'https://emergent.sh/news', 'AI Labs', 'from-[#3B82F6] to-[#1D4ED8]'),
+('ElevenLabs', 'https://elevenlabs.io/blog/rss.xml', 'https://elevenlabs.io/blog', 'AI Labs', 'from-[#000000] to-[#374151]'),
+('Cloudflare AI', 'https://blog.cloudflare.com/tag/ai/rss/', 'https://blog.cloudflare.com/tag/ai/', 'Developer Tools', 'from-[#F38020] to-[#FAAE40]'),
+('BlenderAI', 'https://blenderai.org/sitemap.xml', 'https://blenderai.org/blog', 'Creative AI', 'from-[#EA7600] to-[#E87D0D]')
 on conflict (name) do update set
   feed_url = excluded.feed_url,
   site_url = excluded.site_url,

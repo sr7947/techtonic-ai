@@ -1,5 +1,6 @@
 import Parser from 'rss-parser';
 import { createClient } from '@supabase/supabase-js';
+import { DEFAULT_OFFICIAL_SOURCES } from './sync-news.js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -31,14 +32,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Fetch active sources from Supabase
-    const { data: sources, error: sourceErr } = await supabase
+    // 1. Fetch active sources from Supabase and merge with DEFAULT_OFFICIAL_SOURCES
+    const { data: dbSources } = await supabase
       .from('ai_sources')
       .select('*');
 
-    if (sourceErr || !sources || sources.length === 0) {
-      throw new Error(`Failed to load sources from Supabase: ${sourceErr?.message || 'Empty sources list'}`);
+    const sourceMap = new Map();
+    for (const s of DEFAULT_OFFICIAL_SOURCES) {
+      sourceMap.set(s.name, s);
     }
+    for (const s of (dbSources || [])) {
+      sourceMap.set(s.name, { ...sourceMap.get(s.name), ...s });
+    }
+    const sources = Array.from(sourceMap.values());
 
     const alertsSent = [];
 
