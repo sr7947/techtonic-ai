@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://techtonic-ai.vercel.app/sitemap.xml
+Sitemap: https://wenzdaylab.in/sitemap.xml

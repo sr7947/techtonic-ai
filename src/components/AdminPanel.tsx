@@ -60,7 +60,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       category: upCategory,
       source_name: upSource || 'TechTonic Editorial',
       summary: upSummary,
-      article_url: upUrl || `https://techtonic-ai.vercel.app/updates/${Date.now()}`,
+      article_url: upUrl || `https://wenzdaylab.in/updates/${Date.now()}`,
       image_url: upImageUrl || null,
       published_at: new Date().toISOString()
     };
