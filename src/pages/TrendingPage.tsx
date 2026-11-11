@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { TrendingUp, Hash, RefreshCw, ShieldAlert, PlusCircle, Trash2, ExternalLink } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -248,8 +249,12 @@ CREATE POLICY "Allow public write access" ON public.trending_tweets FOR ALL USIN
                   const cleanUrl = (tweet.tweet_url || '').split('?')[0];
 
                   return (
-                    <div 
+                    <motion.div 
                       key={tweet.id} 
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileHover={{ scale: 1.015, y: -2 }}
+                      transition={{ duration: 0.25 }}
                       className="w-full flex justify-center flex-col items-center bg-brand-navy-deep/20 rounded-3xl p-5 border border-brand-gold/15 shadow-xl glass-panel relative overflow-visible group"
                     >
                       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold/30 to-transparent" />
@@ -286,7 +291,7 @@ CREATE POLICY "Allow public write access" ON public.trending_tweets FOR ALL USIN
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
 

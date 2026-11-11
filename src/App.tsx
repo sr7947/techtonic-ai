@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ThreeBackground } from './components/ThreeBackground';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -130,50 +131,59 @@ function App() {
         navigate={navigate}
       />
 
-      {/* Main Content Layout */}
-      <main id="main-content" className="relative z-10">
-        
-        {/* TAB 1: Latest Updates (Home & /latest-updates) */}
-        {(currentPath === '/' || currentPath === '/latest-updates') && (
-          <>
-            <Hero />
-            <UpdatesSection updates={updates} articles={articles} />
-          </>
-        )}
+      {/* Main Content Layout with 3D Depth Route Transitions */}
+      <main id="main-content" className="relative z-10 overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPath === '/latest-updates' ? '/' : currentPath}
+            initial={{ opacity: 0, y: 16, scale: 0.99 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -16, scale: 0.99 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            {/* TAB 1: Latest Updates (Home & /latest-updates) */}
+            {(currentPath === '/' || currentPath === '/latest-updates') && (
+              <>
+                <Hero />
+                <UpdatesSection updates={updates} articles={articles} />
+              </>
+            )}
 
-        {/* TAB 2: Trending */}
-        {currentPath === '/trending' && (
-          <TrendingPage />
-        )}
+            {/* TAB 2: Trending */}
+            {currentPath === '/trending' && (
+              <TrendingPage />
+            )}
 
-        {/* TAB 3: Model Hubs */}
-        {currentPath === '/models-hub' && (
-          <ModelsHubPage />
-        )}
+            {/* TAB 3: Model Hubs */}
+            {currentPath === '/models-hub' && (
+              <ModelsHubPage />
+            )}
 
-        {/* TAB 4: Model Rankings */}
-        {currentPath === '/model-rankings' && (
-          <ModelRankingsPage />
-        )}
+            {/* TAB 4: Model Rankings */}
+            {currentPath === '/model-rankings' && (
+              <ModelRankingsPage />
+            )}
 
-        {/* 404 Fallback for Obsolete Routes */}
-        {![
-          '/', '/latest-updates', '/trending', '/models-hub', '/model-rankings'
-        ].includes(currentPath) && (
-          <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 gap-6 pt-24">
-            <div className="font-display text-8xl font-black text-brand-gold/20">404</div>
-            <h2 className="text-2xl font-bold text-slate-200">Page Redesigned</h2>
-            <p className="text-slate-400 max-w-md text-sm">
-              WenzdayLab has been redesigned into 4 dedicated tabs: Latest Updates, Trending, Model Hubs, and Model Rankings.
-            </p>
-            <button
-              onClick={() => navigate('/')}
-              className="px-6 py-3 bg-brand-gold text-brand-navy-dark font-extrabold rounded-2xl hover:bg-brand-gold-bright transition-all shadow-lg cursor-pointer"
-            >
-              Explore Latest Updates
-            </button>
-          </div>
-        )}
+            {/* 404 Fallback for Obsolete Routes */}
+            {![
+              '/', '/latest-updates', '/trending', '/models-hub', '/model-rankings'
+            ].includes(currentPath) && (
+              <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 gap-6 pt-24">
+                <div className="font-display text-8xl font-black text-brand-gold/20">404</div>
+                <h2 className="text-2xl font-bold text-slate-200">Page Redesigned</h2>
+                <p className="text-slate-400 max-w-md text-sm">
+                  WenzdayLab has been redesigned into 4 dedicated tabs: Latest Updates, Trending, Model Hubs, and Model Rankings.
+                </p>
+                <button
+                  onClick={() => navigate('/')}
+                  className="px-6 py-3 bg-brand-gold text-brand-navy-dark font-extrabold rounded-2xl hover:bg-brand-gold-bright transition-all shadow-lg cursor-pointer"
+                >
+                  Explore Latest Updates
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Platform Footer */}

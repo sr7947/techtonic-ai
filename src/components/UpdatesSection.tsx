@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { Card3D } from './Card3D';
 import { 
   Calendar, 
   ArrowUpRight, 
@@ -295,103 +297,113 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredArticles.map((article) => {
+          {filteredArticles.map((article, idx) => {
             const relTime = getRelativeTime(article.published_at);
             const badgeStyle = getSourceBadgeColor(article.sourceName || '');
 
             return (
-              <article
+              <motion.div
                 key={article.id}
-                className="group relative flex flex-col justify-between rounded-3xl bg-brand-navy-deep/75 border border-brand-gold/20 hover:border-brand-gold/50 transition-all duration-300 overflow-hidden shadow-xl hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.5)]"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.45, delay: Math.min(idx * 0.05, 0.3) }}
+                className="h-full"
               >
-                {/* Media Image / Video Banner */}
-                {article.imageUrl && (
-                  <div className="relative w-full h-48 overflow-hidden bg-brand-navy-dark border-b border-brand-gold/10">
-                    <SafeImage
-                      src={article.imageUrl}
-                      alt={article.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    
-                    {/* Source Name Overlay Pill */}
-                    <div className="absolute top-3 left-3">
-                      <span className={`px-2.5 py-1 rounded-xl text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md border shadow-md ${badgeStyle}`}>
-                        {article.sourceName}
-                      </span>
-                    </div>
+                <Card3D depth={8} className="h-full">
+                  <article
+                    className="group relative flex flex-col justify-between h-full rounded-3xl bg-brand-navy-deep/85 border border-brand-gold/20 hover:border-brand-gold/60 transition-colors duration-300 overflow-hidden shadow-2xl"
+                  >
+                    {/* Media Image / Video Banner */}
+                    {article.imageUrl && (
+                      <div className="relative w-full h-48 overflow-hidden bg-brand-navy-dark border-b border-brand-gold/10">
+                        <SafeImage
+                          src={article.imageUrl}
+                          alt={article.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        
+                        {/* Source Name Overlay Pill */}
+                        <div className="absolute top-3 left-3" style={{ transform: 'translateZ(25px)' }}>
+                          <span className={`px-2.5 py-1 rounded-xl text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md border shadow-lg ${badgeStyle}`}>
+                            {article.sourceName}
+                          </span>
+                        </div>
 
-                    {/* Relative Time Badge */}
-                    <div className="absolute top-3 right-3 bg-brand-navy-dark/90 backdrop-blur-md px-2.5 py-1 rounded-xl border border-brand-gold/20 text-[10px] font-bold text-slate-300 flex items-center gap-1 shadow-md">
-                      <Clock className="w-3 h-3 text-brand-gold" />
-                      <span>{relTime}</span>
-                    </div>
-
-                    {/* Video indicator if available */}
-                    {article.videoUrl && (
-                      <div className="absolute bottom-3 right-3 bg-red-600/90 text-white p-1.5 rounded-lg backdrop-blur-sm shadow-md">
-                        <VideoIcon className="w-4 h-4" />
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Card Content Body */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                  
-                  <div className="space-y-3">
-                    {/* Header line if no image */}
-                    {!article.imageUrl && (
-                      <div className="flex items-center justify-between gap-2 pb-1">
-                        <span className={`px-2.5 py-1 rounded-xl text-[10px] font-extrabold uppercase tracking-wider border ${badgeStyle}`}>
-                          {article.sourceName}
-                        </span>
-                        <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
+                        {/* Relative Time Badge */}
+                        <div className="absolute top-3 right-3 bg-brand-navy-dark/90 backdrop-blur-md px-2.5 py-1 rounded-xl border border-brand-gold/20 text-[10px] font-bold text-slate-300 flex items-center gap-1 shadow-lg" style={{ transform: 'translateZ(25px)' }}>
                           <Clock className="w-3 h-3 text-brand-gold" />
-                          {relTime}
-                        </span>
+                          <span>{relTime}</span>
+                        </div>
+
+                        {/* Video indicator if available */}
+                        {article.videoUrl && (
+                          <div className="absolute bottom-3 right-3 bg-red-600/90 text-white p-1.5 rounded-lg backdrop-blur-sm shadow-md" style={{ transform: 'translateZ(25px)' }}>
+                            <VideoIcon className="w-4 h-4" />
+                          </div>
+                        )}
                       </div>
                     )}
 
-                    {/* Article Title */}
-                    <h3 className="font-display text-lg sm:text-xl font-bold text-slate-100 group-hover:text-brand-gold transition-colors leading-snug line-clamp-2">
-                      <a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="focus:outline-none"
-                      >
-                        {article.title}
-                      </a>
-                    </h3>
+                    {/* Card Content Body */}
+                    <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                      
+                      <div className="space-y-3">
+                        {/* Header line if no image */}
+                        {!article.imageUrl && (
+                          <div className="flex items-center justify-between gap-2 pb-1" style={{ transform: 'translateZ(20px)' }}>
+                            <span className={`px-2.5 py-1 rounded-xl text-[10px] font-extrabold uppercase tracking-wider border shadow-sm ${badgeStyle}`}>
+                              {article.sourceName}
+                            </span>
+                            <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-brand-gold" />
+                              {relTime}
+                            </span>
+                          </div>
+                        )}
 
-                    {/* Article Summary */}
-                    <p className="text-slate-300 text-xs sm:text-sm leading-relaxed line-clamp-3">
-                      {article.summary}
-                    </p>
-                  </div>
+                        {/* Article Title */}
+                        <h3 className="font-display text-lg sm:text-xl font-bold text-slate-100 group-hover:text-brand-gold transition-colors leading-snug line-clamp-2" style={{ transform: 'translateZ(15px)' }}>
+                          <a
+                            href={article.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="focus:outline-none"
+                          >
+                            {article.title}
+                          </a>
+                        </h3>
 
-                  {/* Card Footer: Metadata & Link */}
-                  <div className="pt-4 border-t border-brand-gold/10 flex items-center justify-between gap-2">
-                    <div className="text-[10px] text-slate-400 flex items-center gap-1 font-semibold truncate">
-                      <Calendar className="w-3 h-3 text-brand-gold shrink-0" />
-                      <span className="truncate">
-                        {article.published_at ? new Date(article.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Official Release'}
-                      </span>
+                        {/* Article Summary */}
+                        <p className="text-slate-300 text-xs sm:text-sm leading-relaxed line-clamp-3">
+                          {article.summary}
+                        </p>
+                      </div>
+
+                      {/* Card Footer: Metadata & Link */}
+                      <div className="pt-4 border-t border-brand-gold/10 flex items-center justify-between gap-2" style={{ transform: 'translateZ(20px)' }}>
+                        <div className="text-[10px] text-slate-400 flex items-center gap-1 font-semibold truncate">
+                          <Calendar className="w-3 h-3 text-brand-gold shrink-0" />
+                          <span className="truncate">
+                            {article.published_at ? new Date(article.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Official Release'}
+                          </span>
+                        </div>
+
+                        <a
+                          href={article.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs font-bold text-brand-gold hover:text-brand-gold-bright transition-colors shrink-0 group/link"
+                        >
+                          <span>Read Original</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                        </a>
+                      </div>
+
                     </div>
-
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-bold text-brand-gold hover:text-brand-gold-bright transition-colors shrink-0 group/link"
-                    >
-                      <span>Read Original</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-                    </a>
-                  </div>
-
-                </div>
-              </article>
+                  </article>
+                </Card3D>
+              </motion.div>
             );
           })}
         </div>

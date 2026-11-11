@@ -349,10 +349,12 @@ export const ModelsHub: React.FC = () => {
                 const taskLabel = getTaskLabel(model.pipeline_tag);
                 
                 return (
-                  <div
+                  <motion.div
                     key={model.id}
                     onClick={() => setActiveModel(model)}
-                    className="p-5 rounded-2xl bg-brand-navy-deep/20 hover:bg-brand-navy-light/10 border border-brand-gold/10 hover:border-brand-gold/25 transition-all duration-200 cursor-pointer flex items-center justify-between gap-4 group shadow-md"
+                    whileHover={{ scale: 1.012, x: 4 }}
+                    transition={{ duration: 0.2 }}
+                    className="p-5 rounded-2xl bg-brand-navy-deep/20 hover:bg-brand-navy-light/10 border border-brand-gold/10 hover:border-brand-gold/25 transition-colors duration-200 cursor-pointer flex items-center justify-between gap-4 group shadow-md"
                   >
                     <div className="flex items-center gap-4 min-w-0">
                       
@@ -417,7 +419,7 @@ export const ModelsHub: React.FC = () => {
                     <div className="shrink-0 flex items-center justify-end text-slate-500 group-hover:text-brand-gold transition-colors">
                       <ChevronRight className="w-5 h-5" />
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
 

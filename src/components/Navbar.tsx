@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Menu, X, Settings, LogOut, ChevronDown, Trophy, Flame, Cpu, Newspaper } from 'lucide-react';
 
 interface NavbarProps {
@@ -145,22 +146,31 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* Desktop Navigation - EXACTLY 4 TABS */}
-            <nav className="hidden md:flex items-center gap-1.5 bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/20 backdrop-blur-md shadow-xl">
+            <nav className="hidden md:flex items-center gap-1.5 bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/20 backdrop-blur-md shadow-2xl">
               {NAV_TABS.map((tab) => {
                 const active = isTabActive(tab.path);
                 return (
-                  <button
+                  <motion.button
                     key={tab.id}
                     onClick={() => navigate(tab.path)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                      active
-                        ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-[0_0_15px_rgba(189,154,118,0.35)] scale-105'
-                        : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
+                      active ? 'text-brand-navy-dark' : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
                     }`}
                   >
-                    {tab.icon}
-                    <span>{tab.label}</span>
-                  </button>
+                    {active && (
+                      <motion.div
+                        layoutId="activeTabPill"
+                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-brand-gold to-brand-gold-dark shadow-[0_0_20px_rgba(212,175,55,0.4)]"
+                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      {tab.icon}
+                      <span>{tab.label}</span>
+                    </span>
+                  </motion.button>
                 );
               })}
             </nav>

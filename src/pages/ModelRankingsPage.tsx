@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Trophy, 
   ExternalLink, 
@@ -347,25 +348,35 @@ export const ModelRankingsPage: React.FC = () => {
             <p className="text-slate-500 text-xs mt-1">Try clearing your search query or license filter.</p>
           </div>
         ) : (
-          <div className="space-y-3.5">
-            {filteredItems.map((item: RankingItem) => {
-              const isTop1 = item.rank === 1;
-              const isTop2 = item.rank === 2;
-              const isTop3 = item.rank === 3;
+          <motion.div 
+            layout
+            className="space-y-3.5"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredItems.map((item: RankingItem, idx: number) => {
+                const isTop1 = item.rank === 1;
+                const isTop2 = item.rank === 2;
+                const isTop3 = item.rank === 3;
 
-              return (
-                <div
-                  key={item.id}
-                  className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
-                    isTop1
-                      ? 'bg-gradient-to-r from-brand-gold/15 via-brand-navy-deep to-brand-navy-dark border-brand-gold/50 shadow-[0_0_25px_rgba(189,154,118,0.2)]'
-                      : isTop2
-                      ? 'bg-brand-navy-deep/90 border-slate-400/30 hover:border-slate-300 shadow-md'
-                      : isTop3
-                      ? 'bg-brand-navy-deep/80 border-amber-600/30 hover:border-amber-500 shadow-md'
-                      : 'bg-brand-navy-deep/60 border-brand-gold/15 hover:border-brand-gold/40'
-                  } p-4 sm:p-5 hover:translate-x-1`}
-                >
+                return (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.3, delay: Math.min(idx * 0.04, 0.25) }}
+                    whileHover={{ scale: 1.012, x: 4 }}
+                    className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
+                      isTop1
+                        ? 'bg-gradient-to-r from-brand-gold/15 via-brand-navy-deep to-brand-navy-dark border-brand-gold/50 shadow-[0_0_25px_rgba(189,154,118,0.2)]'
+                        : isTop2
+                        ? 'bg-brand-navy-deep/90 border-slate-400/30 hover:border-slate-300 shadow-md'
+                        : isTop3
+                        ? 'bg-brand-navy-deep/80 border-amber-600/30 hover:border-amber-500 shadow-md'
+                        : 'bg-brand-navy-deep/60 border-brand-gold/15 hover:border-brand-gold/40'
+                    } p-4 sm:p-5`}
+                  >
                   <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
                     
                     {/* Left Column: Rank + Model Title + Creator */}
@@ -500,10 +511,11 @@ export const ModelRankingsPage: React.FC = () => {
                     </div>
 
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+            </AnimatePresence>
+          </motion.div>
         )
       )}
 
