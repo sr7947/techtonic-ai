@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Settings, LogOut, ChevronDown, ArrowLeft, Compass } from 'lucide-react';
+import { Menu, X, Settings, LogOut, ChevronDown, Trophy, Flame, Cpu, Newspaper } from 'lucide-react';
 
 interface NavbarProps {
   user: { name: string; email: string; picture: string } | null;
@@ -11,12 +11,6 @@ interface NavbarProps {
   cityMode?: boolean;
   onCityModeToggle?: () => void;
 }
-
-const YoutubeIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
-    <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507A3.003 3.003 0 0 0 .503 6.163C0 8.037 0 12 0 12s0 3.963.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.387.507 9.387.507s7.517 0 9.387-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.963 24 12 24 12s0-3.963-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-  </svg>
-);
 
 const GoogleIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -33,36 +27,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSignOut,
   onOpenAdmin,
   currentPath = '/',
-  navigate = (path) => { window.location.pathname = path; },
-  cityMode = false,
-  onCityModeToggle
+  navigate = (path) => { window.location.pathname = path; }
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showCustomForm, setShowCustomForm] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Custom User Creation states
-  const [customEmail, setCustomEmail] = useState('');
-  const [customName, setCustomName] = useState('');
-
-  // Accounts list parsed directly from the user's Google accounts screenshot!
   const googleAccounts = [
     {
       name: "Kumar Shanu",
       email: "sr7947@gmail.com",
-      avatarBg: "bg-[#7c4dff]",
-      initial: "K",
       picture: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
     },
     {
       name: "Sharat Chandra Singh",
       email: "scsingh0912@gmail.com",
-      avatarBg: "bg-[#e65100]",
-      initial: "S",
       picture: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80"
     }
   ];
@@ -78,30 +59,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => window.removeEventListener('click', handleOutsideClick);
   }, []);
 
-  // Handle active scroll sections
+  // Handle scroll styling
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-
-      const sections = ['updates', 'models', 'leaders', 'learning', 'videos', 'trending', 'subscribe'];
-      const scrollPosition = window.scrollY + 100;
-
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
-      if (window.scrollY < 200) {
-        setActiveSection('home');
-      }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -115,188 +77,112 @@ export const Navbar: React.FC<NavbarProps> = ({
     setShowLoginModal(false);
   };
 
-  const handleCustomSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!customEmail) return;
-
-    let displayName = customName.trim();
-    if (!displayName) {
-      const prefix = customEmail.split('@')[0];
-      displayName = prefix.split(/[._-]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  // Exactly 4 Navigation Tabs
+  const NAV_TABS = [
+    {
+      id: 'latest-updates',
+      label: 'Latest Updates',
+      path: '/',
+      icon: <Newspaper className="w-4 h-4" />
+    },
+    {
+      id: 'trending',
+      label: 'Trending',
+      path: '/trending',
+      icon: <Flame className="w-4 h-4 text-orange-400" />
+    },
+    {
+      id: 'models-hub',
+      label: 'Model Hubs',
+      path: '/models-hub',
+      icon: <Cpu className="w-4 h-4 text-brand-gold" />
+    },
+    {
+      id: 'model-rankings',
+      label: 'Model Rankings',
+      path: '/model-rankings',
+      icon: <Trophy className="w-4 h-4 text-amber-300" />
     }
+  ];
 
-    onSignIn({
-      name: displayName,
-      email: customEmail.trim(),
-      picture: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'
-    });
-    setCustomEmail('');
-    setCustomName('');
-    setShowCustomForm(false);
-    setShowLoginModal(false);
+  const isTabActive = (tabPath: string) => {
+    if (tabPath === '/') {
+      return currentPath === '/' || currentPath === '/latest-updates';
+    }
+    return currentPath === tabPath;
   };
-
-
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-brand-navy-dark/80 backdrop-blur-md border-b border-brand-gold/10 py-3 shadow-lg' 
-          : 'bg-transparent py-5'
-      }`}>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled 
+            ? 'bg-brand-navy-dark/95 backdrop-blur-xl border-b border-brand-gold/20 py-3 shadow-2xl' 
+            : 'bg-transparent py-4'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between">
             
-            {/* Logo & Brand */}
-            <a href="#" className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-brand-gold/50 rounded-lg p-1">
+            {/* Brand Logo & Title */}
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-3 group focus:outline-none rounded-xl p-1 text-left cursor-pointer"
+            >
               <img 
                 src="/logo.png" 
                 alt="TechTonic AI Logo" 
-                className="w-10 h-10 object-contain rounded-md border border-brand-gold/20 group-hover:border-brand-gold/50 transition-colors"
+                className="w-10 h-10 object-contain rounded-xl border border-brand-gold/30 shadow-md group-hover:scale-105 transition-transform"
               />
               <div className="flex flex-col">
-                <span className="font-display text-lg md:text-xl font-bold tracking-widest text-brand-gold group-hover:text-brand-gold-bright transition-colors">
-                  TECHTONIC AI
+                <span className="font-display text-lg sm:text-xl font-extrabold tracking-wider text-slate-100 group-hover:text-brand-gold transition-colors">
+                  TECHTONIC <span className="gold-gradient-text">AI</span>
                 </span>
-                <span className="text-[9px] uppercase tracking-[0.25em] text-slate-400 group-hover:text-brand-gold/80 transition-colors">
-                  Let's Explore Future Together
+                <span className="text-[9px] uppercase tracking-[0.25em] text-slate-400 font-semibold group-hover:text-brand-gold/80 transition-colors">
+                  Frontier Intelligence
                 </span>
               </div>
-            </a>
+            </button>
 
-            {/* Desktop Navigation */}
-            <div className="hidden xl:flex items-center gap-3 xl:gap-4.5">
-              
-              {/* Home-scroll Sections */}
-              {[
-                { id: 'updates', label: 'Latest Updates' },
-                { id: 'leaders', label: 'AI Leaders' },
-                { id: 'learning', label: 'AI Developers' },
-                { id: 'videos', label: 'Videos' }
-              ].map((sect) => (
-                <button
-                  key={sect.id}
-                  onClick={() => {
-                    if (currentPath === '/') {
-                      document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                      navigate('/');
-                      setTimeout(() => {
-                        document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
-                      }, 200);
-                    }
-                  }}
-                  className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
-                    currentPath === '/' && activeSection === sect.id ? 'text-brand-gold-bright' : 'text-slate-300'
-                  }`}
-                >
-                  {sect.label}
-                </button>
-              ))}
-
-              {/* Dedicated Subpages */}
-              <button
-                onClick={() => navigate('/models-hub')}
-                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
-                  currentPath === '/models-hub' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
-                }`}
-              >
-                Models Hub
-              </button>
-
-              <button
-                onClick={() => navigate('/trending')}
-                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
-                  currentPath === '/trending' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
-                }`}
-              >
-                Trending
-              </button>
-
-              <button
-                onClick={() => navigate('/learning')}
-                className={`text-xs font-semibold uppercase tracking-wider transition-all duration-300 relative py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
-                  currentPath === '/learning' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
-                }`}
-              >
-                AI Learning
-              </button>
-
-              {/* Tech Stack Dropdown */}
-              <div className="relative group">
-                <button 
-                  onClick={() => navigate('/tech-stack')}
-                  className={`flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-all py-1 focus:outline-none hover:text-brand-gold cursor-pointer whitespace-nowrap ${
-                    currentPath === '/tech-stack' ? 'text-brand-gold-bright font-bold' : 'text-slate-300'
-                  }`}
-                >
-                  Tech Stack
-                  <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
-                </button>
-                <div className="absolute left-0 mt-2 w-64 rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            {/* Desktop Navigation - EXACTLY 4 TABS */}
+            <nav className="hidden md:flex items-center gap-1.5 bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/20 backdrop-blur-md shadow-xl">
+              {NAV_TABS.map((tab) => {
+                const active = isTabActive(tab.path);
+                return (
                   <button
-                    onClick={() => navigate('/tech-stack')}
-                    className="w-full text-left px-4 py-2 text-xs font-bold rounded-xl text-brand-gold-bright hover:bg-brand-gold/10 transition-all duration-200 cursor-pointer border-b border-brand-gold/10 pb-2 mb-1.5"
+                    key={tab.id}
+                    onClick={() => navigate(tab.path)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                      active
+                        ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-[0_0_15px_rgba(189,154,118,0.35)] scale-105'
+                        : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
+                    }`}
                   >
-                    Full Stack Overview
+                    {tab.icon}
+                    <span>{tab.label}</span>
                   </button>
-                  {[
-                    { id: 'interface', name: 'Interface Layer' },
-                    { id: 'orchestration', name: 'Orchestration Layer' },
-                    { id: 'models', name: 'Foundation Models' },
-                    { id: 'data-memory', name: 'Data & Memory' },
-                    { id: 'ingestion-tools', name: 'Ingestion & Tools' },
-                    { id: 'open-llm-access', name: 'Open LLM Access' },
-                    { id: 'evaluation-safety', name: 'Evaluation & Safety' },
-                    { id: 'infrastructure', name: 'Infrastructure Layer' }
-                  ].map((layer) => (
-                    <button
-                      key={layer.id}
-                      onClick={() => navigate(`/tech-stack?layer=${layer.id}`)}
-                      className="w-full text-left px-4 py-2 text-xs font-semibold rounded-xl text-slate-300 hover:text-brand-navy-dark hover:bg-brand-gold transition-all duration-200 cursor-pointer"
-                    >
-                      {layer.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                );
+              })}
+            </nav>
 
-              {/* Technologies Dropdown */}
-              <div className="relative group">
-                <button className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-300 hover:text-brand-gold transition-all py-1 focus:outline-none cursor-pointer whitespace-nowrap">
-                  Technologies
-                  <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
-                </button>
-                <div className="absolute left-0 mt-2 w-52 rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  {[
-                    { name: 'Developer Studio', path: '/technologies/developer-studio' },
-                    { name: 'MCP (Model Context)', path: '/technologies/mcp' },
-                    { name: 'Skills & Tools', path: '/technologies/skills' },
-                    { name: 'Agent Frameworks', path: '/technologies/frameworks' },
-                    { name: 'AI Infrastructure', path: '/technologies/infrastructure' },
-                  ].map((tech) => (
-                    <button
-                      key={tech.name}
-                      onClick={() => navigate(tech.path)}
-                      className="w-full text-left px-4 py-2.5 text-xs font-semibold rounded-xl text-slate-300 hover:text-brand-navy-dark hover:bg-brand-gold transition-all duration-200 cursor-pointer"
-                    >
-                      {tech.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {/* Right Side Actions: Admin & User Auth */}
+            <div className="hidden sm:flex items-center gap-3">
+              
+              {/* Quick Admin Access Button */}
+              <button
+                onClick={onOpenAdmin}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-navy-deep/80 hover:bg-brand-navy-light/60 border border-brand-gold/20 text-brand-gold-bright text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-md"
+                title="Admin Content & Database Panel"
+              >
+                <Settings className="w-3.5 h-3.5 text-brand-gold" />
+                <span>Admin</span>
+              </button>
 
-              <div className="h-5 w-[1px] bg-brand-gold/20 mx-2" />
-
-              {/* Authentication Actions */}
+              {/* User Authentication */}
               {!user ? (
                 <button
-                  onClick={() => {
-                    setShowCustomForm(false);
-                    setShowLoginModal(true);
-                  }}
-                  className="flex items-center gap-1.5 bg-brand-gold/10 hover:bg-brand-gold/25 text-brand-gold-bright border border-brand-gold/20 hover:border-brand-gold/50 px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wider transition-all duration-300 active:scale-95 cursor-pointer"
+                  onClick={() => setShowLoginModal(true)}
+                  className="flex items-center gap-1.5 bg-brand-gold/15 hover:bg-brand-gold/30 text-brand-gold-bright border border-brand-gold/30 hover:border-brand-gold/60 px-4 py-1.5 rounded-xl text-xs font-bold tracking-wider transition-all duration-200 active:scale-95 cursor-pointer shadow-md"
                 >
                   <GoogleIcon className="w-3.5 h-3.5" />
                   Sign In
@@ -308,12 +194,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                       e.stopPropagation();
                       setShowDropdown(!showDropdown);
                     }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-navy-light/25 hover:bg-brand-navy-light/45 border border-brand-gold/20 transition-all text-slate-200 text-xs font-medium select-none"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-navy-deep/90 hover:bg-brand-navy-light/60 border border-brand-gold/30 transition-all text-slate-200 text-xs font-semibold shadow-md cursor-pointer"
                   >
                     <img
                       src={user.picture}
                       alt={user.name}
-                      className="w-6 h-6 rounded-full object-cover border border-brand-gold/30"
+                      className="w-6 h-6 rounded-full object-cover border border-brand-gold/40"
                     />
                     <span className="max-w-[100px] truncate">{user.name}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
@@ -321,12 +207,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {/* Dropdown Menu */}
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-2xl glass-panel border border-brand-gold/20 bg-brand-navy-deep p-2.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-3 duration-250">
-                      <div className="px-3.5 py-2.5 border-b border-brand-gold/10 mb-2">
-                        <div className="font-display text-slate-200 text-xs font-bold truncate uppercase tracking-wide">
+                    <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-brand-gold/30 bg-brand-navy-deep p-2.5 shadow-2xl z-50 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="px-3 py-2 border-b border-brand-gold/15 mb-2">
+                        <div className="font-display text-slate-100 text-xs font-bold truncate">
                           {user.name}
                         </div>
-                        <div className="text-[10px] text-slate-500 truncate mt-0.5">
+                        <div className="text-[10px] text-slate-400 truncate mt-0.5">
                           {user.email}
                         </div>
                       </div>
@@ -336,7 +222,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setShowDropdown(false);
                           onOpenAdmin();
                         }}
-                        className="flex items-center gap-2.5 w-full text-left px-3.5 py-2 rounded-xl text-xs font-semibold text-brand-gold-bright hover:bg-brand-gold/10 hover:text-brand-gold transition-colors"
+                        className="flex items-center gap-2.5 w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-brand-gold-bright hover:bg-brand-gold/15 transition-colors cursor-pointer"
                       >
                         <Settings className="w-4 h-4 text-brand-gold" />
                         Admin Dashboard
@@ -347,7 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setShowDropdown(false);
                           onSignOut();
                         }}
-                        className="flex items-center gap-2.5 w-full text-left px-3.5 py-2 mt-1 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                        className="flex items-center gap-2.5 w-full text-left px-3 py-2 mt-1 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-500/15 transition-colors cursor-pointer"
                       >
                         <LogOut className="w-4 h-4" />
                         Sign Out
@@ -356,399 +242,122 @@ export const Navbar: React.FC<NavbarProps> = ({
                   )}
                 </div>
               )}
-
-              <button
-                onClick={onCityModeToggle}
-                className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 focus:outline-none active:scale-95 border cursor-pointer ${
-                  cityMode
-                    ? 'bg-brand-gold/25 text-brand-gold-bright border-brand-gold/40 shadow-[0_0_10px_rgba(189,154,118,0.1)]'
-                    : 'bg-brand-navy-light/45 text-slate-300 border-brand-gold/10 hover:border-brand-gold/30 hover:bg-brand-navy-light/70'
-                }`}
-              >
-                <Compass className="w-4 h-4 text-brand-gold" />
-                {cityMode ? '2D View' : '3D City'}
-                {!cityMode && (
-                  <span className="absolute -top-1.5 -right-1.5 px-1 py-0.5 text-[8px] font-bold bg-brand-gold text-brand-navy-dark rounded-full uppercase tracking-wide leading-none">
-                    NEW
-                  </span>
-                )}
-              </button>
-
-              <a
-                href="https://youtube.com/@techtonicai7947"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-red-600/10 hover:bg-red-600/25 text-red-500 border border-red-500/20 hover:border-red-500/50 px-4 py-2 rounded-xl text-sm font-semibold tracking-wider transition-all duration-300 focus:outline-none active:scale-95"
-              >
-                <YoutubeIcon className="w-4 h-4 fill-red-500" />
-                Subscribe
-              </a>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="flex xl:hidden">
+            {/* Mobile Hamburger Toggle */}
+            <div className="flex md:hidden items-center gap-2">
+              <button
+                onClick={onOpenAdmin}
+                className="p-2 rounded-xl bg-brand-navy-deep border border-brand-gold/20 text-brand-gold"
+                title="Admin"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-lg text-slate-300 hover:text-brand-gold hover:bg-brand-navy-light/35 focus:outline-none focus:ring-2 focus:ring-brand-gold/50"
+                className="p-2 rounded-xl bg-brand-navy-deep border border-brand-gold/20 text-slate-200 hover:text-brand-gold"
               >
-                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
 
           </div>
         </div>
 
-        {/* Mobile Drawer Menu */}
-        <div className={`xl:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-        }`}>
-          <div className="px-2 pt-2 pb-4 space-y-1.5 bg-brand-navy-dark/95 border-b border-brand-gold/10 shadow-2xl backdrop-blur-lg">
-            {/* Home scroll sections */}
-            {[
-              { id: 'updates', label: 'Latest Updates' },
-              { id: 'leaders', label: 'AI Leaders' },
-              { id: 'learning', label: 'AI Developers' },
-              { id: 'videos', label: 'Videos' }
-            ].map((sect) => (
-              <button
-                key={sect.id}
-                onClick={() => {
-                  setIsOpen(false);
-                  if (currentPath === '/') {
-                    document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
-                  } else {
-                    navigate('/');
-                    setTimeout(() => {
-                      document.getElementById(sect.id)?.scrollIntoView({ behavior: 'smooth' });
-                    }, 200);
-                  }
-                }}
-                className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
-              >
-                {sect.label}
-              </button>
-            ))}
+        {/* Mobile Navigation Drawer */}
+        {isOpen && (
+          <div className="md:hidden bg-brand-navy-dark/95 border-b border-brand-gold/20 p-4 backdrop-blur-2xl animate-in slide-in-from-top duration-250">
+            <div className="flex flex-col gap-2">
+              {NAV_TABS.map((tab) => {
+                const active = isTabActive(tab.path);
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setIsOpen(false);
+                      navigate(tab.path);
+                    }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all text-left ${
+                      active
+                        ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-md'
+                        : 'text-slate-200 hover:bg-brand-navy-light/40'
+                    }`}
+                  >
+                    {tab.icon}
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
 
-            {/* Dedicated subpages */}
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                navigate('/models-hub');
-              }}
-              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
-            >
-              Models Hub
-            </button>
-
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                navigate('/trending');
-              }}
-              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
-            >
-              Trending
-            </button>
-
-             <button
-              onClick={() => {
-                setIsOpen(false);
-                navigate('/learning');
-              }}
-              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
-            >
-              AI Learning
-            </button>
-
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                navigate('/tech-stack');
-              }}
-              className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:bg-brand-navy-light/20 hover:text-brand-gold cursor-pointer"
-            >
-              Tech Stack
-            </button>
-
-            {/* Technologies Accordion */}
-            <div className="border-t border-brand-gold/10 pt-2 mt-2">
-              <span className="block px-4 py-1 text-[10px] uppercase font-bold text-slate-500 tracking-widest">
-                Technologies Hub
-              </span>
-              {[
-                { name: 'Developer Studio', path: '/technologies/developer-studio' },
-                { name: 'MCP (Model Context)', path: '/technologies/mcp' },
-                { name: 'Skills & Tools', path: '/technologies/skills' },
-                { name: 'Agent Frameworks', path: '/technologies/frameworks' },
-                { name: 'AI Infrastructure', path: '/technologies/infrastructure' },
-              ].map((tech) => (
-                <button
-                  key={tech.name}
-                  onClick={() => {
-                    setIsOpen(false);
-                    navigate(tech.path);
-                  }}
-                  className="w-full text-left block px-6 py-2 text-sm font-medium text-slate-400 hover:text-brand-gold cursor-pointer"
-                >
-                  - {tech.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Tech Stack Mobile Accordion */}
-            <div className="border-t border-brand-gold/10 pt-2 mt-2">
-              <span className="block px-4 py-1 text-[10px] uppercase font-bold text-slate-500 tracking-widest">
-                AI Tech Stack
-              </span>
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  navigate('/tech-stack');
-                }}
-                className="w-full text-left block px-6 py-2 text-sm font-medium text-slate-400 hover:text-brand-gold cursor-pointer"
-              >
-                - Full Stack Overview
-              </button>
-              {[
-                { name: 'Interface Layer', id: 'interface' },
-                { name: 'Orchestration Layer', id: 'orchestration' },
-                { name: 'Foundation Models', id: 'models' },
-                { name: 'Data & Memory', id: 'data-memory' },
-                { name: 'Ingestion & Tools', id: 'ingestion-tools' },
-                { name: 'Open LLM Access', id: 'open-llm-access' },
-                { name: 'Evaluation & Safety', id: 'evaluation-safety' },
-                { name: 'Infrastructure Layer', id: 'infrastructure' }
-              ].map((layer) => (
-                <button
-                  key={layer.id}
-                  onClick={() => {
-                    setIsOpen(false);
-                    navigate(`/tech-stack?layer=${layer.id}`);
-                  }}
-                  className="w-full text-left block px-6 py-2 text-sm font-medium text-slate-400 hover:text-brand-gold cursor-pointer"
-                >
-                  - {layer.name}
-                </button>
-              ))}
-            </div>
-
-            <div className="border-t border-brand-gold/10 pt-4 mt-2 px-4 space-y-3">
-              {user ? (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2.5 py-1">
-                    <img
-                      src={user.picture}
-                      alt={user.name}
-                      className="w-8 h-8 rounded-full border border-brand-gold/30"
-                    />
-                    <div className="text-left">
-                      <div className="text-sm font-bold text-slate-200">{user.name}</div>
-                      <div className="text-[10px] text-slate-500">{user.email}</div>
+              <div className="pt-2 border-t border-brand-gold/15 mt-2 flex items-center justify-between">
+                {!user ? (
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      setShowLoginModal(true);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-brand-gold text-brand-navy-dark font-bold text-xs uppercase"
+                  >
+                    <GoogleIcon className="w-4 h-4" />
+                    Sign In with Google
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-2">
+                      <img src={user.picture} alt={user.name} className="w-7 h-7 rounded-full border border-brand-gold/30" />
+                      <span className="text-xs font-bold text-slate-200 truncate max-w-[150px]">{user.name}</span>
                     </div>
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        onSignOut();
+                      }}
+                      className="text-xs text-red-400 font-bold px-3 py-1.5 rounded-xl bg-red-500/10"
+                    >
+                      Sign Out
+                    </button>
                   </div>
-
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      onOpenAdmin();
-                    }}
-                    className="flex items-center justify-center gap-2 w-full bg-brand-gold/10 hover:bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/25 py-2.5 rounded-lg text-sm font-semibold tracking-wider transition-colors"
-                  >
-                    <Settings className="w-4 h-4 text-brand-gold" />
-                    Admin Control Center
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      onSignOut();
-                    }}
-                    className="flex items-center justify-center gap-2 w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 py-2.5 rounded-lg text-sm font-semibold tracking-wider transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out Account
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    setShowCustomForm(false);
-                    setShowLoginModal(true);
-                  }}
-                  className="flex items-center justify-center gap-2 w-full bg-brand-gold/10 hover:bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/25 py-2.5 rounded-lg text-sm font-semibold tracking-wider transition-colors"
-                >
-                  <GoogleIcon className="w-4 h-4" />
-                  Sign In Options
-                </button>
-              )}
-
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  if (onCityModeToggle) onCityModeToggle();
-                }}
-                className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg text-base font-semibold tracking-wider transition-all border cursor-pointer ${
-                  cityMode
-                    ? 'bg-brand-gold/25 text-brand-gold-bright border-brand-gold/40'
-                    : 'bg-brand-navy-light/45 text-slate-300 border-brand-gold/10 hover:bg-brand-navy-light/70'
-                }`}
-              >
-                <Compass className="w-5 h-5 text-brand-gold" />
-                {cityMode ? 'Standard Mode' : 'AI City Mode'}
-              </button>
-
-              <a
-                href="https://youtube.com/@techtonicai7947"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center justify-center gap-2 w-full bg-red-600/15 hover:bg-red-600/25 text-red-500 border border-red-500/30 py-3 rounded-lg text-base font-semibold tracking-wider transition-all"
-              >
-                <YoutubeIcon className="w-5 h-5 fill-red-500" />
-                Subscribe to Channel
-              </a>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        )}
+      </header>
 
-      {/* Google "Choose an Account" Replicating Modal */}
+      {/* Google Sign In Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-          
-          <div className="w-full max-w-[840px] bg-[#1f1f1f] border border-zinc-700/60 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[460px] text-zinc-300 relative select-none">
-            
-            {/* Top Close Button */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-brand-navy-deep border border-brand-gold/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative space-y-6">
             <button
               onClick={() => setShowLoginModal(false)}
-              className="absolute right-5 top-5 p-1.5 rounded-xl bg-zinc-800/50 hover:bg-zinc-700/80 text-zinc-400 hover:text-white transition-all cursor-pointer z-10 border border-zinc-700/20"
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-200 p-1 rounded-xl"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
 
-            {/* Left Side: Brand Logo and Title */}
-            <div className="md:w-1/2 p-8 sm:p-12 flex flex-col justify-between border-b md:border-b-0 md:border-r border-zinc-700/40 bg-[#171717]">
-              
-              {/* Google Sign in with logo header */}
-              <div className="flex items-center gap-3">
-                <GoogleIcon className="w-5 h-5" />
-                <span className="text-sm font-medium text-zinc-100 tracking-wide">Sign in with Google</span>
-              </div>
-
-              {/* Channel logo and title */}
-              <div className="my-10 space-y-4">
-                <img
-                  src="/logo.png"
-                  alt="TechTonic AI Logo"
-                  className="w-14 h-14 object-contain rounded-xl border border-brand-gold/30 bg-[#232E4C] p-2"
-                />
-                <h3 className="text-2xl sm:text-3xl font-normal text-zinc-100 leading-tight">
-                  Choose an account
-                </h3>
-                <p className="text-zinc-400 text-sm">
-                  to continue to <span className="text-brand-gold-bright font-semibold">TechTonic AI</span>
-                </p>
-              </div>
-
-              {/* Bottom text */}
-              <div className="text-[11px] text-zinc-500 leading-relaxed">
-                Before using this app, you can review TechTonic AI's <a href="#" className="text-blue-400 hover:underline">Privacy Policy</a> and <a href="#" className="text-blue-400 hover:underline">Terms of Service</a>.
-              </div>
-
+            <div className="text-center space-y-2">
+              <img src="/logo.png" alt="TechTonic AI" className="w-12 h-12 mx-auto rounded-xl border border-brand-gold/30" />
+              <h3 className="font-display text-xl font-bold text-slate-100">Sign in to TechTonic AI</h3>
+              <p className="text-xs text-slate-400">Choose your account to access curated news and admin publishing.</p>
             </div>
 
-            {/* Right Side: Accounts List or Custom Form */}
-            <div className="md:w-1/2 p-8 sm:p-12 flex flex-col justify-center bg-[#1e1e1e]">
-              
-              {!showCustomForm ? (
-                <div className="space-y-4 w-full">
-                  
-                  {/* Google Accounts parsed from user's screen */}
-                  <div className="divide-y divide-zinc-700/45 border-b border-zinc-700/45">
-                    {googleAccounts.map((account) => (
-                      <button
-                        key={account.email}
-                        onClick={() => handleAccountSelect(account)}
-                        className="flex items-center gap-4 w-full text-left py-3.5 px-2 hover:bg-zinc-800/45 transition-colors duration-200 cursor-pointer rounded-xl"
-                      >
-                        {/* Circular Initials Avatar */}
-                        <div className={`w-9 h-9 rounded-full ${account.avatarBg} text-white font-bold flex items-center justify-center text-sm shadow-md`}>
-                          {account.initial}
-                        </div>
-                        <div className="flex-grow min-w-0">
-                          <div className="text-sm font-semibold text-zinc-100 truncate">{account.name}</div>
-                          <div className="text-xs text-zinc-400 truncate mt-0.5">{account.email}</div>
-                        </div>
-                      </button>
-                    ))}
+            <div className="space-y-3">
+              {googleAccounts.map((account) => (
+                <button
+                  key={account.email}
+                  onClick={() => handleAccountSelect(account)}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-brand-navy-dark/90 hover:bg-brand-navy-light/60 border border-brand-gold/20 hover:border-brand-gold/40 transition-all text-left group"
+                >
+                  <img src={account.picture} alt={account.name} className="w-9 h-9 rounded-full object-cover border border-brand-gold/30" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-bold text-slate-200 group-hover:text-brand-gold truncate">{account.name}</div>
+                    <div className="text-[11px] text-slate-400 truncate">{account.email}</div>
                   </div>
-
-                  {/* Option: Use another account */}
-                  <button
-                    onClick={() => setShowCustomForm(true)}
-                    className="flex items-center gap-4 w-full text-left py-3.5 px-2 hover:bg-zinc-800/45 transition-colors duration-200 cursor-pointer rounded-xl"
-                  >
-                    <div className="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700/50 flex items-center justify-center text-zinc-400">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                      </svg>
-                    </div>
-                    <div className="text-sm font-semibold text-zinc-200">
-                      Use another account
-                    </div>
-                  </button>
-
-                </div>
-              ) : (
-                /* Custom Email Form */
-                <form onSubmit={handleCustomSubmit} className="space-y-5 w-full">
-                  <button
-                    type="button"
-                    onClick={() => setShowCustomForm(false)}
-                    className="inline-flex items-center gap-1.5 text-xs text-brand-gold-bright hover:text-brand-gold font-semibold transition-colors cursor-pointer mb-2"
-                  >
-                    <ArrowLeft className="w-4.5 h-4.5" />
-                    Back to Accounts list
-                  </button>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-brand-gold">Gmail Address *</label>
-                    <input
-                      type="email"
-                      required
-                      value={customEmail}
-                      onChange={(e) => setCustomEmail(e.target.value)}
-                      placeholder="e.g. yourname@gmail.com"
-                      className="w-full px-4.5 py-2.5 bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl focus:border-brand-gold focus:outline-none text-sm font-medium"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-brand-gold">Display Name (Optional)</label>
-                    <input
-                      type="text"
-                      value={customName}
-                      onChange={(e) => setCustomName(e.target.value)}
-                      placeholder="e.g. Kumar Shanu"
-                      className="w-full px-4.5 py-2.5 bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl focus:border-brand-gold focus:outline-none text-sm font-medium"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold-bright text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest transition-all cursor-pointer"
-                  >
-                    <GoogleIcon className="w-4 h-4 fill-brand-navy-dark" />
-                    SIGN IN INSTANTLY
-                  </button>
-                </form>
-              )}
-
+                  <GoogleIcon className="w-4 h-4 shrink-0" />
+                </button>
+              ))}
             </div>
-
           </div>
-          
         </div>
       )}
     </>

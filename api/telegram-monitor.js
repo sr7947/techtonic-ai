@@ -9,7 +9,9 @@ const parser = new Parser({
   customFields: {
     item: [
       ['content:encoded', 'contentEncoded'],
-      ['dc:creator', 'creator']
+      ['dc:creator', 'creator'],
+      ['media:content', 'mediaContent'],
+      ['enclosure', 'enclosure']
     ]
   }
 });
@@ -31,20 +33,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Fetch all active sources dynamically from Supabase (exactly like sync-news does)
+    // 1. Fetch active sources from Supabase
     const { data: sources, error: sourceErr } = await supabase
       .from('ai_sources')
       .select('*');
 
-    if (sourceErr || !sources) {
-      throw new Error(`Failed to load sources from Supabase: ${sourceErr?.message || 'Empty'}`);
+    if (sourceErr || !sources || sources.length === 0) {
+      throw new Error(`Failed to load sources from Supabase: ${sourceErr?.message || 'Empty sources list'}`);
     }
 
     const alertsSent = [];
 
     // 2. Loop through each live source
     for (const source of sources) {
-      console.log(`Checking RSS feed: ${source.name} at ${source.feed_url}`);
       let feed;
       try {
         feed = await parser.parseURL(source.feed_url);
@@ -53,7 +54,7 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // Check the latest 3 items
+      // Check the latest 3 items from this official source
       for (const item of feed.items.slice(0, 3)) {
         const articleUrl = item.link || item.guid || '';
         if (!articleUrl) continue;
@@ -73,31 +74,48 @@ export default async function handler(req, res) {
           .maybeSingle();
 
         if (!exists && !pendingExists) {
-          console.log(`Staging new article: "${item.title}"`);
+          console.log(`Staging new official article: "${item.title}"`);
           
+          let mediaImageUrl = null;
+          if (item.enclosure?.url && item.enclosure.type?.includes('image')) {
+            mediaImageUrl = item.enclosure.url;
+          } else if (item.mediaContent?.$?.url) {
+            mediaImageUrl = item.mediaContent.$.url;
+          } else {
+            const rawSummary = item.contentSnippet || item.summary || item.contentEncoded || '';
+            const imgMatch = rawSummary.match(/<img[^>]+src=["']([^"']+)["']/i);
+            if (imgMatch && imgMatch[1]) {
+              mediaImageUrl = imgMatch[1];
+            }
+          }
+
+          if (!mediaImageUrl) {
+            mediaImageUrl = generateThemedImageUrl(item.title);
+          }
+
           // Stage in pending_articles table
           const { data: saved, error: stageErr } = await supabase
             .from('pending_articles')
             .insert([{
               title: item.title || 'Untitled Article',
-              summary: item.contentSnippet || item.summary || 'No summary available.',
+              summary: item.contentSnippet || item.summary || 'Official announcement and release notes.',
               article_url: articleUrl,
               source_name: source.name,
-              image_url: generateThemedImageUrl(item.title),
-              published_at: item.pubDate || new Date().toISOString()
+              image_url: mediaImageUrl,
+              published_at: item.pubDate || item.isoDate || new Date().toISOString()
             }])
             .select()
             .single();
 
-          if (stageErr) {
-            console.error("Failed to stage pending article:", stageErr.message);
+          if (stageErr || !saved) {
+            console.error("Failed to stage pending article:", stageErr?.message);
             continue;
           }
 
-          // Format interactive buttons markup
+          // Format interactive buttons markup (Accept, Go Live, Reject)
           const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
-          const text = `🔔 *New AI Update Found!*\n\n*Source*: ${source.name}\n*Title*: ${item.title || 'Untitled'}\n\nIngest this article to your live database?`;
-          
+          const text = `🔔 *New Official AI Update Found!*\n\n*Source*: ${source.name}\n*Title*: ${item.title || 'Untitled'}\n\n*Link*: ${articleUrl}\n\nApprove or reject this news for TechTonic AI?`;
+
           const payload = {
             chat_id: chatId,
             text,
@@ -107,23 +125,26 @@ export default async function handler(req, res) {
                 [
                   { text: '✅ Accept & Save to DB', callback_data: `accept_${saved.id}` },
                   { text: '🚀 Go Live (Deploy)', callback_data: `deploy_${saved.id}` }
+                ],
+                [
+                  { text: '❌ Reject', callback_data: `reject_${saved.id}` }
                 ]
               ]
             }
           };
 
-          // Send notification payload
-          const response = await fetch(telegramUrl, {
+          const teleRes = await fetch(telegramUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
 
-          if (!response.ok) {
-            const errBody = await response.text();
-            console.error(`Telegram sendMessage failed: ${response.status}`, errBody);
-          } else {
-            alertsSent.push(item.title);
+          if (teleRes.ok) {
+            alertsSent.push({
+              source: source.name,
+              title: item.title,
+              url: articleUrl
+            });
           }
         }
       }
@@ -131,11 +152,12 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      alertsSent
+      alertsCount: alertsSent.length,
+      alerts: alertsSent
     });
 
-  } catch (error) {
-    console.error("Monitor handler crash:", error);
-    return res.status(500).json({ error: error.message });
+  } catch (err) {
+    console.error("Telegram Monitor error:", err);
+    return res.status(500).json({ error: err.message });
   }
 }

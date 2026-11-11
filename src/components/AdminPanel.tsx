@@ -1,66 +1,48 @@
 import React, { useState } from 'react';
-import { X, Plus, Copy, Check, Info } from 'lucide-react';
+import { X, Copy, Check, Trash2, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AdminPanelProps {
   onClose: () => void;
   onAddUpdate: (update: any) => void;
-  onAddResource: (resource: any) => void;
-  onAddVideo: (video: any) => void;
+  onAddResource?: (resource: any) => void;
+  onAddVideo?: (video: any) => void;
   currentUpdates: any[];
-  currentResources: any[];
-  currentVideos: any[];
+  currentResources?: any[];
+  currentVideos?: any[];
 }
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({
   onClose,
-  onAddUpdate,
-  onAddResource,
-  onAddVideo,
-  currentUpdates,
-  currentResources,
-  currentVideos,
+  onAddUpdate
 }) => {
-  const [activeForm, setActiveForm] = useState<'update' | 'resource' | 'video' | 'tweet'>('update');
+  const [activeForm, setActiveForm] = useState<'update' | 'tweet' | 'db-reset'>('update');
   const [copied, setCopied] = useState(false);
 
-  // Supabase states
+  // Supabase operation states
   const [publishing, setPublishing] = useState(false);
   const [publishStatus, setPublishStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Reset DB states
+  const [resetting, setResetting] = useState(false);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
 
   const isSupabaseConfigured = !!(
     import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
   );
 
-  // Form states - Update
+  // Form states - Update (Latest Updates)
   const [upTitle, setUpTitle] = useState('');
-  const [upCategory, setUpCategory] = useState('Models');
-  const [upSource, setUpSource] = useState('');
+  const [upCategory, setUpCategory] = useState('AI Labs');
+  const [upSource, setUpSource] = useState('Admin Editorial');
   const [upSummary, setUpSummary] = useState('');
   const [upUrl, setUpUrl] = useState('');
-  const [upTag, setUpTag] = useState('');
-  const [upCompany, setUpCompany] = useState('openai');
+  const [upImageUrl, setUpImageUrl] = useState('');
 
-  // Form states - Resource
-  const [resCompany, setResCompany] = useState('');
-  const [resTool, setResTool] = useState('');
-  const [resDesc, setResDesc] = useState('');
-  const [resUseCase, setResUseCase] = useState('');
-  const [resCategory, setResCategory] = useState('API & Integration');
-  const [resDocs, setResDocs] = useState('');
-  const [resLearn, setResLearn] = useState('');
-
-  // Form states - Video
-  const [vidTitle, setVidTitle] = useState('');
-  const [vidDuration, setVidDuration] = useState('');
-  const [vidCategory, setVidCategory] = useState('Agentic AI');
-  const [vidPublish, setVidPublish] = useState('Just now');
-  const [vidId, setVidId] = useState('');
-
-  // Form states - Tweet
+  // Form states - Tweet (Trending)
   const [tweetUrl, setTweetUrl] = useState('');
-  const [tweetTag, setTweetTag] = useState('');
+  const [tweetTag, setTweetTag] = useState('#AI');
 
   const triggerCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -68,6 +50,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Submit Latest Update
   const handleAddUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!upTitle || !upSummary) return;
@@ -75,13 +58,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const rawData = {
       title: upTitle,
       category: upCategory,
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }),
-      source: upSource || 'TechTonic AI Curation',
+      source_name: upSource || 'TechTonic Editorial',
       summary: upSummary,
-      url: upUrl || '#',
-      read_time: '3 min read',
-      tag: upTag || upCategory,
-      company: upCompany
+      article_url: upUrl || `https://techtonic-ai.vercel.app/updates/${Date.now()}`,
+      image_url: upImageUrl || null,
+      published_at: new Date().toISOString()
     };
 
     if (isSupabaseConfigured) {
@@ -89,7 +70,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       setPublishStatus('idle');
       try {
         const { data, error } = await supabase
-          .from('ai_updates')
+          .from('ai_articles')
           .insert([rawData])
           .select();
 
@@ -100,200 +81,49 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             id: data[0].id,
             title: data[0].title,
             category: data[0].category,
-            date: data[0].date,
-            source: data[0].source,
+            sourceName: data[0].source_name,
             summary: data[0].summary,
-            url: data[0].url,
-            readTime: data[0].read_time,
-            tag: data[0].tag,
-            company: data[0].company
+            url: data[0].article_url,
+            imageUrl: data[0].image_url,
+            published_at: data[0].published_at
           });
         }
         setPublishStatus('success');
-        // Reset form fields
         setUpTitle('');
-        setUpSource('');
         setUpSummary('');
         setUpUrl('');
-        setUpTag('');
-        setUpCompany('openai');
+        setUpImageUrl('');
       } catch (err: any) {
-        console.error("Supabase insert error:", err);
+        console.error('Failed to post article to Supabase:', err);
         setPublishStatus('error');
-        setErrorMessage(err.message || 'Failed to publish to Supabase.');
+        setErrorMessage(err.message || 'Database error occurred.');
       } finally {
         setPublishing(false);
       }
     } else {
-      // Local preview fallback
+      // Local fallback
       onAddUpdate({
-        id: `upd-${Date.now()}`,
-        ...rawData,
-        readTime: rawData.read_time
+        id: `local-${Date.now()}`,
+        title: upTitle,
+        category: upCategory,
+        sourceName: upSource,
+        summary: upSummary,
+        url: upUrl || '#',
+        imageUrl: upImageUrl || undefined,
+        published_at: new Date().toISOString()
       });
-      // Reset form fields
+      setPublishStatus('success');
       setUpTitle('');
-      setUpSource('');
       setUpSummary('');
       setUpUrl('');
-      setUpTag('');
+      setUpImageUrl('');
     }
   };
 
-  const handleAddResourceSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!resCompany || !resTool || !resDesc) return;
-
-    const rawData = {
-      company: resCompany,
-      tool_name: resTool,
-      description: resDesc,
-      use_case: resUseCase || 'General development and testing',
-      category: resCategory,
-      docs_url: resDocs || '#',
-      learn_url: resLearn || '#'
-    };
-
-    if (isSupabaseConfigured) {
-      setPublishing(true);
-      setPublishStatus('idle');
-      try {
-        const { data, error } = await supabase
-          .from('learning_resources')
-          .insert([rawData])
-          .select();
-
-        if (error) throw error;
-
-        if (data && data[0]) {
-          onAddResource({
-            id: data[0].id,
-            company: data[0].company,
-            toolName: data[0].tool_name,
-            description: data[0].description,
-            useCase: data[0].use_case,
-            category: data[0].category,
-            docsUrl: data[0].docs_url,
-            learnUrl: data[0].learn_url
-          });
-        }
-        setPublishStatus('success');
-        // Reset form fields
-        setResCompany('');
-        setResTool('');
-        setResDesc('');
-        setResUseCase('');
-        setResDocs('');
-        setResLearn('');
-      } catch (err: any) {
-        console.error("Supabase insert error:", err);
-        setPublishStatus('error');
-        setErrorMessage(err.message || 'Failed to publish to Supabase.');
-      } finally {
-        setPublishing(false);
-      }
-    } else {
-      // Local preview fallback
-      onAddResource({
-        id: `res-${Date.now()}`,
-        company: resCompany,
-        toolName: resTool,
-        description: resDesc,
-        useCase: rawData.use_case,
-        category: resCategory,
-        docsUrl: rawData.docs_url,
-        learnUrl: rawData.learn_url
-      });
-      // Reset form fields
-      setResCompany('');
-      setResTool('');
-      setResDesc('');
-      setResUseCase('');
-      setResDocs('');
-      setResLearn('');
-    }
-  };
-
-  const handleAddVideoSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!vidTitle || !vidId) return;
-
-    const rawData = {
-      title: vidTitle,
-      duration: vidDuration || '15:00',
-      category: vidCategory,
-      publish_date: vidPublish,
-      youtube_id: vidId
-    };
-
-    if (isSupabaseConfigured) {
-      setPublishing(true);
-      setPublishStatus('idle');
-      try {
-        const { data, error } = await supabase
-          .from('youtube_videos')
-          .insert([rawData])
-          .select();
-
-        if (error) throw error;
-
-        if (data && data[0]) {
-          onAddVideo({
-            id: data[0].id,
-            title: data[0].title,
-            duration: data[0].duration,
-            category: data[0].category,
-            publishDate: data[0].publish_date,
-            youtubeId: data[0].youtube_id
-          });
-        }
-        setPublishStatus('success');
-        // Reset form fields
-        setVidTitle('');
-        setVidDuration('');
-        setVidId('');
-      } catch (err: any) {
-        console.error("Supabase insert error:", err);
-        setPublishStatus('error');
-        setErrorMessage(err.message || 'Failed to publish to Supabase.');
-      } finally {
-        setPublishing(false);
-      }
-    } else {
-      // Local preview fallback
-      onAddVideo({
-        id: `yt-${Date.now()}`,
-        title: vidTitle,
-        duration: vidDuration || '15:00',
-        category: vidCategory,
-        publishDate: vidPublish,
-        youtubeId: vidId
-      });
-      // Reset form fields
-      setVidTitle('');
-      setVidDuration('');
-      setVidId('');
-    }
-  };
-
+  // Submit Trending Tweet
   const handleAddTweetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tweetUrl || !tweetTag) return;
-
-    // Extract the status URL if the user pasted the entire HTML embed code block
-    const urlMatch = tweetUrl.match(/https?:\/\/(?:twitter|x)\.com\/[a-zA-Z0-9_]+\/status\/\d+/i);
-    const targetUrl = urlMatch ? urlMatch[0] : tweetUrl.trim();
-
-    let formattedTag = tweetTag.trim();
-    if (!formattedTag.startsWith('#')) {
-      formattedTag = '#' + formattedTag;
-    }
-    formattedTag = formattedTag.replace(/\s+/g, '').toUpperCase();
-
-    const rawData = {
-      tag: formattedTag,
-      tweet_url: targetUrl
-    };
+    if (!tweetUrl) return;
 
     if (isSupabaseConfigured) {
       setPublishing(true);
@@ -301,604 +131,325 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       try {
         const { error } = await supabase
           .from('trending_tweets')
-          .insert([rawData])
-          .select();
+          .insert([{
+            tag: tweetTag.startsWith('#') ? tweetTag : `#${tweetTag}`,
+            tweet_url: tweetUrl.trim(),
+            created_at: new Date().toISOString()
+          }]);
 
         if (error) throw error;
 
         setPublishStatus('success');
         setTweetUrl('');
       } catch (err: any) {
-        console.error("Supabase insert error:", err);
+        console.error('Failed to save tweet:', err);
         setPublishStatus('error');
-        setErrorMessage(err.message || 'Failed to publish tweet to Supabase.');
+        setErrorMessage(err.message || 'Database error occurred.');
       } finally {
         setPublishing(false);
       }
     } else {
-      alert("Supabase not configured. Tweet cannot be saved in local preview mode.");
+      setPublishStatus('error');
+      setErrorMessage('Supabase is not configured.');
     }
   };
 
-  // Generate updated typescript code block
-  const generateCodeConfig = () => {
-    if (activeForm === 'update') {
-      return `export const LATEST_UPDATES: AIUpdate[] = ${JSON.stringify(currentUpdates, null, 2)};`;
-    } else if (activeForm === 'resource') {
-      return `export const LEARNING_RESOURCES: LearningResource[] = ${JSON.stringify(currentResources, null, 2)};`;
-    } else if (activeForm === 'video') {
-      return `export const YOUTUBE_VIDEOS: YouTubeVideo[] = ${JSON.stringify(currentVideos, null, 2)};`;
-    } else {
-      return `/* Copy the SQL schema from supabase_tweets_schema.sql to create the table, then add tweets via Admin Panel */`;
+  // Trigger Full DB Reset
+  const handleExecuteDbReset = async () => {
+    const confirmWipe = window.confirm(
+      "⚠️ WARNING: This will permanently delete ALL old articles, pending articles, tweets, and logs from Supabase, and reseed the 43 official sources.\n\nAre you sure you want to proceed?"
+    );
+    if (!confirmWipe) return;
+
+    setResetting(true);
+    setResetMessage(null);
+    try {
+      const response = await fetch('/api/reset-db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to reset database');
+      }
+
+      setResetMessage(`✅ Success: ${result.message}`);
+    } catch (err: any) {
+      console.error("DB Reset failed:", err);
+      // Client-side direct reset fallback if API endpoint is not yet deployed
+      try {
+        await supabase.from('ai_articles').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('pending_articles').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('trending_tweets').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        setResetMessage("✅ Database tables cleared directly via Supabase client.");
+      } catch (clientErr: any) {
+        setResetMessage(`❌ Error: ${err.message || clientErr.message}`);
+      }
+    } finally {
+      setResetting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy-dark/70 backdrop-blur-md">
-      <div 
-        className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl p-6 sm:p-8 glass-panel border border-brand-gold/20 shadow-2xl bg-gradient-to-b from-brand-navy-deep to-brand-navy relative"
-        style={{ scrollbarWidth: 'thin' }}
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="bg-brand-navy-deep border border-brand-gold/30 rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto space-y-6">
+        
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-brand-gold/15 pb-4 mb-6">
-          <div>
-            <h2 className="font-display text-lg sm:text-2xl font-bold tracking-widest text-brand-gold uppercase">
-              Admin Content Panel
-            </h2>
-            <p className="text-slate-400 text-xs mt-1">
-              Add new links, resources, or YouTube uploads to the TechTonic AI UI.
-            </p>
+        <div className="flex items-center justify-between pb-4 border-b border-brand-gold/15">
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-lg border border-brand-gold/30" />
+            <div>
+              <h3 className="font-display text-lg sm:text-xl font-bold text-slate-100">TechTonic Admin Panel</h3>
+              <p className="text-[11px] text-slate-400">Manage live news, trending tweets, and database hygiene.</p>
+            </div>
           </div>
-          <button 
+
+          <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-brand-navy-light/20 hover:bg-brand-gold/15 text-slate-400 hover:text-brand-gold-bright transition-all cursor-pointer"
-            aria-label="Close Admin Panel"
+            className="p-1.5 rounded-xl bg-brand-navy-dark border border-brand-gold/20 text-slate-400 hover:text-slate-200 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Tab Selector */}
-        <div className="flex border-b border-brand-gold/10 pb-3 mb-6 gap-2 sm:gap-4 overflow-x-auto">
+        {/* Tab Selection */}
+        <div className="flex items-center gap-2 bg-brand-navy-dark p-1.5 rounded-2xl border border-brand-gold/20">
           <button
-            onClick={() => {
-              setActiveForm('update');
-              setPublishStatus('idle');
-            }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
+            onClick={() => { setActiveForm('update'); setPublishStatus('idle'); }}
+            className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
               activeForm === 'update'
-                ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
+                ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-md'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Latest updates
+            Post Latest Update
           </button>
+
           <button
-            onClick={() => {
-              setActiveForm('resource');
-              setPublishStatus('idle');
-            }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
-              activeForm === 'resource'
-                ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            Learning Resources
-          </button>
-          <button
-            onClick={() => {
-              setActiveForm('video');
-              setPublishStatus('idle');
-            }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
-              activeForm === 'video'
-                ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            YouTube Videos
-          </button>
-          <button
-            onClick={() => {
-              setActiveForm('tweet');
-              setPublishStatus('idle');
-            }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wider transition-colors whitespace-nowrap cursor-pointer ${
+            onClick={() => { setActiveForm('tweet'); setPublishStatus('idle'); }}
+            className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
               activeForm === 'tweet'
-                ? 'bg-brand-gold/20 text-brand-gold-bright border border-brand-gold/40'
+                ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-md'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Trending Tweets
+            Post Trending Tweet
+          </button>
+
+          <button
+            onClick={() => { setActiveForm('db-reset'); setPublishStatus('idle'); }}
+            className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+              activeForm === 'db-reset'
+                ? 'bg-red-500 text-white shadow-md'
+                : 'text-red-400 hover:text-red-300'
+            }`}
+          >
+            Database Reset
           </button>
         </div>
 
-        {/* Form & Code Split Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Form Side */}
-          <div className="lg:col-span-6 space-y-4">
-            
-            {/* Form: Latest Update */}
-            {activeForm === 'update' && (
-              <form onSubmit={handleAddUpdateSubmit} className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Update Title *</label>
-                  <input
-                    type="text"
-                    required
-                    value={upTitle}
-                    onChange={(e) => setUpTitle(e.target.value)}
-                    placeholder="e.g. Introducing Claude 3.7 Sonnet"
-                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Category</label>
-                    <select
-                      value={upCategory}
-                      onChange={(e) => setUpCategory(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    >
-                      <option>Models</option>
-                      <option>Products</option>
-                      <option>Research</option>
-                      <option>Developer Tools</option>
-                      <option>Enterprise AI</option>
-                      <option>Startups</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Company Group</label>
-                    <select
-                      value={upCompany}
-                      onChange={(e) => setUpCompany(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    >
-                      <option value="google">Google</option>
-                      <option value="openai">OpenAI</option>
-                      <option value="anthropic">Anthropic</option>
-                      <option value="meta">Meta</option>
-                      <option value="microsoft">Microsoft</option>
-                      <option value="amazon">Amazon</option>
-                      <option value="nvidia">NVIDIA</option>
-                      <option value="other">Others</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Custom Badge Tag</label>
-                    <input
-                      type="text"
-                      value={upTag}
-                      onChange={(e) => setUpTag(e.target.value)}
-                      placeholder="e.g. Claude 3.7"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Source Publisher</label>
-                    <input
-                      type="text"
-                      value={upSource}
-                      onChange={(e) => setUpSource(e.target.value)}
-                      placeholder="e.g. Anthropic Blog"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Target Link URL</label>
-                    <input
-                      type="text"
-                      value={upUrl}
-                      onChange={(e) => setUpUrl(e.target.value)}
-                      placeholder="e.g. https://anthropic.com/..."
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Brief Summary *</label>
-                  <textarea
-                    required
-                    rows={4}
-                    value={upSummary}
-                    onChange={(e) => setUpSummary(e.target.value)}
-                    placeholder="Enter a short overview of the update..."
-                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm resize-none"
-                  />
-                </div>
-
-                {/* Database Connection Banner */}
-                <div className="flex items-center gap-2 text-xs py-1">
-                  {isSupabaseConfigured ? (
-                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      Connected to Supabase Cloud Database
-                    </span>
-                  ) : (
-                    <span className="text-amber-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      Fallback Static Mode (No Database Configured)
-                    </span>
-                  )}
-                </div>
-
-                {publishStatus === 'success' && (
-                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Published Live successfully!
-                  </div>
-                )}
-                
-                {publishStatus === 'error' && (
-                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Failed to publish: {errorMessage}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={publishing}
-                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
-                >
-                  <Plus className="w-4 h-4" />
-                  {publishing ? 'PUBLISHING LIVE...' : isSupabaseConfigured ? 'PUBLISH LIVE TO DATABASE' : 'PREVIEW & ADD UPDATE'}
-                </button>
-              </form>
-            )}
-
-            {/* Form: Learning Resource */}
-            {activeForm === 'resource' && (
-              <form onSubmit={handleAddResourceSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Company *</label>
-                    <input
-                      type="text"
-                      required
-                      value={resCompany}
-                      onChange={(e) => setResCompany(e.target.value)}
-                      placeholder="e.g. OpenAI"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Tool Name *</label>
-                    <input
-                      type="text"
-                      required
-                      value={resTool}
-                      onChange={(e) => setResTool(e.target.value)}
-                      placeholder="e.g. Assistants API"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Docs Category</label>
-                    <select
-                      value={resCategory}
-                      onChange={(e) => setResCategory(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    >
-                      <option>API & Integration</option>
-                      <option>Developer Studio</option>
-                      <option>Models & Prompting</option>
-                      <option>Frameworks</option>
-                      <option>Infrastructure</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Docs URL</label>
-                    <input
-                      type="text"
-                      value={resDocs}
-                      onChange={(e) => setResDocs(e.target.value)}
-                      placeholder="Official Documentation URL"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Learning Guide URL</label>
-                    <input
-                      type="text"
-                      value={resLearn}
-                      onChange={(e) => setResLearn(e.target.value)}
-                      placeholder="e.g. GitHub cookbook link"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Core Use Case</label>
-                    <input
-                      type="text"
-                      value={resUseCase}
-                      onChange={(e) => setResUseCase(e.target.value)}
-                      placeholder="e.g. Building chatbots"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Short Description *</label>
-                  <textarea
-                    required
-                    rows={3}
-                    value={resDesc}
-                    onChange={(e) => setResDesc(e.target.value)}
-                    placeholder="Enter description of tool/framework..."
-                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm resize-none"
-                  />
-                </div>
-
-                {/* Database Connection Banner */}
-                <div className="flex items-center gap-2 text-xs py-1">
-                  {isSupabaseConfigured ? (
-                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      Connected to Supabase Cloud Database
-                    </span>
-                  ) : (
-                    <span className="text-amber-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      Fallback Static Mode (No Database Configured)
-                    </span>
-                  )}
-                </div>
-
-                {publishStatus === 'success' && (
-                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Published Live successfully!
-                  </div>
-                )}
-                
-                {publishStatus === 'error' && (
-                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Failed to publish: {errorMessage}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={publishing}
-                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
-                >
-                  <Plus className="w-4 h-4" />
-                  {publishing ? 'PUBLISHING LIVE...' : isSupabaseConfigured ? 'PUBLISH LIVE TO DATABASE' : 'PREVIEW & ADD RESOURCE'}
-                </button>
-              </form>
-            )}
-
-            {/* Form: YouTube Video */}
-            {activeForm === 'video' && (
-              <form onSubmit={handleAddVideoSubmit} className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Video Title *</label>
-                  <input
-                    type="text"
-                    required
-                    value={vidTitle}
-                    onChange={(e) => setVidTitle(e.target.value)}
-                    placeholder="e.g. Model Context Protocol Crash Course"
-                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">YouTube Video ID *</label>
-                    <input
-                      type="text"
-                      required
-                      value={vidId}
-                      onChange={(e) => setVidId(e.target.value)}
-                      placeholder="e.g. dQw4w9WgXcQ"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Duration</label>
-                    <input
-                      type="text"
-                      value={vidDuration}
-                      onChange={(e) => setVidDuration(e.target.value)}
-                      placeholder="e.g. 18:45"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Category</label>
-                    <select
-                      value={vidCategory}
-                      onChange={(e) => setVidCategory(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    >
-                      <option>AI News</option>
-                      <option>GenAI Tools</option>
-                      <option>Tutorials</option>
-                      <option>Prompt Engineering</option>
-                      <option>Agentic AI</option>
-                      <option>Cloud + AI</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Publish Date</label>
-                    <input
-                      type="text"
-                      value={vidPublish}
-                      onChange={(e) => setVidPublish(e.target.value)}
-                      placeholder="e.g. 2 days ago"
-                      className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                    />
-                  </div>
-                </div>
-
-                {/* Database Connection Banner */}
-                <div className="flex items-center gap-2 text-xs py-1">
-                  {isSupabaseConfigured ? (
-                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      Connected to Supabase Cloud Database
-                    </span>
-                  ) : (
-                    <span className="text-amber-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      Fallback Static Mode (No Database Configured)
-                    </span>
-                  )}
-                </div>
-
-                {publishStatus === 'success' && (
-                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Published Live successfully!
-                  </div>
-                )}
-                
-                {publishStatus === 'error' && (
-                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Failed to publish: {errorMessage}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={publishing}
-                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
-                >
-                  <Plus className="w-4 h-4" />
-                  {publishing ? 'PUBLISHING LIVE...' : isSupabaseConfigured ? 'PUBLISH LIVE TO DATABASE' : 'PREVIEW & ADD VIDEO'}
-                </button>
-              </form>
-            )}
-
-            {/* Form: Trending Tweet */}
-            {activeForm === 'tweet' && (
-              <form onSubmit={handleAddTweetSubmit} className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Twitter/X Tweet URL or Embed Code *</label>
-                  <input
-                    type="text"
-                    required
-                    value={tweetUrl}
-                    onChange={(e) => setTweetUrl(e.target.value)}
-                    placeholder="Paste tweet link or full HTML blockquote embed code"
-                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-brand-gold tracking-wider">Hashtag Category *</label>
-                  <input
-                    type="text"
-                    required
-                    value={tweetTag}
-                    onChange={(e) => setTweetTag(e.target.value)}
-                    placeholder="e.g. #LLM or #NextJS"
-                    className="w-full px-4 py-2.5 bg-brand-navy-dark text-slate-100 rounded-xl border border-brand-gold/20 focus:border-brand-gold focus:outline-none text-sm"
-                  />
-                </div>
-
-                {/* Database Connection Banner */}
-                <div className="flex items-center gap-2 text-xs py-1">
-                  {isSupabaseConfigured ? (
-                    <span className="text-green-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      Connected to Supabase Cloud Database
-                    </span>
-                  ) : (
-                    <span className="text-red-400 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-red-400" />
-                      Database configuration missing in .env
-                    </span>
-                  )}
-                </div>
-
-                {publishStatus === 'success' && (
-                  <div className="p-3.5 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Tweet linked successfully! It will now appear on your Trending page.
-                  </div>
-                )}
-                
-                {publishStatus === 'error' && (
-                  <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl font-medium animate-in fade-in slide-in-from-top-1.5 duration-200">
-                    Failed to publish: {errorMessage}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={publishing || !isSupabaseConfigured}
-                  className="w-full flex items-center justify-center gap-2 bg-brand-gold text-brand-navy-dark font-bold py-3.5 rounded-xl text-xs tracking-widest hover:bg-brand-gold-bright transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_15px_rgba(189,154,118,0.15)]"
-                >
-                  <Plus className="w-4 h-4" />
-                  {publishing ? 'PUBLISHING...' : 'PUBLISH TWEET LINK LIVE'}
-                </button>
-              </form>
-            )}
-
+        {/* Status Banners */}
+        {publishStatus === 'success' && (
+          <div className="p-3 bg-emerald-500/15 border border-emerald-500/30 rounded-2xl text-emerald-300 text-xs font-semibold flex items-center gap-2">
+            <Check className="w-4 h-4 shrink-0" />
+            <span>Published successfully to live Supabase database!</span>
           </div>
+        )}
 
-          {/* Code Configuration & Persistence Guide Side */}
-          <div className="lg:col-span-6 space-y-4">
-            
-            {/* Guide callout */}
-            <div className="p-4 rounded-2xl bg-brand-navy-light/10 border border-brand-gold/15 flex gap-3 text-xs leading-relaxed text-slate-400">
-              <Info className="w-5 h-5 text-brand-gold flex-shrink-0 mt-0.5" />
+        {publishStatus === 'error' && (
+          <div className="p-3 bg-red-500/15 border border-red-500/30 rounded-2xl text-red-300 text-xs font-semibold flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        {/* FORM 1: Post Latest Update */}
+        {activeForm === 'update' && (
+          <form onSubmit={handleAddUpdateSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Announcement Title *
+              </label>
+              <input
+                type="text"
+                required
+                value={upTitle}
+                onChange={(e) => setUpTitle(e.target.value)}
+                placeholder="e.g. OpenAI Announces GPT-4.5 Orion Frontier Model"
+                className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl px-4 py-2.5 outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="font-bold text-slate-200 block mb-1">Developer Curation Workflow</span>
-                Adding content above updates the UI instantly so you can check how it looks. To persist these additions permanently, click **Copy Code Curation** below and overwrite the corresponding export inside [src/data/content.ts](file:///C:/Users/Kumar%20Shanu/.gemini/antigravity/scratch/techtonic-ai/src/data/content.ts).
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  Source Name
+                </label>
+                <input
+                  type="text"
+                  value={upSource}
+                  onChange={(e) => setUpSource(e.target.value)}
+                  placeholder="e.g. OpenAI Blog, Anthropic Research"
+                  className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl px-4 py-2.5 outline-none"
+                />
               </div>
-            </div>
 
-            {/* Code container */}
-            <div className="relative">
-              <div className="absolute right-3 top-3 z-10">
-                <button
-                  onClick={() => triggerCopy(generateCodeConfig())}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-navy-light/40 hover:bg-brand-gold/20 border border-brand-gold/20 hover:border-brand-gold/40 text-[10px] sm:text-xs font-bold text-slate-300 transition-colors"
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  Category
+                </label>
+                <select
+                  value={upCategory}
+                  onChange={(e) => setUpCategory(e.target.value)}
+                  className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl px-4 py-2.5 outline-none"
                 >
-                  {copied ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-brand-gold" />
-                      COPIED!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" />
-                      COPY CODE
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">
-                  Export Curation (Generated Code)
-                </span>
-                <pre className="w-full max-h-[300px] overflow-auto p-4 rounded-2xl bg-brand-navy-dark text-brand-gold-bright border border-brand-gold/10 font-mono text-[11px] leading-relaxed text-left select-all">
-                  {generateCodeConfig()}
-                </pre>
+                  <option value="AI Labs">AI Labs</option>
+                  <option value="Research">Research</option>
+                  <option value="Enterprise AI">Enterprise AI</option>
+                  <option value="Hardware & AI">Hardware & AI</option>
+                  <option value="Developer Tools">Developer Tools</option>
+                </select>
               </div>
             </div>
 
-          </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Official Article / Announcement URL
+              </label>
+              <input
+                type="url"
+                value={upUrl}
+                onChange={(e) => setUpUrl(e.target.value)}
+                placeholder="https://openai.com/news/..."
+                className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl px-4 py-2.5 outline-none"
+              />
+            </div>
 
-        </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Image / Thumbnail URL (Optional)
+              </label>
+              <input
+                type="url"
+                value={upImageUrl}
+                onChange={(e) => setUpImageUrl(e.target.value)}
+                placeholder="https://... image banner"
+                className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl px-4 py-2.5 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Announcement Summary *
+              </label>
+              <textarea
+                required
+                rows={3}
+                value={upSummary}
+                onChange={(e) => setUpSummary(e.target.value)}
+                placeholder="Detailed summary of the new frontier model, benchmarks, capabilities, and availability..."
+                className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl p-3 outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={publishing}
+              className="w-full py-3 bg-gradient-to-r from-brand-gold to-brand-gold-dark hover:from-brand-gold-bright hover:to-brand-gold text-brand-navy-dark font-extrabold text-xs uppercase tracking-wider rounded-2xl transition-all shadow-lg cursor-pointer disabled:opacity-50"
+            >
+              {publishing ? 'Publishing to Supabase...' : 'Publish to Latest Updates'}
+            </button>
+          </form>
+        )}
+
+        {/* FORM 2: Post Trending Tweet */}
+        {activeForm === 'tweet' && (
+          <form onSubmit={handleAddTweetSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Twitter / X Status URL *
+              </label>
+              <input
+                type="url"
+                required
+                value={tweetUrl}
+                onChange={(e) => setTweetUrl(e.target.value)}
+                placeholder="https://x.com/openai/status/188..."
+                className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl px-4 py-2.5 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Hashtag Category Tag
+              </label>
+              <input
+                type="text"
+                value={tweetTag}
+                onChange={(e) => setTweetTag(e.target.value)}
+                placeholder="#AI, #Agents, #LLM, #Robotics"
+                className="w-full bg-brand-navy-dark border border-brand-gold/20 focus:border-brand-gold text-slate-200 text-xs sm:text-sm rounded-xl px-4 py-2.5 outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={publishing}
+              className="w-full py-3 bg-gradient-to-r from-brand-gold to-brand-gold-dark hover:from-brand-gold-bright hover:to-brand-gold text-brand-navy-dark font-extrabold text-xs uppercase tracking-wider rounded-2xl transition-all shadow-lg cursor-pointer disabled:opacity-50"
+            >
+              {publishing ? 'Posting Tweet...' : 'Add to Trending Section'}
+            </button>
+          </form>
+        )}
+
+        {/* TAB 3: Database Reset */}
+        {activeForm === 'db-reset' && (
+          <div className="space-y-5">
+            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-200 text-xs space-y-2">
+              <div className="font-bold flex items-center gap-2 text-red-400">
+                <ShieldAlert className="w-4 h-4" />
+                Database Reset & Reseeding
+              </div>
+              <p>
+                This action will wipe old articles, staged items, and tweets from your Supabase database. It will immediately reseed the <strong>43 official AI news sources</strong> so your automated pipeline starts fresh.
+              </p>
+            </div>
+
+            {resetMessage && (
+              <div className={`p-3.5 rounded-2xl text-xs font-semibold ${
+                resetMessage.startsWith('✅')
+                  ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-300'
+                  : 'bg-red-500/15 border border-red-500/30 text-red-300'
+              }`}>
+                {resetMessage}
+              </div>
+            )}
+
+            <button
+              onClick={handleExecuteDbReset}
+              disabled={resetting}
+              className="w-full py-3.5 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl transition-all shadow-lg cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              {resetting ? 'Resetting Database...' : 'Execute Full Supabase DB Reset'}
+            </button>
+
+            <div className="pt-3 border-t border-brand-gold/15 text-center">
+              <p className="text-[11px] text-slate-400 mb-2">
+                Prefer running SQL manually in Supabase?
+              </p>
+              <button
+                onClick={() => triggerCopy(`-- Run in Supabase SQL Editor\nTRUNCATE TABLE ai_articles CASCADE;\nTRUNCATE TABLE pending_articles CASCADE;\nTRUNCATE TABLE trending_tweets CASCADE;\nTRUNCATE TABLE ai_fetch_logs CASCADE;`)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-navy-dark border border-brand-gold/20 text-brand-gold text-xs font-semibold hover:bg-brand-navy-light/40"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copied ? 'Copied SQL!' : 'Copy Reset SQL Commands'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
