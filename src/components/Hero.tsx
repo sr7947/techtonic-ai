@@ -108,7 +108,7 @@ export const Hero: React.FC = () => {
           transition={{ duration: 1, delay: 0.4 }}
         >
           <div className="bg-brand-navy-dark/70 p-3.5 rounded-2xl border border-brand-gold/10 backdrop-blur-md">
-            <div className="font-display text-xl sm:text-3xl font-bold text-brand-gold-bright">10+</div>
+            <div className="font-display text-xl sm:text-3xl font-bold text-brand-gold-bright">47+</div>
             <div className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider mt-1 font-semibold">AI Labs Tracked</div>
           </div>
           

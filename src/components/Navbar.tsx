@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, Settings, LogOut, ChevronDown, Trophy, Flame, Cpu, Newspaper } from 'lucide-react';
+import { HallmarkThemeSwitcher } from './HallmarkThemeSwitcher';
 
 interface NavbarProps {
   user: { name: string; email: string; picture: string } | null;
@@ -175,9 +176,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               })}
             </nav>
 
-            {/* Right Side Actions: Admin & User Auth */}
-            <div className="hidden sm:flex items-center gap-3">
+            {/* Right Side Actions: Theme Switcher, Admin & User Auth */}
+            <div className="hidden sm:flex items-center gap-2.5">
               
+              {/* Hallmark Theme Switcher */}
+              <HallmarkThemeSwitcher />
+
               {/* Quick Admin Access Button */}
               <button
                 onClick={onOpenAdmin}
@@ -278,6 +282,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         {isOpen && (
           <div className="md:hidden bg-brand-navy-dark/95 border-b border-brand-gold/20 p-4 backdrop-blur-2xl animate-in slide-in-from-top duration-250">
             <div className="flex flex-col gap-2">
+              <div className="py-2 border-b border-white/10 mb-1 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-300">Hallmark Theme</span>
+                <HallmarkThemeSwitcher />
+              </div>
               {NAV_TABS.map((tab) => {
                 const active = isTabActive(tab.path);
                 return (
