@@ -166,7 +166,7 @@ function App() {
 
             {/* TAB 4: Model Rankings */}
             {currentPath === '/model-rankings' && (
-              <ModelRankingsPage />
+              <ModelRankingsPage isAdmin={!!user} />
             )}
 
             {/* 404 Fallback for Obsolete Routes */}

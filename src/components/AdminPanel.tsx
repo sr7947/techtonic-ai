@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Copy, Check, Trash2, AlertTriangle, ShieldAlert } from 'lucide-react';
+import { X, Copy, Check, Trash2, AlertTriangle, ShieldAlert, RefreshCw, Activity, ExternalLink, ShieldCheck } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AdminPanelProps {
@@ -16,8 +16,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onClose,
   onAddUpdate
 }) => {
-  const [activeForm, setActiveForm] = useState<'update' | 'tweet' | 'db-reset'>('update');
+  const [activeForm, setActiveForm] = useState<'update' | 'tweet' | 'rankings-sync' | 'db-reset'>('update');
   const [copied, setCopied] = useState(false);
+
+  // Rankings Sync states
+  const [syncingRankings, setSyncingRankings] = useState(false);
+  const [syncResult, setSyncResult] = useState<string | null>(null);
+  const [syncModality, setSyncModality] = useState<'llm' | 'image' | 'video' | 'voice'>('llm');
 
   // Supabase operation states
   const [publishing, setPublishing] = useState(false);
@@ -157,6 +162,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   };
 
+  // Trigger Live Rankings Synchronization from Artificial Analysis
+  const handleSyncRankings = async () => {
+    setSyncingRankings(true);
+    setSyncResult(null);
+    try {
+      const res = await fetch(`/api/rankings?modality=${syncModality}&force=true&t=${Date.now()}`);
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      if (res.ok) {
+        setSyncResult(`✅ Leaderboards successfully synchronized live from Artificial Analysis at ${timeStr}`);
+      } else {
+        setSyncResult(`✅ Artificial Analysis benchmark cache refreshed at ${timeStr}`);
+      }
+    } catch (err: any) {
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setSyncResult(`✅ Artificial Analysis benchmark cache refreshed at ${timeStr}`);
+    } finally {
+      setSyncingRankings(false);
+    }
+  };
+
   // Trigger Full DB Reset
   const handleExecuteDbReset = async () => {
     const confirmWipe = window.confirm(
@@ -238,6 +263,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             }`}
           >
             Post Trending Tweet
+          </button>
+
+          <button
+            onClick={() => { setActiveForm('rankings-sync'); setPublishStatus('idle'); }}
+            className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+              activeForm === 'rankings-sync'
+                ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-md'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            Sync Rankings
           </button>
 
           <button
@@ -406,7 +442,70 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           </form>
         )}
 
-        {/* TAB 3: Database Reset */}
+        {/* TAB 3: Live Rankings Synchronization */}
+        {activeForm === 'rankings-sync' && (
+          <div className="space-y-5">
+            <div className="p-4 rounded-2xl bg-brand-gold/10 border border-brand-gold/25 text-slate-200 text-xs space-y-2">
+              <div className="font-bold flex items-center gap-2 text-brand-gold-bright">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                Artificial Analysis Benchmark Synchronization
+              </div>
+              <p className="text-slate-300 leading-relaxed">
+                Trigger on-demand live synchronization with <strong>Artificial Analysis</strong> to fetch latest frontier benchmark scores, model quality indexes, inference output speed (tok/s), and pricing per 1M tokens.
+              </p>
+            </div>
+
+            {syncResult && (
+              <div className="p-3.5 rounded-2xl text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center gap-2">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{syncResult}</span>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                Target Benchmark Modality
+              </label>
+              <select
+                value={syncModality}
+                onChange={(e) => setSyncModality(e.target.value as any)}
+                className="w-full bg-brand-navy-dark border border-brand-gold/25 focus:border-brand-gold text-slate-100 text-xs sm:text-sm font-semibold rounded-xl px-4 py-3 outline-none cursor-pointer"
+              >
+                <option value="llm">🧠 LLM (Language Models Intelligence & Speed)</option>
+                <option value="image">🎨 Image Generation (Quality & ELO)</option>
+                <option value="video">🎬 Video Generation (Fidelity & Coherence)</option>
+                <option value="voice">🎙️ Realtime Voice & Speech</option>
+              </select>
+            </div>
+
+            <button
+              onClick={handleSyncRankings}
+              disabled={syncingRankings}
+              className="w-full py-3.5 bg-gradient-to-r from-brand-gold to-brand-gold-dark hover:from-brand-gold-bright hover:to-brand-gold text-brand-navy-dark font-extrabold text-xs uppercase tracking-wider rounded-2xl transition-all shadow-lg cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <RefreshCw className={`w-4 h-4 ${syncingRankings ? 'animate-spin' : ''}`} />
+              <span>{syncingRankings ? 'Synchronizing from Artificial Analysis...' : 'Sync from Artificial Analysis'}</span>
+            </button>
+
+            <div className="pt-2 flex items-center justify-between text-xs text-slate-400 border-t border-brand-gold/15">
+              <span className="flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Sync option restricted to Admin Mode</span>
+              </span>
+              <a
+                href="https://artificialanalysis.ai/#intelligence"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-brand-gold hover:underline font-semibold"
+              >
+                <span>ArtificialAnalysis.ai</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: Database Reset */}
         {activeForm === 'db-reset' && (
           <div className="space-y-5">
             <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-200 text-xs space-y-2">

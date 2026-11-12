@@ -16,7 +16,14 @@ import {
 } from 'lucide-react';
 import { MODEL_RANKINGS_DATA, type ModalityCategory, type ModalityConfig, type RankingItem } from '../data/modelRankings';
 
-export const ModelRankingsPage: React.FC = () => {
+interface ModelRankingsPageProps {
+  isAdmin?: boolean;
+}
+
+export const ModelRankingsPage: React.FC<ModelRankingsPageProps> = ({ isAdmin = false }) => {
+  // Admin mode: true if explicitly passed or if admin user is signed in
+  const isUserAdmin = isAdmin || !!localStorage.getItem('wenzdaylab_user') || !!localStorage.getItem('techtonic_user');
+
   const [selectedModality, setSelectedModality] = useState<ModalityCategory>('llm');
   const [rankingsData, setRankingsData] = useState<Record<ModalityCategory, ModalityConfig>>(MODEL_RANKINGS_DATA);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
@@ -110,35 +117,42 @@ export const ModelRankingsPage: React.FC = () => {
           Unbiased benchmark rankings across Large Language Models, Generative Images, Video synthesis, and Realtime Audio engines — synchronized with <strong>Artificial Analysis</strong>.
         </p>
 
-        {/* Live Synchronization Status Badge */}
-        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-brand-navy-light/40 border border-brand-gold/20 text-xs text-slate-300">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <Activity className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Live Sync: <strong>{lastSyncTime}</strong></span>
+        {/* Live Synchronization Status Badge (Admin Only) */}
+        {isUserAdmin && (
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3 animate-in fade-in duration-300">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="font-mono text-[10px] uppercase tracking-wider font-bold">Admin Mode</span>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-brand-navy-light/40 border border-brand-gold/20 text-xs text-slate-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <Activity className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Live Sync: <strong>{lastSyncTime}</strong></span>
+            </div>
+
+            <button
+              onClick={handleSyncWithArtificialAnalysis}
+              disabled={isRefreshing}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-navy-dark hover:bg-brand-navy-light/50 border border-brand-gold/25 text-brand-gold-bright text-xs font-semibold transition-all cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-brand-gold' : ''}`} />
+              <span>{isRefreshing ? 'Syncing...' : 'Sync from Artificial Analysis'}</span>
+            </button>
+
+            <a
+              href={activeSourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/30 text-brand-gold-bright text-xs font-bold transition-all hover:scale-105"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Open ArtificialAnalysis.ai ↗</span>
+            </a>
           </div>
+        )}
 
-          <button
-            onClick={handleSyncWithArtificialAnalysis}
-            disabled={isRefreshing}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-navy-dark hover:bg-brand-navy-light/50 border border-brand-gold/25 text-brand-gold-bright text-xs font-semibold transition-all cursor-pointer disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-brand-gold' : ''}`} />
-            <span>{isRefreshing ? 'Syncing...' : 'Sync from Artificial Analysis'}</span>
-          </button>
-
-          <a
-            href={activeSourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/30 text-brand-gold-bright text-xs font-bold transition-all hover:scale-105"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Open ArtificialAnalysis.ai ↗</span>
-          </a>
-        </div>
-
-        {syncFeedback && (
+        {isUserAdmin && syncFeedback && (
           <div className="pt-2 flex justify-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold animate-in fade-in slide-in-from-top-2 duration-300">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
