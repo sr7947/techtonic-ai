@@ -22,6 +22,25 @@ export default async function handler(req, res) {
     const text = textMessage.text.trim();
     const chatId = textMessage.chat.id;
 
+    // Welcome and help command for mobile users
+    if (text.startsWith('/start') || text.startsWith('/help')) {
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: `👋 <b>Welcome to WenzdayLab Bot!</b>\n\n` +
+            `<b>📱 Post Tweets from Mobile to Trending:</b>\n` +
+            `• <b>Instant Post</b>:\n<code>/post &lt;tweet_url&gt; #Hashtag</code>\n\n` +
+            `• <b>1-Tap Review</b>:\nShare or paste any link:\n<code>&lt;tweet_url&gt; #Hashtag</code>\nand tap <b>[🚀 Post Live to Trending]</b>\n\n` +
+            `<i>Examples of tags:</i> #AI, #Models, #Agents, #Coding, #Tech (or create any new tag)\n\n` +
+            `<b>🎥 YouTube Videos:</b>\nShare any YouTube link to summarize and publish news to Latest Updates.`,
+          parse_mode: 'HTML'
+        })
+      });
+      return res.status(200).send('OK');
+    }
+
     const urlMatch = text.match(/https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s]+/i);
     if (urlMatch) {
       const youtubeUrl = urlMatch[0];
@@ -61,6 +80,13 @@ export default async function handler(req, res) {
     const twitterMatch = text.match(/https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/[a-zA-Z0-9_]+\/status\/\d+/i);
     if (twitterMatch) {
       const tweetUrl = twitterMatch[0];
+
+      // Extract optional hashtag from user's message (e.g. #AI, #Models, #Agents, #Coding)
+      const hashtagMatch = text.match(/#[a-zA-Z0-9_\u00c0-\u024f]+/g);
+      const userTag = hashtagMatch ? hashtagMatch[0] : null;
+
+      // Check if user wants instant direct posting
+      const isDirectPost = text.startsWith('/post') || text.startsWith('/tweet') || text.startsWith('/publish');
       
       // Send processing alert
       await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -68,14 +94,16 @@ export default async function handler(req, res) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
-          text: `⏳ *Analyzing X / Twitter Post...*\nFetching details from oEmbed API and summarizing with Gemini AI...`,
-          parse_mode: 'Markdown'
+          text: isDirectPost
+            ? `⏳ <b>Posting Tweet to Trending...</b>\nHashtag: <code>${userTag || 'Auto-detecting...'}</code>`
+            : `⏳ <b>Analyzing X / Twitter Post...</b>\nHashtag: <code>${userTag || 'Auto-detecting...'}</code>\nFetching details and preparing approval button...`,
+          parse_mode: 'HTML'
         })
       });
 
       const geminiKey = process.env.GEMINI_API_KEY;
       try {
-        await analyzeAndStageTwitterPost(tweetUrl, chatId, botToken, geminiKey);
+        await analyzeAndStageTwitterPost(tweetUrl, chatId, botToken, geminiKey, userTag, isDirectPost);
       } catch (err) {
         console.error("Direct tweet analysis failed:", err.message);
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -83,7 +111,7 @@ export default async function handler(req, res) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: chatId,
-            text: `❌ <b>Analysis Failed</b>:\nUnable to summarize the tweet. Details: ${err.message}`,
+            text: `❌ <b>Failed to process tweet</b>:\n${err.message}`,
             parse_mode: 'HTML'
           })
         });
@@ -143,13 +171,15 @@ export default async function handler(req, res) {
 
       if (sourceName === 'Tweet') {
         // Insert into production trending_tweets table
-        const { error: insertErr } = await supabase
+        const { data: inserted, error: insertErr } = await supabase
           .from('trending_tweets')
           .insert([{
             tag: categoryName || '#AI',
             tweet_url: article.article_url,
             created_at: new Date().toISOString()
-          }]);
+          }])
+          .select()
+          .maybeSingle();
 
         if (insertErr) {
           console.error("Failed to insert into trending_tweets:", insertErr.message);
@@ -162,15 +192,23 @@ export default async function handler(req, res) {
           .delete()
           .eq('id', pendingId);
 
-        // Edit Telegram message to show confirmation
+        // Edit Telegram message to show confirmation with direct link & undo button
         await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: chatId,
             message_id: messageId,
-            text: `✅ <b>Tweet Ingested & Saved Live to Trending!</b>\n\n<b>Tag</b>: ${categoryName}\n<b>URL</b>: ${article.article_url}\n\nThe trending tweets section has been updated successfully.`,
-            parse_mode: 'HTML'
+            text: `✅ <b>Tweet Ingested & Saved Live to Trending!</b>\n\n<b>Tag</b>: <code>${categoryName}</code>\n<b>URL</b>: ${article.article_url}\n\nThe trending tweets section has been updated successfully.`,
+            parse_mode: 'HTML',
+            reply_markup: inserted ? {
+              inline_keyboard: [
+                [
+                  { text: '🌐 View on WenzdayLab', url: 'https://www.wenzdaylab.in/trending' },
+                  { text: '🗑️ Delete from Live', callback_data: `delete_tweet_${inserted.id}` }
+                ]
+              ]
+            } : undefined
           })
         });
         return res.status(200).send('OK');
@@ -315,6 +353,27 @@ export default async function handler(req, res) {
           chat_id: chatId,
           message_id: messageId,
           text: `❌ <b>Article Rejected & Discarded</b>\n\n<b>Title</b>: ${articleTitle}\n\nThis summary has been removed from staging.`,
+          parse_mode: 'HTML'
+        })
+      });
+    } else if (data.startsWith('delete_tweet_')) {
+      const tweetId = data.replace('delete_tweet_', '');
+      console.log(`Callback Delete Tweet received for ID: ${tweetId}`);
+
+      const { error: delErr } = await supabase
+        .from('trending_tweets')
+        .delete()
+        .eq('id', tweetId);
+
+      await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          message_id: messageId,
+          text: delErr 
+            ? `⚠️ <b>Error deleting tweet</b>: ${delErr.message}`
+            : `🗑️ <b>Tweet Deleted from Live Trending!</b>\n\nThe post has been successfully removed from WenzdayLab.`,
           parse_mode: 'HTML'
         })
       });

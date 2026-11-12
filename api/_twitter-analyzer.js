@@ -10,9 +10,7 @@ function cleanTweetText(html) {
   const textMatch = html.match(/<p[^>]*>([\s\S]*?)<\/p>/);
   if (!textMatch) return '';
   let text = textMatch[1];
-  // Remove inner HTML tags
   text = text.replace(/<[^>]*>/g, '');
-  // Clean basic HTML entities
   text = text
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
@@ -22,12 +20,11 @@ function cleanTweetText(html) {
   return text;
 }
 
-export async function analyzeAndStageTwitterPost(url, chatId, botToken, geminiKey) {
+export async function analyzeAndStageTwitterPost(url, chatId, botToken, geminiKey, userProvidedTag = null, directPost = false) {
   // Extract handle and tweet ID
-  // Pattern matches: https://x.com/antigravity/status/2082157410139914278?s=46
   const match = url.match(/https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/([a-zA-Z0-9_]+)\/status\/(\d+)/i);
   if (!match) {
-    throw new Error("Invalid Twitter/X URL format.");
+    throw new Error("Invalid Twitter/X URL format. Expected: https://x.com/username/status/123456789");
   }
 
   const username = match[1];
@@ -50,10 +47,15 @@ export async function analyzeAndStageTwitterPost(url, chatId, botToken, geminiKe
     console.warn("Failed to fetch tweet from oEmbed API:", err.message);
   }
 
-  // 2. Initialize Gemini AI
-  let tag = '#AI';
+  // 2. Determine Tag: User provided tag takes top priority
+  let tag = userProvidedTag ? userProvidedTag.trim() : '#AI';
+  if (!tag.startsWith('#')) {
+    tag = '#' + tag;
+  }
+
   let summary = tweetText;
 
+  // 3. Summarize with Gemini if key is provided and needed
   if (geminiKey) {
     try {
       const genAI = new GoogleGenerativeAI(geminiKey);
@@ -84,18 +86,16 @@ ${tweetText}
 
       const parsed = JSON.parse(cleanJson);
       if (parsed.summary) summary = parsed.summary;
-      if (parsed.tag) tag = parsed.tag;
+      // Only use Gemini's tag if user didn't supply their own
+      if (!userProvidedTag && parsed.tag) {
+        tag = parsed.tag.startsWith('#') ? parsed.tag : '#' + parsed.tag;
+      }
     } catch (err) {
       console.warn("Gemini tweet analysis failed, using fallback:", err.message);
     }
   }
 
-  // Ensure tag starts with '#'
-  if (!tag.startsWith('#')) {
-    tag = '#' + tag;
-  }
-
-  // 3. Check for duplicates in live trending_tweets
+  // 4. Check for duplicates in live trending_tweets
   const { data: exists } = await supabase
     .from('trending_tweets')
     .select('id')
@@ -108,14 +108,59 @@ ${tweetText}
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: chatId,
-        text: `ℹ️ <b>Duplicate Skipped</b>:\nThis tweet by @${authorName} is already present in your live trending section.`,
+        text: `ℹ️ <b>Duplicate Skipped</b>:\nThis tweet by @${authorName} is already live in your Trending section under tag <code>${tag}</code>.`,
         parse_mode: 'HTML'
       })
     });
     return { title: `Tweet by @${authorName}`, summary, tag };
   }
 
-  // 4. Check if it already exists in pending staging
+  // 5. If Direct Post is requested (e.g. via /post command) -> Insert directly to trending_tweets!
+  if (directPost) {
+    console.log(`Directly inserting tweet to trending_tweets: ${cleanUrl} (${tag})`);
+    const { data: inserted, error: insErr } = await supabase
+      .from('trending_tweets')
+      .insert([{
+        tag: tag,
+        tweet_url: cleanUrl,
+        created_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+
+    if (insErr) {
+      throw new Error(`Failed to insert into trending_tweets: ${insErr.message}`);
+    }
+
+    const text = `🚀 <b>Tweet Posted Live to Trending!</b>\n\n` +
+      `<b>Author</b>: @${authorName}\n` +
+      `<b>Hashtag</b>: <code>${tag}</code>\n` +
+      `<b>URL</b>: ${cleanUrl}\n\n` +
+      `<b>Content Preview</b>:\n"${tweetText}"\n\n` +
+      `✅ <i>Visible live now at wenzdaylab.in/trending</i>`;
+
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: '🌐 View on WenzdayLab', url: 'https://www.wenzdaylab.in/trending' },
+              { text: '🗑️ Delete from Live', callback_data: `delete_tweet_${inserted.id}` }
+            ]
+          ]
+        }
+      })
+    });
+
+    return { title: `Tweet by @${authorName}`, summary, tag };
+  }
+
+  // 6. Otherwise (Normal sharing from mobile) -> Stage in pending_articles and send 1-tap confirmation button!
   const { data: pendingExists } = await supabase
     .from('pending_articles')
     .select('id')
@@ -125,7 +170,6 @@ ${tweetText}
   let savedId = pendingExists?.id;
 
   if (!pendingExists) {
-    // Insert into pending staging
     const { data: saved, error: stageErr } = await supabase
       .from('pending_articles')
       .insert([{
@@ -139,11 +183,10 @@ ${tweetText}
       .single();
 
     if (stageErr) {
-      throw new Error(`Failed to save pending tweet: ${stageErr.message}`);
+      throw new Error(`Failed to stage pending tweet: ${stageErr.message}`);
     }
     savedId = saved.id;
   } else {
-    // Update existing pending entry
     const { error: updateErr } = await supabase
       .from('pending_articles')
       .update({
@@ -159,8 +202,13 @@ ${tweetText}
     }
   }
 
-  // 5. Send Telegram approval message with inline buttons
-  const text = `🐦 <b>New X / Twitter Post Detected!</b>\n\n<b>User</b>: @${authorName}\n<b>Tweet Link</b>: ${url}\n<b>Hashtag Tag</b>: <code>${tag}</code>\n\n<b>Tweet Content Preview</b>:\n"${tweetText}"\n\n<b>AI Developer Take</b>:\n${summary}\n\nIngest this tweet to the live trending section?`;
+  // 7. Send Telegram interactive message with 1-tap Post button
+  const text = `🐦 <b>New X / Twitter Post Received!</b>\n\n` +
+    `<b>Author</b>: @${authorName}\n` +
+    `<b>Hashtag</b>: <code>${tag}</code>\n` +
+    `<b>URL</b>: ${cleanUrl}\n\n` +
+    `<b>Tweet Preview</b>:\n"${tweetText}"\n\n` +
+    `Post this tweet live to WenzdayLab Trending?`;
 
   await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
     method: 'POST',
@@ -172,10 +220,7 @@ ${tweetText}
       reply_markup: {
         inline_keyboard: [
           [
-            { text: '✅ Accept & Ingest', callback_data: `accept_${savedId}` },
-            { text: '🚀 Go Live (Deploy)', callback_data: `deploy_${savedId}` }
-          ],
-          [
+            { text: '🚀 Post Live to Trending', callback_data: `accept_${savedId}` },
             { text: '❌ Reject & Discard', callback_data: `reject_${savedId}` }
           ]
         ]
