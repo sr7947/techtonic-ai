@@ -14,8 +14,8 @@ export const Hero: React.FC = () => {
       {view3DMode === 'sphere' ? (
         <div className="absolute inset-0 z-0 flex items-center justify-center">
           <MassiveMotionSphere
-            particleCount={21000}
-            sphereRadius={2.85}
+            particleCount={19500}
+            sphereRadius={1.38}
             autoRotateSpeed={0.9}
             interactive={true}
             showInsideLogo={true}

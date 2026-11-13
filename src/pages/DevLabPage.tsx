@@ -21,8 +21,8 @@ interface DevLabPageProps {
 
 export const DevLabPage: React.FC<DevLabPageProps> = () => {
   // Live Tunable 3D Sphere Settings
-  const [particleCount, setParticleCount] = useState<number>(20000);
-  const [sphereRadius, setSphereRadius] = useState<number>(2.45);
+  const [particleCount, setParticleCount] = useState<number>(19500);
+  const [sphereRadius, setSphereRadius] = useState<number>(1.38);
   const [autoRotateSpeed, setAutoRotateSpeed] = useState<number>(1.0);
   const [showLogo, setShowLogo] = useState<boolean>(true);
   const [isAutoRotate, setIsAutoRotate] = useState<boolean>(true);
@@ -31,8 +31,8 @@ export const DevLabPage: React.FC<DevLabPageProps> = () => {
   const [activeTab, setActiveTab] = useState<'controls' | 'palette' | 'metrics'>('controls');
 
   const handleReset = () => {
-    setParticleCount(20000);
-    setSphereRadius(2.45);
+    setParticleCount(19500);
+    setSphereRadius(1.38);
     setAutoRotateSpeed(1.0);
     setShowLogo(true);
     setIsAutoRotate(true);
@@ -247,13 +247,18 @@ export const DevLabPage: React.FC<DevLabPageProps> = () => {
                   </div>
                   <input
                     type="range"
-                    min="1.8"
-                    max="3.0"
+                    min="0.80"
+                    max="2.20"
                     step="0.05"
                     value={sphereRadius}
                     onChange={(e) => setSphereRadius(Number(e.target.value))}
                     className="w-full accent-amber-500 cursor-pointer h-1.5 bg-neutral-800 rounded-lg"
                   />
+                  <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+                    <span>Compact (0.8x)</span>
+                    <span>Motion.dev (1.38x)</span>
+                    <span>Expanded (2.2x)</span>
+                  </div>
                 </div>
 
                 {/* Auto Rotation Speed Slider */}
@@ -281,9 +286,9 @@ export const DevLabPage: React.FC<DevLabPageProps> = () => {
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       onClick={() => {
-                        setParticleCount(15000);
-                        setSphereRadius(2.3);
-                        setAutoRotateSpeed(0.8);
+                        setParticleCount(19500);
+                        setSphereRadius(1.38);
+                        setAutoRotateSpeed(0.9);
                       }}
                       className="p-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-slate-800 text-[11px] font-medium text-slate-300 transition-colors text-center cursor-pointer"
                     >
@@ -292,8 +297,8 @@ export const DevLabPage: React.FC<DevLabPageProps> = () => {
                     <button
                       onClick={() => {
                         setParticleCount(24000);
-                        setSphereRadius(2.6);
-                        setAutoRotateSpeed(1.4);
+                        setSphereRadius(1.65);
+                        setAutoRotateSpeed(1.2);
                       }}
                       className="p-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-slate-800 text-[11px] font-medium text-slate-300 transition-colors text-center cursor-pointer"
                     >
@@ -301,13 +306,13 @@ export const DevLabPage: React.FC<DevLabPageProps> = () => {
                     </button>
                     <button
                       onClick={() => {
-                        setParticleCount(10000);
-                        setSphereRadius(2.4);
-                        setAutoRotateSpeed(0.5);
+                        setParticleCount(12000);
+                        setSphereRadius(1.15);
+                        setAutoRotateSpeed(0.6);
                       }}
                       className="p-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-slate-800 text-[11px] font-medium text-slate-300 transition-colors text-center cursor-pointer"
                     >
-                      Ambient Chill
+                      Compact
                     </button>
                   </div>
                 </div>

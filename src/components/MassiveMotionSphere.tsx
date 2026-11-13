@@ -207,10 +207,11 @@ const ParticleSphereMesh: React.FC<ParticleSphereMeshProps> = ({
       // Latitude phi (0 to PI) with banding density enhancement
       let phi = Math.acos(2.0 * v - 1.0);
 
-      // Enhance point density along horizontal ring stripes
+      // Enhance point density along horizontal ring stripes matching Motion.dev
       const bandFactor =
-        Math.pow(Math.sin(phi * 8.0), 6) * 0.35 +
-        Math.pow(Math.sin(phi * 16.0), 8) * 0.25;
+        Math.pow(Math.sin(phi * 7.0), 8) * 0.45 +
+        Math.pow(Math.sin(phi * 14.0 + 0.3), 8) * 0.35 +
+        Math.pow(Math.cos(phi * 3.5), 10) * 0.25;
 
       // Volumetric thickness around sphere surface
       const thickness = (Math.random() - 0.5) * 0.12 * (1.0 + bandFactor);
@@ -315,7 +316,8 @@ const ParticleSphereMesh: React.FC<ParticleSphereMeshProps> = ({
     const targetParallaxY = mousePos.y * 0.2;
 
     if (sphereGroupRef.current) {
-      // Apply smooth Euler rotation with mouse parallax dampening
+      // Apply smooth Euler rotation with planetary axial tilt (-12deg) and mouse parallax
+      sphereGroupRef.current.rotation.z = -0.21;
       sphereGroupRef.current.rotation.x = s.rotX + targetParallaxY;
       sphereGroupRef.current.rotation.y = s.rotY + targetParallaxX;
     }
@@ -330,7 +332,7 @@ const ParticleSphereMesh: React.FC<ParticleSphereMeshProps> = ({
   return (
     <group ref={sphereGroupRef}>
       {/* 1. REVOLVING 3D LOGO INSIDE THE SPHERE */}
-      {showInsideLogo && <RevolvingInsideLogo size={radius * 0.48} />}
+      {showInsideLogo && <RevolvingInsideLogo size={radius * 0.44} />}
 
       {/* 2. THE MASSIVE 3D PARTICLE SPHERE (Motion.dev Banded Shell) */}
       <points ref={pointsRef}>
@@ -345,7 +347,7 @@ const ParticleSphereMesh: React.FC<ParticleSphereMeshProps> = ({
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.048}
+          size={0.034}
           vertexColors
           map={particleTexture}
           transparent
@@ -365,7 +367,7 @@ const ParticleSphereMesh: React.FC<ParticleSphereMeshProps> = ({
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.028}
+          size={0.022}
           color="#FFA62B"
           map={particleTexture}
           transparent
@@ -383,8 +385,8 @@ const ParticleSphereMesh: React.FC<ParticleSphereMeshProps> = ({
 // 3. MAIN EXPORTED COMPONENT (Canvas + Pointer Drag Handler + Camera Zoom)
 // ---------------------------------------------------------------------------
 export const MassiveMotionSphere: React.FC<MassiveMotionSphereProps> = ({
-  particleCount = 18500,
-  sphereRadius = 2.45,
+  particleCount = 19000,
+  sphereRadius = 1.38,
   autoRotateSpeed = 1.0,
   interactive = true,
   showInsideLogo = true,
@@ -401,7 +403,7 @@ export const MassiveMotionSphere: React.FC<MassiveMotionSphereProps> = ({
   const [mouseParallax, setMouseParallax] = useState({ x: 0, y: 0 });
 
   // Camera zoom state
-  const [cameraZ, setCameraZ] = useState(4.8);
+  const [cameraZ, setCameraZ] = useState(4.6);
 
   // Pointer drag events
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
@@ -477,7 +479,7 @@ export const MassiveMotionSphere: React.FC<MassiveMotionSphereProps> = ({
       </div>
 
       <Canvas
-        camera={{ position: [0, 0, cameraZ], fov: 55 }}
+        camera={{ position: [0, 0, cameraZ], fov: 48 }}
         gl={{
           antialias: true,
           alpha: true,
