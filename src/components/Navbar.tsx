@@ -170,35 +170,35 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled 
-            ? 'bg-brand-navy-dark/95 backdrop-blur-xl border-b border-brand-gold/20 py-3 shadow-2xl' 
-            : 'bg-transparent py-4'
+            ? 'bg-brand-navy-dark/95 backdrop-blur-xl border-b border-brand-gold/20 py-2.5 xl:py-3 shadow-2xl' 
+            : 'bg-transparent py-3 xl:py-4'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+        <div className="max-w-[1440px] w-full mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
+          <div className="flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
             
-            {/* Brand Logo & Title */}
+            {/* Brand Logo & Title (Protected against shrinking and overlapping) */}
             <button
               onClick={() => navigate('/')}
-              className="flex items-center gap-3 group focus:outline-none rounded-xl p-1 text-left cursor-pointer"
+              className="shrink-0 flex items-center gap-2.5 sm:gap-3 group focus:outline-none rounded-xl p-1 text-left cursor-pointer z-10"
             >
               <img 
                 src="/wenzdaylab-logo.svg" 
                 alt="WenzdayLab Logo" 
-                className="w-10 h-10 object-contain rounded-xl border border-brand-gold/30 shadow-md group-hover:scale-105 transition-transform"
+                className="w-9 h-9 sm:w-10 sm:h-10 object-contain rounded-xl border border-brand-gold/30 shadow-md group-hover:scale-105 transition-transform shrink-0"
               />
-              <div className="flex flex-col">
-                <span className="font-display text-lg sm:text-xl font-extrabold tracking-wider text-slate-100 group-hover:text-brand-gold transition-colors">
+              <div className="flex flex-col shrink-0 select-none">
+                <span className="font-display text-base sm:text-lg xl:text-xl font-extrabold tracking-wider text-slate-100 group-hover:text-brand-gold transition-colors whitespace-nowrap">
                   WENZDAY<span className="gold-gradient-text">LAB</span>
                 </span>
-                <span className="text-[9px] uppercase tracking-[0.25em] text-slate-400 font-semibold group-hover:text-brand-gold/80 transition-colors">
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.22em] text-slate-400 font-semibold group-hover:text-brand-gold/80 transition-colors whitespace-nowrap">
                   Frontier Intelligence
                 </span>
               </div>
             </button>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1.5 bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/20 backdrop-blur-md shadow-2xl">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-brand-navy-deep/80 p-1 xl:p-1.5 rounded-2xl border border-brand-gold/20 backdrop-blur-md shadow-2xl shrink-0">
               {NAV_TABS.map((tab) => {
                 const active = isTabActive(tab.path);
 
@@ -215,7 +215,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => navigate('/ai-agents')}
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
-                        className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
+                        className={`relative flex items-center gap-1 xl:gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
                           active ? 'text-brand-navy-dark' : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
                         }`}
                       >
@@ -226,9 +226,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                             transition={{ type: "spring", stiffness: 400, damping: 32 }}
                           />
                         )}
-                        <span className="relative z-10 flex items-center gap-1.5">
+                        <span className="relative z-10 flex items-center gap-1 xl:gap-1.5">
                           {tab.icon}
-                          <span>{tab.label}</span>
+                          <span className="whitespace-nowrap">{tab.label}</span>
                           <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${agentsDropdownOpen ? 'rotate-180' : ''}`} />
                         </span>
                       </motion.button>
@@ -389,7 +389,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => navigate(tab.path)}
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
+                    className={`relative flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
                       active ? 'text-brand-navy-dark' : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
                     }`}
                   >
@@ -400,9 +400,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                         transition={{ type: "spring", stiffness: 400, damping: 32 }}
                       />
                     )}
-                    <span className="relative z-10 flex items-center gap-2">
+                    <span className="relative z-10 flex items-center gap-1.5 xl:gap-2">
                       {tab.icon}
-                      <span>{tab.label}</span>
+                      <span className="whitespace-nowrap">{tab.label}</span>
                     </span>
                   </motion.button>
                 );
@@ -410,7 +410,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </nav>
 
             {/* Right Side Actions: Theme Switcher, Admin & User Auth */}
-            <div className="hidden sm:flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center gap-2 xl:gap-2.5 shrink-0">
               
               {/* Hallmark Theme Switcher */}
               <HallmarkThemeSwitcher />
