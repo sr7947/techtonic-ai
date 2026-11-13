@@ -16,6 +16,84 @@ import {
 } from 'lucide-react';
 import { MODEL_RANKINGS_DATA, type ModalityCategory, type ModalityConfig, type RankingItem } from '../data/modelRankings';
 
+const CREATOR_LOGOS: Record<string, string> = {
+  'anthropic': '/logos/anthropic.png',
+  'google': '/logos/google.png',
+  'google deepmind': '/logos/google.png',
+  'google cloud': '/logos/google.png',
+  'openai': '/logos/openai.png',
+  'meta': '/logos/meta.png',
+  'muse labs': '/logos/meta.png',
+  'xai': '/logos/grok.svg',
+  'deepseek': '/logos/deepseek.svg',
+  'alibaba cloud': '/logos/alibaba.svg',
+  'alibaba': '/logos/alibaba.svg',
+  'mistral': '/logos/mistral.svg',
+  'midjourney': '/logos/midjourney.svg',
+  'runway': '/logos/runway.svg',
+  'black forest labs': '/logos/bfl.svg',
+  'black forest labs / fal': '/logos/bfl.svg',
+  'black forest labs / together': '/logos/bfl.svg',
+  'stability ai': '/logos/stability.svg',
+  'elevenlabs': '/logos/elevenlabs.svg',
+  'luma ai': '/logos/luma.svg',
+  'pika labs': '/logos/pika.svg',
+  'ideogram': '/logos/ideogram.svg',
+  'recraft': '/logos/recraft.svg',
+  'kyutai': '/logos/kyutai.svg',
+  'cartesia': '/logos/cartesia.svg',
+  'deepgram': '/logos/deepgram.svg',
+  'assemblyai': '/logos/assemblyai.svg',
+  'minimax': '/logos/minimax.svg',
+  'moonshot ai': '/logos/moonshot.svg',
+  'zhipu ai': '/logos/zhipu.svg',
+  'kuaishou': '/logos/kling.svg',
+  'xiaomi ai': '/logos/xiaomi.svg',
+  'microsoft': '/logos/microsoft.png',
+  'apple': '/logos/apple.png',
+  'aws': '/logos/aws.png',
+  'ibm': '/logos/ibm.png',
+  'nvidia': '/logos/nvidia.png',
+  'hugging face': '/logos/huggingface.png'
+};
+
+const getCreatorLogo = (creator: string = '', modelName: string = '', existingLogo?: string): string => {
+  if (existingLogo && existingLogo.startsWith('/logos/')) {
+    return existingLogo;
+  }
+  const c = creator.trim().toLowerCase();
+  if (CREATOR_LOGOS[c]) return CREATOR_LOGOS[c];
+  for (const [key, logo] of Object.entries(CREATOR_LOGOS)) {
+    if (c.includes(key) || key.includes(c)) return logo;
+  }
+  const m = modelName.toLowerCase();
+  if (m.includes('gpt') || m.includes('dall-e') || m.includes('sora') || m.includes('whisper')) return '/logos/openai.png';
+  if (m.includes('claude')) return '/logos/anthropic.png';
+  if (m.includes('gemini') || m.includes('imagen') || m.includes('chirp')) return '/logos/google.png';
+  if (m.includes('grok')) return '/logos/grok.svg';
+  if (m.includes('deepseek')) return '/logos/deepseek.svg';
+  if (m.includes('flux')) return '/logos/bfl.svg';
+  if (m.includes('qwen') || m.includes('wan')) return '/logos/alibaba.svg';
+  if (m.includes('kling')) return '/logos/kling.svg';
+  if (m.includes('k3') || m.includes('kimi')) return '/logos/moonshot.svg';
+  if (m.includes('glm')) return '/logos/zhipu.svg';
+  if (m.includes('mimo')) return '/logos/xiaomi.svg';
+  if (m.includes('gen-3') || m.includes('gen-2')) return '/logos/runway.svg';
+  if (m.includes('sdxl') || m.includes('stable')) return '/logos/stability.svg';
+  if (m.includes('eleven')) return '/logos/elevenlabs.svg';
+  if (m.includes('luma')) return '/logos/luma.svg';
+  if (m.includes('pika')) return '/logos/pika.svg';
+  if (m.includes('ideogram')) return '/logos/ideogram.svg';
+  if (m.includes('recraft')) return '/logos/recraft.svg';
+  if (m.includes('moshi')) return '/logos/kyutai.svg';
+  if (m.includes('sonic')) return '/logos/cartesia.svg';
+  if (m.includes('nova')) return '/logos/deepgram.svg';
+  if (m.includes('assembly')) return '/logos/assemblyai.svg';
+  if (m.includes('hailuo')) return '/logos/minimax.svg';
+  if (m.includes('llama') || m.includes('muse')) return '/logos/meta.png';
+  return '/logos/google.png';
+};
+
 interface ModelRankingsPageProps {
   isAdmin?: boolean;
 }
@@ -432,13 +510,14 @@ export const ModelRankingsPage: React.FC<ModelRankingsPageProps> = ({ isAdmin = 
                         </div>
 
                         <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                          {item.creatorLogo && (
-                            <img
-                              src={item.creatorLogo}
-                              alt={item.creator}
-                              className="w-3.5 h-3.5 object-contain"
-                            />
-                          )}
+                          <img
+                            src={getCreatorLogo(item.creator, item.model, item.creatorLogo)}
+                            alt={item.creator}
+                            className="w-4 h-4 object-contain shrink-0 rounded-sm bg-white/5 p-0.5 border border-white/10"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/logos/google.png';
+                            }}
+                          />
                           <span className="font-semibold text-slate-300">{item.creator}</span>
                           <span>•</span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
