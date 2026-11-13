@@ -8,6 +8,40 @@ function generateThemedImageUrl(_title) {
   return null;
 }
 
+// Canonical URL normalizer to prevent duplicates caused by tracking parameters or trailing slashes
+export function normalizeUrl(rawUrl) {
+  if (!rawUrl) return '';
+  try {
+    const u = new URL(rawUrl);
+    const trackingParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'ref', 'source', 'fbclid', 'gclid'];
+    for (const p of trackingParams) {
+      u.searchParams.delete(p);
+    }
+    for (const key of Array.from(u.searchParams.keys())) {
+      if (key.toLowerCase().startsWith('utm_')) {
+        u.searchParams.delete(key);
+      }
+    }
+    const cleanHost = u.hostname.toLowerCase().replace(/^www\./, '');
+    const cleanPath = u.pathname.replace(/\/+$/, '');
+    const search = u.searchParams.toString();
+    return `${cleanHost}${cleanPath}${search ? '?' + search : ''}`;
+  } catch {
+    return rawUrl.trim().toLowerCase().replace(/^https?:\/\/(?:www\.)?/, '').replace(/\/+$/, '');
+  }
+}
+
+// Canonical Title normalizer to prevent duplicate alerts from minor spacing/punctuation differences
+export function normalizeTitle(rawTitle) {
+  if (!rawTitle) return '';
+  return rawTitle
+    .toLowerCase()
+    .replace(/[\u2018\u2019\u201C\u201D]/g, "'")
+    .replace(/[\u2013\u2014]/g, '-')
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+
 // Initialize Supabase client
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -117,27 +151,26 @@ export default async function handler(req, res) {
     }
     const sources = Array.from(sourceMap.values());
 
-    // 2. Fetch existing titles from the last 7 days for deduplication
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // 2. Fetch existing titles and URLs from the last 14 days for robust deduplication
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
     
-    const { data: recentArticles } = await supabase
-      .from('ai_articles')
-      .select('title, article_url')
-      .gt('published_at', sevenDaysAgo.toISOString());
-      
-    const recentTitlesSet = new Set(
-      (recentArticles || []).map(a => (a.title || '').toLowerCase().trim())
-    );
-
-    const { data: recentUrlsPending } = await supabase
-      .from('pending_articles')
-      .select('article_url');
-
-    const recentUrlsSet = new Set([
-      ...(recentArticles || []).map(a => a.article_url),
-      ...(recentUrlsPending || []).map(a => a.article_url)
+    const [recentArticlesRes, recentPendingRes] = await Promise.all([
+      supabase.from('ai_articles').select('title, article_url').gte('created_at', fourteenDaysAgo.toISOString()),
+      supabase.from('pending_articles').select('title, article_url')
     ]);
+      
+    const recentTitlesSet = new Set();
+    const recentUrlsSet = new Set();
+
+    for (const a of (recentArticlesRes.data || [])) {
+      if (a.title) recentTitlesSet.add(normalizeTitle(a.title));
+      if (a.article_url) recentUrlsSet.add(normalizeUrl(a.article_url));
+    }
+    for (const p of (recentPendingRes.data || [])) {
+      if (p.title) recentTitlesSet.add(normalizeTitle(p.title));
+      if (p.article_url) recentUrlsSet.add(normalizeUrl(p.article_url));
+    }
 
     // 3. Process all sources with individual timeouts
     const promises = sources.map(async (source) => {
@@ -165,11 +198,17 @@ export default async function handler(req, res) {
           const articleUrl = item.link || item.guid;
           if (!articleUrl) continue;
 
-          // Title & URL deduplication
-          const lowerTitle = (item.title || '').toLowerCase().trim();
-          if (recentTitlesSet.has(lowerTitle) || recentUrlsSet.has(articleUrl)) {
+          // Canonical Title & URL deduplication
+          const normTitle = normalizeTitle(item.title);
+          const normUrl = normalizeUrl(articleUrl);
+
+          if ((normTitle && recentTitlesSet.has(normTitle)) || recentUrlsSet.has(normUrl)) {
             continue;
           }
+
+          // Register in sets immediately to prevent in-flight duplicates across sibling sources
+          if (normTitle) recentTitlesSet.add(normTitle);
+          recentUrlsSet.add(normUrl);
 
           // Summary cleanup
           let rawSummary = item.contentSnippet || item.summary || item.contentEncoded || '';
