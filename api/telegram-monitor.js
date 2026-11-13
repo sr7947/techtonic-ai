@@ -38,10 +38,11 @@ export default async function handler(req, res) {
       .select('*');
 
     const sourceMap = new Map();
-    for (const s of DEFAULT_OFFICIAL_SOURCES) {
+    for (const s of (dbSources || [])) {
       sourceMap.set(s.name, s);
     }
-    for (const s of (dbSources || [])) {
+    // Official verified feeds always take precedence over legacy database entries
+    for (const s of DEFAULT_OFFICIAL_SOURCES) {
       sourceMap.set(s.name, { ...sourceMap.get(s.name), ...s });
     }
     const sources = Array.from(sourceMap.values());
