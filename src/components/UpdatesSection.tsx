@@ -57,9 +57,9 @@ const SafeImage: React.FC<{ src: string; alt: string; className: string }> = ({ 
       <div className={`${className} bg-gradient-to-br from-[#0A1124] via-[#050814] to-[#0F1B38] flex flex-col items-center justify-center border border-brand-gold/15 p-4 relative overflow-hidden group`}>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(212,175,55,0.06),_transparent)] pointer-events-none" />
         <img 
-          src="/wenzdaylab-logo.svg" 
+          src="/wenzdaylab-logo.png" 
           alt="WenzdayLab" 
-          className="w-10 h-10 object-contain mb-1.5 opacity-85 group-hover:scale-110 transition-transform drop-shadow-[0_0_12px_rgba(212,175,55,0.3)]" 
+          className="w-10 h-10 object-cover mb-1.5 opacity-85 group-hover:scale-110 transition-transform drop-shadow-[0_0_12px_rgba(212,175,55,0.3)] rounded-lg" 
         />
         <div className="text-xs font-display font-extrabold tracking-widest text-brand-gold uppercase">
           WENZDAY<span className="text-slate-100">LAB</span>

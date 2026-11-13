@@ -1,32 +1,74 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GeminiFullPage3D } from './GeminiFullPage3D';
-import { ArrowRight, BookOpen, Sparkles } from 'lucide-react';
+import { MassiveMotionSphere } from './MassiveMotionSphere';
+import { ArrowRight, Sparkles, Orbit, Waves } from 'lucide-react';
 
 export const Hero: React.FC = () => {
+  const [view3DMode, setView3DMode] = useState<'sphere' | 'stream'>('sphere');
+
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center pt-24 pb-16 overflow-hidden z-10 bg-brand-navy-dark">
+    <section className="relative min-h-[95vh] flex items-center justify-center pt-24 pb-16 overflow-hidden z-10 bg-brand-navy-dark">
       
-      {/* Full-Bleed 100vw × 100vh 3D Particle Swarm Background */}
-      <GeminiFullPage3D />
+      {/* 3D Engine: Massive 3D Motion Sphere or Legacy Particle Stream */}
+      {view3DMode === 'sphere' ? (
+        <div className="absolute inset-0 z-0 flex items-center justify-center">
+          <MassiveMotionSphere
+            particleCount={21000}
+            sphereRadius={2.85}
+            autoRotateSpeed={0.9}
+            interactive={true}
+            showInsideLogo={true}
+            className="w-full h-full"
+          />
+        </div>
+      ) : (
+        <GeminiFullPage3D />
+      )}
+
+      {/* 3D Engine Quick Switcher (Dev Mode Preview) */}
+      <div className="absolute top-26 right-4 sm:right-8 z-30 hidden sm:flex items-center gap-1 p-1 bg-black/60 backdrop-blur-xl rounded-2xl border border-amber-500/30 text-xs shadow-xl">
+        <button
+          onClick={() => setView3DMode('sphere')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer ${
+            view3DMode === 'sphere'
+              ? 'bg-amber-500 text-black shadow-[0_0_15px_rgba(255,122,0,0.5)]'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Orbit className="w-3.5 h-3.5" />
+          3D Sphere
+        </button>
+        <button
+          onClick={() => setView3DMode('stream')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer ${
+            view3DMode === 'stream'
+              ? 'bg-amber-500 text-black shadow-[0_0_15px_rgba(255,122,0,0.5)]'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Waves className="w-3.5 h-3.5" />
+          Stream
+        </button>
+      </div>
 
       {/* Overlay Ambient Gradient Vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-brand-navy-dark/40 to-brand-navy-dark pointer-events-none z-10" />
 
       {/* Centered Hero Content Container */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 text-center space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 text-center space-y-8 pointer-events-none">
         
         {/* Top Tagline Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-navy-dark/80 border border-red-500/30 backdrop-blur-md shadow-2xl"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-navy-dark/80 border border-amber-500/40 backdrop-blur-md shadow-2xl pointer-events-auto"
         >
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-          <span className="w-2 h-2 rounded-full bg-brand-gold" />
-          <span className="text-[10px] md:text-xs tracking-[0.25em] uppercase font-bold text-brand-gold-bright">
-            Let's Explore Future Together
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-orange-500" />
+          <span className="text-[10px] md:text-xs tracking-[0.25em] uppercase font-bold text-amber-300">
+            Frontier Intelligence & Autonomous Systems
           </span>
         </motion.div>
 
@@ -39,11 +81,11 @@ export const Hero: React.FC = () => {
         >
           <div className="flex items-center justify-center gap-3 mb-2">
             <img 
-              src="/wenzdaylab-logo.svg" 
+              src="/wenzdaylab-logo.png" 
               alt="WenzdayLab" 
               width={80}
               height={80}
-              className="w-14 h-14 md:w-16 md:h-16 object-contain rounded-xl border border-brand-gold/30 shadow-2xl"
+              className="w-14 h-14 md:w-16 md:h-16 object-cover rounded-xl border border-brand-gold/30 shadow-2xl"
             />
             <span className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-200 uppercase tracking-wider">
               WENZDAY<span className="gold-gradient-text">LAB</span>
@@ -77,26 +119,26 @@ export const Hero: React.FC = () => {
 
         {/* Action Buttons */}
         <motion.div 
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 pointer-events-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <a
             href="#updates"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 via-brand-gold to-amber-500 hover:from-red-500 hover:to-brand-gold-bright text-brand-navy-dark font-extrabold text-base px-9 py-4 rounded-full transition-all duration-300 shadow-[0_0_30px_rgba(239,68,68,0.4)] hover:shadow-[0_0_45px_rgba(239,68,68,0.6)] hover:scale-105 active:scale-95 focus:outline-none"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-black font-extrabold text-base px-9 py-4 rounded-full transition-all duration-300 shadow-[0_0_30px_rgba(255,122,0,0.4)] hover:shadow-[0_0_45px_rgba(255,122,0,0.6)] hover:scale-105 active:scale-95 focus:outline-none cursor-pointer"
           >
-            <Sparkles className="w-5 h-5 fill-brand-navy-dark" />
+            <Sparkles className="w-5 h-5 fill-black" />
             Explore AI Updates
             <ArrowRight className="w-5 h-5 ml-1" />
           </a>
 
           <a
-            href="#learning"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-brand-navy-dark/90 hover:bg-brand-navy-light/60 text-brand-gold-bright border border-brand-gold/40 hover:border-brand-gold font-bold text-base px-9 py-4 rounded-full transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95 focus:outline-none"
+            href="/dev-lab"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-black/80 hover:bg-neutral-900 text-amber-300 border border-amber-500/40 hover:border-amber-400 font-bold text-base px-8 py-4 rounded-full transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95 focus:outline-none cursor-pointer shadow-lg"
           >
-            <BookOpen className="w-5 h-5" />
-            Start Learning
+            <Orbit className="w-5 h-5 text-amber-400" />
+            Enter 3D Dev Lab
           </a>
         </motion.div>
 

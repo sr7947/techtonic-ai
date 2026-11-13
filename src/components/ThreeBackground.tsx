@@ -50,7 +50,7 @@ export const ThreeBackground: React.FC = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw grid lines in the background
-      ctx.strokeStyle = 'rgba(189, 154, 118, 0.015)';
+      ctx.strokeStyle = 'rgba(255, 122, 0, 0.02)';
       ctx.lineWidth = 1;
       const gridSize = 80;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -75,12 +75,12 @@ export const ThreeBackground: React.FC = () => {
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-        // Draw particle
+        // Draw particle with warm solar amber glow
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(189, 154, 118, ${p.alpha})`;
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = 'rgba(189, 154, 118, 0.5)';
+        ctx.fillStyle = `rgba(255, 150, 40, ${p.alpha})`;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = 'rgba(255, 122, 0, 0.6)';
         ctx.fill();
         ctx.shadowBlur = 0; // Reset shadow for lines
       });
@@ -93,11 +93,11 @@ export const ThreeBackground: React.FC = () => {
           const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
 
           if (dist < connectionDistance) {
-            const alpha = (1 - dist / connectionDistance) * 0.12;
+            const alpha = (1 - dist / connectionDistance) * 0.14;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(189, 154, 118, ${alpha})`;
+            ctx.strokeStyle = `rgba(255, 140, 20, ${alpha})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
@@ -107,11 +107,11 @@ export const ThreeBackground: React.FC = () => {
         if (mouseRef.current.active) {
           const mouseDist = Math.hypot(p1.x - mouseRef.current.x, p1.y - mouseRef.current.y);
           if (mouseDist < mouseConnectionDistance) {
-            const alpha = (1 - mouseDist / mouseConnectionDistance) * 0.2;
+            const alpha = (1 - mouseDist / mouseConnectionDistance) * 0.25;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(mouseRef.current.x, mouseRef.current.y);
-            ctx.strokeStyle = `rgba(189, 154, 118, ${alpha})`;
+            ctx.strokeStyle = `rgba(255, 160, 40, ${alpha})`;
             ctx.lineWidth = 1;
             ctx.stroke();
 

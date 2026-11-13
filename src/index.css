@@ -7,6 +7,30 @@
    ========================================================================== */
 
 :root,
+[data-theme="obsidian-amber"] {
+  /* WenzdayLab Obsidian Sphere: Deep obsidian void, revolving 3D particle sphere, solar amber signal */
+  --theme-font-display: "Familjen Grotesk", "Clash Display", system-ui, sans-serif;
+  --theme-font-sans: "Host Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --theme-font-mono: "JetBrains Mono", monospace;
+
+  --theme-paper-dark: #04060a;
+  --theme-paper-deep: #080c14;
+  --theme-paper: #101622;
+  --theme-paper-light: #182234;
+  --theme-paper-accent: #223049;
+
+  --theme-accent: #ff7a00;
+  --theme-accent-bright: #ffa333;
+  --theme-accent-dark: #cc5a00;
+  --theme-accent-muted: #803800;
+  --theme-accent-glow: rgba(255, 122, 0, 0.25);
+
+  --theme-gradient-accent: linear-gradient(135deg, #ffd080 0%, #ff7a00 50%, #d45000 100%);
+  --theme-border-rule: rgba(255, 122, 0, 0.22);
+  --theme-border-glow: rgba(255, 122, 0, 0.48);
+  --theme-name: "Obsidian Amber";
+}
+
 [data-theme="cobalt"] {
   /* Hallmark Cobalt: Familjen Grotesk over IBM Plex Sans, electric cobalt signal */
   --theme-font-display: "Familjen Grotesk", "Clash Display", system-ui, sans-serif;

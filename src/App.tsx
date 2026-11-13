@@ -9,11 +9,12 @@ import { AdminPanel } from './components/AdminPanel';
 import { LATEST_UPDATES } from './data/content';
 import { supabase } from './lib/supabase';
 
-// 5 Dedicated Tab Pages
+// 6 Dedicated Tab Pages
 import { TrendingPage } from './pages/TrendingPage';
 import { ModelsHubPage } from './pages/ModelsHubPage';
 import { ModelRankingsPage } from './pages/ModelRankingsPage';
 import { AiAgentsPage } from './pages/AiAgentsPage';
+import { DevLabPage } from './pages/DevLabPage';
 
 interface UserProfile {
   name: string;
@@ -211,9 +212,14 @@ function App() {
               <AiAgentsPage />
             )}
 
+            {/* TAB 6: Dev Lab (3D Massive Motion Sphere & Theme Sandbox) */}
+            {currentPath === '/dev-lab' && (
+              <DevLabPage />
+            )}
+
             {/* 404 Fallback for Obsolete Routes */}
             {![
-              '/', '/latest-updates', '/trending', '/models-hub', '/model-rankings'
+              '/', '/latest-updates', '/trending', '/models-hub', '/model-rankings', '/dev-lab'
             ].includes(currentPath) && !currentPath.startsWith('/ai-agents') && (
               <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 gap-6 pt-24">
                 <div className="font-display text-8xl font-black text-brand-gold/20">404</div>

@@ -152,6 +152,12 @@ export const Navbar: React.FC<NavbarProps> = ({
       path: '/ai-agents',
       icon: <Bot className="w-4 h-4 text-cyan-400" />,
       hasDropdown: true
+    },
+    {
+      id: 'dev-lab',
+      label: 'Dev Lab',
+      path: '/dev-lab',
+      icon: <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
     }
   ];
 
@@ -183,9 +189,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="shrink-0 flex items-center gap-2.5 sm:gap-3 group focus:outline-none rounded-xl p-1 text-left cursor-pointer z-10"
             >
               <img 
-                src="/wenzdaylab-logo.svg" 
+                src="/wenzdaylab-logo.png" 
                 alt="WenzdayLab Logo" 
-                className="w-9 h-9 sm:w-10 sm:h-10 object-contain rounded-xl border border-brand-gold/30 shadow-md group-hover:scale-105 transition-transform shrink-0"
+                className="w-9 h-9 sm:w-10 sm:h-10 object-cover rounded-xl border border-brand-gold/30 shadow-md group-hover:scale-105 transition-transform shrink-0"
               />
               <div className="flex flex-col shrink-0 select-none">
                 <span className="font-display text-base sm:text-lg xl:text-xl font-extrabold tracking-wider text-slate-100 group-hover:text-brand-gold transition-colors whitespace-nowrap">
@@ -648,7 +654,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <div className="text-center space-y-2">
-              <img src="/wenzdaylab-logo.svg" alt="WenzdayLab" className="w-12 h-12 mx-auto rounded-xl border border-brand-gold/30" />
+              <img src="/wenzdaylab-logo.png" alt="WenzdayLab" className="w-12 h-12 mx-auto rounded-xl border border-brand-gold/30 object-cover" />
               <h3 className="font-display text-xl font-bold text-slate-100">Sign in to WenzdayLab</h3>
               <p className="text-xs text-slate-400">Choose your account to access curated news and admin publishing.</p>
             </div>

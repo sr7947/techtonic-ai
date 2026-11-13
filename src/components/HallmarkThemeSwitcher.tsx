@@ -16,6 +16,17 @@ export interface HallmarkTheme {
 
 export const HALLMARK_THEMES: HallmarkTheme[] = [
   {
+    id: 'obsidian-amber',
+    name: 'Obsidian Amber',
+    badge: '3D Sphere & Solar Core',
+    accentColor: '#ff7a00',
+    paperColor: '#04060a',
+    fontDisplay: 'Familjen Grotesk',
+    fontBody: 'Host Grotesk',
+    tagline: 'Deep obsidian void, revolving 3D particle sphere, and glowing amber solar intelligence',
+    genre: 'Signature Brand Theme'
+  },
+  {
     id: 'cobalt',
     name: 'Cobalt',
     badge: 'Developer Platform',
