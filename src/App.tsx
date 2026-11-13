@@ -156,8 +156,13 @@ function App() {
       <Navbar 
         user={user} 
         onSignIn={setUser} 
-        onSignOut={() => setUser(null)} 
-        onOpenAdmin={() => setAdminOpen(true)}
+        onSignOut={() => {
+          setUser(null);
+          setAdminOpen(false);
+        }} 
+        onOpenAdmin={() => {
+          if (user) setAdminOpen(true);
+        }}
         currentPath={currentPath}
         navigate={navigate}
       />
@@ -225,8 +230,8 @@ function App() {
       {/* Platform Footer */}
       <Footer />
 
-      {/* Admin Panel Modal Overlay */}
-      {adminOpen && (
+      {/* Admin Panel Modal Overlay (strictly gated for authenticated admin user) */}
+      {adminOpen && user && (
         <AdminPanel
           onClose={() => setAdminOpen(false)}
           onAddUpdate={(newUp) => setUpdates([newUp, ...updates])}

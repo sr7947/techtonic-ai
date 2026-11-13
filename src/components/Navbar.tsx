@@ -182,15 +182,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Hallmark Theme Switcher */}
               <HallmarkThemeSwitcher />
 
-              {/* Quick Admin Access Button */}
-              <button
-                onClick={onOpenAdmin}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-navy-deep/80 hover:bg-brand-navy-light/60 border border-brand-gold/20 text-brand-gold-bright text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-md"
-                title="Admin Content & Database Panel"
-              >
-                <Settings className="w-3.5 h-3.5 text-brand-gold" />
-                <span>Admin</span>
-              </button>
+              {/* Quick Admin Access Button (strictly visible only when signed in) */}
+              {user && (
+                <button
+                  onClick={onOpenAdmin}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-navy-deep/80 hover:bg-brand-navy-light/60 border border-brand-gold/20 text-brand-gold-bright text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-md"
+                  title="Admin Content & Database Panel"
+                >
+                  <Settings className="w-3.5 h-3.5 text-brand-gold" />
+                  <span>Admin</span>
+                </button>
+              )}
 
               {/* User Authentication */}
               {!user ? (
@@ -260,13 +262,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Mobile Hamburger Toggle */}
             <div className="flex md:hidden items-center gap-2">
-              <button
-                onClick={onOpenAdmin}
-                className="p-2 rounded-xl bg-brand-navy-deep border border-brand-gold/20 text-brand-gold"
-                title="Admin"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
+              {user && (
+                <button
+                  onClick={onOpenAdmin}
+                  className="p-2 rounded-xl bg-brand-navy-deep border border-brand-gold/20 text-brand-gold"
+                  title="Admin"
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
+              )}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="p-2 rounded-xl bg-brand-navy-deep border border-brand-gold/20 text-slate-200 hover:text-brand-gold"

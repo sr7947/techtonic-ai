@@ -104,15 +104,16 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
   const [showArchive, setShowArchive] = useState<boolean>(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // Admin Mode state (active if passed via props, or toggled on, or admin logged in)
-  const [adminMode, setAdminMode] = useState<boolean>(() => {
-    return propsIsAdmin || localStorage.getItem('wenzdaylab_admin_mode') === 'true' || !!localStorage.getItem('wenzdaylab_user') || !!localStorage.getItem('techtonic_user');
-  });
+  // Admin Mode state (strictly active ONLY if user is logged in as admin)
+  const [adminMode, setAdminMode] = useState<boolean>(propsIsAdmin);
+
+  useEffect(() => {
+    setAdminMode(propsIsAdmin);
+  }, [propsIsAdmin]);
 
   const toggleAdminMode = () => {
-    const next = !adminMode;
-    setAdminMode(next);
-    localStorage.setItem('wenzdaylab_admin_mode', next ? 'true' : 'false');
+    if (!propsIsAdmin) return;
+    setAdminMode(prev => !prev);
   };
 
   const handleDelete = async (article: ArticleItem) => {
@@ -349,18 +350,21 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
         {/* Counter & Mode Indicator */}
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={toggleAdminMode}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl border text-xs font-bold transition-all cursor-pointer shadow-lg active:scale-95 ${
-              adminMode
-                ? 'bg-red-500/20 border-red-500/50 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
-                : 'bg-brand-navy-deep/80 hover:bg-brand-navy-light/60 border-brand-gold/25 text-slate-300 hover:text-brand-gold'
-            }`}
-            title="Toggle Admin Delete Mode"
-          >
-            {adminMode ? <ShieldCheck className="w-3.5 h-3.5 text-red-400" /> : <Shield className="w-3.5 h-3.5 text-brand-gold" />}
-            <span>Admin Mode: {adminMode ? 'ON (Delete Active)' : 'OFF'}</span>
-          </button>
+          {/* Admin Mode Toggle (STRICTLY visible ONLY when user is signed in as Admin) */}
+          {propsIsAdmin && (
+            <button
+              onClick={toggleAdminMode}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl border text-xs font-bold transition-all cursor-pointer shadow-lg active:scale-95 ${
+                adminMode
+                  ? 'bg-red-500/20 border-red-500/50 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                  : 'bg-brand-navy-deep/80 hover:bg-brand-navy-light/60 border-brand-gold/25 text-slate-300 hover:text-brand-gold'
+              }`}
+              title="Toggle Admin Delete Mode"
+            >
+              {adminMode ? <ShieldCheck className="w-3.5 h-3.5 text-red-400" /> : <Shield className="w-3.5 h-3.5 text-brand-gold" />}
+              <span>Admin Mode: {adminMode ? 'ON (Delete Active)' : 'OFF'}</span>
+            </button>
+          )}
 
           <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-brand-navy-deep/90 border border-brand-gold/20 text-xs font-semibold text-slate-300 backdrop-blur-md shadow-lg">
             <Clock className="w-4 h-4 text-brand-gold" />
@@ -495,7 +499,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
                           {/* Recommendation B: Smart Recency Badge & Relative Time Overlay */}
                           <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20" style={{ transform: 'translateZ(25px)' }}>
-                            {adminMode && (
+                            {propsIsAdmin && adminMode && (
                               <button
                                 onClick={(e) => {
                                   e.preventDefault();
@@ -550,7 +554,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                               
                               {/* Recency Badge for non-image cards & Admin Delete */}
                               <div className="flex items-center gap-1.5">
-                                {adminMode && (
+                                {propsIsAdmin && adminMode && (
                                   <button
                                     onClick={(e) => {
                                       e.preventDefault();
