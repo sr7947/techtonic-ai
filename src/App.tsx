@@ -79,16 +79,12 @@ function App() {
       if (!url || !key) return;
 
       try {
-        // Fetch AI articles from official feed pipeline (filtered to last 3 days)
-        const threeDaysAgo = new Date();
-        threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-        threeDaysAgo.setHours(0, 0, 0, 0);
-
+        // Fetch latest official AI articles from Supabase (up to 200 for rich 7-day view, archive, and company filter fallbacks)
         const { data: rawArticles, error: errArticles } = await supabase
           .from('ai_articles')
           .select('*')
-          .or(`published_at.gte.${threeDaysAgo.toISOString()},created_at.gte.${threeDaysAgo.toISOString()}`)
-          .order('published_at', { ascending: false });
+          .order('published_at', { ascending: false })
+          .limit(200);
 
         if (rawArticles && !errArticles) {
           setArticles(rawArticles.map((item: any) => ({
