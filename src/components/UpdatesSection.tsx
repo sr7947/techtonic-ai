@@ -18,6 +18,7 @@ interface ArticleItem {
   date?: string;
   published_at?: string;
   publishedAt?: string;
+  created_at?: string;
   url: string;
   sourceName?: string;
   source?: string;
@@ -108,6 +109,7 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
           category: item.category || 'AI Labs',
           date: item.date,
           published_at: item.published_at || item.publishedAt || item.date,
+          created_at: item.created_at,
           url: item.url || item.article_url || '#',
           sourceName: item.sourceName || item.source || 'Official Source',
           author: item.author || item.sourceName || 'AI Lab',
@@ -125,16 +127,24 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
     const threeDaysThreshold = threeDaysAgo.getTime();
 
     const last3DaysItems = unique.filter((item) => {
-      const dateVal = item.published_at ? new Date(item.published_at).getTime() : 0;
-      return !isNaN(dateVal) && dateVal >= threeDaysThreshold;
+      const pubDateVal = item.published_at ? new Date(item.published_at).getTime() : 0;
+      const createdDateVal = item.created_at ? new Date(item.created_at).getTime() : 0;
+      const effectiveDate = Math.max(pubDateVal, createdDateVal);
+      return !isNaN(effectiveDate) && effectiveDate >= threeDaysThreshold;
     });
 
     const displayPool = last3DaysItems.length > 0 ? last3DaysItems : unique;
 
     // SORT STRICTLY WITH LATEST NEWS AS PER DATE & TIME AT THE TOP
     return displayPool.sort((a, b) => {
-      const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
-      const dateB = b.published_at ? new Date(b.published_at).getTime() : 0;
+      const dateA = Math.max(
+        a.published_at ? new Date(a.published_at).getTime() : 0,
+        a.created_at ? new Date(a.created_at).getTime() : 0
+      );
+      const dateB = Math.max(
+        b.published_at ? new Date(b.published_at).getTime() : 0,
+        b.created_at ? new Date(b.created_at).getTime() : 0
+      );
       return dateB - dateA;
     });
   }, [articles, updates]);

@@ -214,6 +214,11 @@ export default async function handler(req, res) {
         return res.status(200).send('OK');
       }
 
+      // Compute effective published date: if original date is older than 3 days, bump to now so it is visible in Latest Updates
+      const pubTime = article.published_at ? new Date(article.published_at).getTime() : 0;
+      const threeDaysAgoTime = Date.now() - (3 * 24 * 60 * 60 * 1000);
+      const effectivePublishedAt = (!pubTime || pubTime < threeDaysAgoTime) ? new Date().toISOString() : article.published_at;
+
       // Insert into production ai_articles table
       const { error: insertErr } = await supabase
         .from('ai_articles')
@@ -222,7 +227,7 @@ export default async function handler(req, res) {
           summary: article.summary,
           article_url: article.article_url,
           source_name: sourceName,
-          published_at: article.published_at,
+          published_at: effectivePublishedAt,
           image_url: article.image_url,
           category: categoryName
         }]);
@@ -292,12 +297,16 @@ export default async function handler(req, res) {
             created_at: new Date().toISOString()
           }]);
         } else {
+          const pubTime = article.published_at ? new Date(article.published_at).getTime() : 0;
+          const threeDaysAgoTime = Date.now() - (3 * 24 * 60 * 60 * 1000);
+          const effectivePublishedAt = (!pubTime || pubTime < threeDaysAgoTime) ? new Date().toISOString() : article.published_at;
+
           await supabase.from('ai_articles').insert([{
             title: article.title,
             summary: article.summary,
             article_url: article.article_url,
             source_name: sourceName,
-            published_at: article.published_at,
+            published_at: effectivePublishedAt,
             image_url: article.image_url,
             category: categoryName
           }]);

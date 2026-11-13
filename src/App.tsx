@@ -87,7 +87,7 @@ function App() {
         const { data: rawArticles, error: errArticles } = await supabase
           .from('ai_articles')
           .select('*')
-          .gte('published_at', threeDaysAgo.toISOString())
+          .or(`published_at.gte.${threeDaysAgo.toISOString()},created_at.gte.${threeDaysAgo.toISOString()}`)
           .order('published_at', { ascending: false });
 
         if (rawArticles && !errArticles) {
@@ -97,7 +97,8 @@ function App() {
             summary: item.summary,
             category: item.category || 'AI Labs',
             published_at: item.published_at,
-            date: new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+            created_at: item.created_at,
+            date: new Date(item.published_at || item.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
             url: item.article_url,
             sourceName: item.source_name,
             author: item.author || item.source_name,
