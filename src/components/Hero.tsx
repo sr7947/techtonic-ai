@@ -100,11 +100,11 @@ export const Hero: React.FC = () => {
               </a>
 
               <a
-                href="/dev-lab"
+                href="/model-rankings"
                 className="flex items-center justify-center gap-2 bg-neutral-900/90 hover:bg-neutral-800 text-amber-300 border border-amber-500/40 hover:border-amber-400 font-bold text-sm sm:text-base px-7 py-3.5 rounded-full transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95 cursor-pointer shadow-lg text-center"
               >
                 <Orbit className="w-4 h-4 text-amber-400" />
-                Enter 3D Dev Lab
+                Model Leaderboards
               </a>
             </div>
 

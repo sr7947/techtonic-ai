@@ -133,7 +133,7 @@ export const TrendingPage: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 min-h-screen bg-brand-navy-dark">
+    <div className="pt-24 min-h-screen bg-transparent">
       {/* Page Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6 border-b border-brand-gold/10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-brand-gold-bright text-xs font-bold tracking-wider uppercase mb-3">

@@ -3,7 +3,7 @@ import ModelsHub from '../components/ModelsHub';
 
 export const ModelsHubPage: React.FC = () => {
   return (
-    <div className="pt-24 min-h-screen bg-brand-navy-dark">
+    <div className="pt-24 min-h-screen bg-transparent">
       {/* Page Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6 border-b border-brand-gold/10">
         <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-wider text-slate-100 uppercase">

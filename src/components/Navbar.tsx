@@ -152,12 +152,6 @@ export const Navbar: React.FC<NavbarProps> = ({
       path: '/ai-agents',
       icon: <Bot className="w-4 h-4 text-cyan-400" />,
       hasDropdown: true
-    },
-    {
-      id: 'dev-lab',
-      label: 'Dev Lab',
-      path: '/dev-lab',
-      icon: <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
     }
   ];
 

@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 
-interface Particle {
+interface Particle3D {
   x: number;
   y: number;
+  z: number;
   vx: number;
   vy: number;
-  radius: number;
+  vz: number;
+  baseRadius: number;
   alpha: number;
+  colorType: 'amber' | 'gold' | 'solar';
 }
 
 export const ThreeBackground: React.FC = () => {
@@ -21,10 +24,10 @@ export const ThreeBackground: React.FC = () => {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let particles: Particle[] = [];
-    const particleCount = 60;
-    const connectionDistance = 120;
-    const mouseConnectionDistance = 200;
+    let particles: Particle3D[] = [];
+    const particleCount = 130;
+    const connectionDistance = 145;
+    const mouseDistance = 220;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -34,14 +37,19 @@ export const ThreeBackground: React.FC = () => {
 
     const initParticles = () => {
       particles = [];
+      const colorTypes: Array<'amber' | 'gold' | 'solar'> = ['amber', 'gold', 'solar'];
+
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          radius: Math.random() * 2 + 1,
-          alpha: Math.random() * 0.5 + 0.3,
+          z: Math.random() * 1.8 + 0.6, // Depth from 0.6 (close) to 2.4 (far)
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          vz: (Math.random() - 0.5) * 0.005,
+          baseRadius: Math.random() * 2.2 + 1.2,
+          alpha: Math.random() * 0.45 + 0.4,
+          colorType: colorTypes[Math.floor(Math.random() * colorTypes.length)],
         });
       }
     };
@@ -49,10 +57,10 @@ export const ThreeBackground: React.FC = () => {
     const drawParticles = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw grid lines in the background
-      ctx.strokeStyle = 'rgba(255, 122, 0, 0.02)';
+      // Subtle ambient space grid
+      ctx.strokeStyle = 'rgba(255, 122, 0, 0.015)';
       ctx.lineWidth = 1;
-      const gridSize = 80;
+      const gridSize = 90;
       for (let x = 0; x < canvas.width; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -66,58 +74,82 @@ export const ThreeBackground: React.FC = () => {
         ctx.stroke();
       }
 
-      // Update and draw particles
+      // Update and draw 3D floating particles
       particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
+        // Perspective speed scaling (closer objects move slightly faster)
+        const depthSpeedScale = 1.2 / p.z;
+        p.x += p.vx * depthSpeedScale;
+        p.y += p.vy * depthSpeedScale;
+        p.z += p.vz;
 
-        // Bounce off walls
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        // Wrap around boundaries
+        if (p.x < -20) p.x = canvas.width + 20;
+        if (p.x > canvas.width + 20) p.x = -20;
+        if (p.y < -20) p.y = canvas.height + 20;
+        if (p.y > canvas.height + 20) p.y = -20;
+        if (p.z < 0.6 || p.z > 2.4) p.vz *= -1;
 
-        // Draw particle with warm solar amber glow
+        // Depth size attenuation
+        const currentRadius = p.baseRadius * (1.2 / p.z);
+        const currentAlpha = Math.min(0.9, p.alpha * (1.2 / p.z));
+
+        // Particle colors based on type
+        let fillStyle = `rgba(255, 122, 0, ${currentAlpha})`;
+        let glowColor = 'rgba(255, 122, 0, 0.7)';
+
+        if (p.colorType === 'gold') {
+          fillStyle = `rgba(255, 195, 75, ${currentAlpha})`;
+          glowColor = 'rgba(255, 185, 50, 0.7)';
+        } else if (p.colorType === 'solar') {
+          fillStyle = `rgba(255, 150, 25, ${currentAlpha})`;
+          glowColor = 'rgba(255, 95, 0, 0.7)';
+        }
+
+        // Render glowing particle node
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 150, 40, ${p.alpha})`;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = 'rgba(255, 122, 0, 0.6)';
+        ctx.arc(p.x, p.y, currentRadius, 0, Math.PI * 2);
+        ctx.fillStyle = fillStyle;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = glowColor;
         ctx.fill();
-        ctx.shadowBlur = 0; // Reset shadow for lines
+        ctx.shadowBlur = 0;
       });
 
-      // Draw connection lines
+      // Draw constellation connection webs
       for (let i = 0; i < particles.length; i++) {
         const p1 = particles[i];
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
-          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.hypot(dx, dy);
 
           if (dist < connectionDistance) {
-            const alpha = (1 - dist / connectionDistance) * 0.14;
+            const alpha = (1 - dist / connectionDistance) * 0.16 * (1.2 / ((p1.z + p2.z) / 2));
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(255, 140, 20, ${alpha})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(255, 135, 20, ${alpha})`;
+            ctx.lineWidth = 0.85;
             ctx.stroke();
           }
         }
 
-        // Draw line to mouse
+        // Draw dynamic connection to mouse cursor
         if (mouseRef.current.active) {
           const mouseDist = Math.hypot(p1.x - mouseRef.current.x, p1.y - mouseRef.current.y);
-          if (mouseDist < mouseConnectionDistance) {
-            const alpha = (1 - mouseDist / mouseConnectionDistance) * 0.25;
+          if (mouseDist < mouseDistance) {
+            const alpha = (1 - mouseDist / mouseDistance) * 0.32;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(mouseRef.current.x, mouseRef.current.y);
-            ctx.strokeStyle = `rgba(255, 160, 40, ${alpha})`;
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(255, 155, 30, ${alpha})`;
+            ctx.lineWidth = 1.1;
             ctx.stroke();
 
-            // Subtle attraction to mouse
-            p1.x += (mouseRef.current.x - p1.x) * 0.005;
-            p1.y += (mouseRef.current.y - p1.y) * 0.005;
+            // Gentle ambient attraction to mouse
+            p1.x += (mouseRef.current.x - p1.x) * 0.004;
+            p1.y += (mouseRef.current.y - p1.y) * 0.004;
           }
         }
       }
@@ -131,7 +163,7 @@ export const ThreeBackground: React.FC = () => {
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY + window.scrollY; // adjust for page scroll
+      mouseRef.current.y = e.clientY;
       mouseRef.current.active = true;
     };
 
@@ -139,7 +171,6 @@ export const ThreeBackground: React.FC = () => {
       mouseRef.current.active = false;
     };
 
-    // Listen to global window mouse movement to make connections across pages
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseleave', handleMouseLeave);
 
@@ -154,7 +185,7 @@ export const ThreeBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 opacity-70"
+      className="fixed inset-0 pointer-events-none z-0 opacity-85"
       style={{ mixBlendMode: 'screen' }}
     />
   );
