@@ -85,7 +85,9 @@ export const HALLMARK_THEMES: HallmarkTheme[] = [
 
 export const HallmarkThemeSwitcher: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<string>(() => {
-    return localStorage.getItem('wenzdaylab_hallmark_theme') || 'cobalt';
+    const saved = localStorage.getItem('wenzdaylab_hallmark_theme');
+    if (!saved || saved === 'cobalt') return 'obsidian-amber';
+    return saved;
   });
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
