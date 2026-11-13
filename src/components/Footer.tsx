@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, Trophy, Flame, Cpu, Newspaper } from 'lucide-react';
+import { ArrowUpRight, Trophy, Flame, Cpu, Newspaper, Bot } from 'lucide-react';
 
 const YoutubeIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -107,6 +107,12 @@ export const Footer: React.FC = () => {
                 <a href="/model-rankings" className="text-slate-400 hover:text-brand-gold-bright transition-colors flex items-center gap-1.5">
                   <Trophy className="w-3.5 h-3.5 text-amber-300" />
                   <span>Model Rankings (Artificial Analysis)</span>
+                </a>
+              </li>
+              <li>
+                <a href="/ai-agents" className="text-slate-400 hover:text-brand-gold-bright transition-colors flex items-center gap-1.5">
+                  <Bot className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>AI Agents (Open Source & Cloud)</span>
                 </a>
               </li>
             </ul>

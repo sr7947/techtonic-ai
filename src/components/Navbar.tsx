@@ -1,7 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Menu, X, Settings, LogOut, ChevronDown, Trophy, Flame, Cpu, Newspaper } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Menu, 
+  X, 
+  Settings, 
+  LogOut, 
+  ChevronDown, 
+  Trophy, 
+  Flame, 
+  Cpu, 
+  Newspaper,
+  Bot,
+  Terminal,
+  Cloud,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react';
 import { HallmarkThemeSwitcher } from './HallmarkThemeSwitcher';
+import { 
+  OpenClawLogo, 
+  HermesAgentLogo, 
+  DotsLogo, 
+  GrokBotsLogo, 
+  MuseLogo 
+} from './AgentLogos';
 
 interface NavbarProps {
   user: { name: string; email: string; picture: string } | null;
@@ -35,7 +57,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [scrolled, setScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [agentsDropdownOpen, setAgentsDropdownOpen] = useState(false);
+  const [mobileAgentsOpen, setMobileAgentsOpen] = useState(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const agentsNavRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<any>(null);
 
   const googleAccounts = [
     {
@@ -50,11 +77,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   ];
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setShowDropdown(false);
+      }
+      if (agentsNavRef.current && !agentsNavRef.current.contains(e.target as Node)) {
+        setAgentsDropdownOpen(false);
       }
     };
     window.addEventListener('click', handleOutsideClick);
@@ -79,7 +109,18 @@ export const Navbar: React.FC<NavbarProps> = ({
     setShowLoginModal(false);
   };
 
-  // Exactly 4 Navigation Tabs
+  const handleMouseEnterAgents = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setAgentsDropdownOpen(true);
+  };
+
+  const handleMouseLeaveAgents = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setAgentsDropdownOpen(false);
+    }, 200);
+  };
+
+  // 5 Core Navigation Tabs
   const NAV_TABS = [
     {
       id: 'latest-updates',
@@ -104,12 +145,22 @@ export const Navbar: React.FC<NavbarProps> = ({
       label: 'Model Rankings',
       path: '/model-rankings',
       icon: <Trophy className="w-4 h-4 text-amber-300" />
+    },
+    {
+      id: 'ai-agents',
+      label: 'AI Agents',
+      path: '/ai-agents',
+      icon: <Bot className="w-4 h-4 text-cyan-400" />,
+      hasDropdown: true
     }
   ];
 
   const isTabActive = (tabPath: string) => {
     if (tabPath === '/') {
       return currentPath === '/' || currentPath === '/latest-updates';
+    }
+    if (tabPath === '/ai-agents') {
+      return currentPath.startsWith('/ai-agents');
     }
     return currentPath === tabPath;
   };
@@ -146,17 +197,199 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </button>
 
-            {/* Desktop Navigation - EXACTLY 4 TABS */}
-            <nav className="hidden md:flex items-center gap-1.5 bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/20 backdrop-blur-md shadow-2xl">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1.5 bg-brand-navy-deep/80 p-1.5 rounded-2xl border border-brand-gold/20 backdrop-blur-md shadow-2xl">
               {NAV_TABS.map((tab) => {
                 const active = isTabActive(tab.path);
+
+                if (tab.id === 'ai-agents') {
+                  return (
+                    <div 
+                      key={tab.id}
+                      ref={agentsNavRef}
+                      onMouseEnter={handleMouseEnterAgents}
+                      onMouseLeave={handleMouseLeaveAgents}
+                      className="relative"
+                    >
+                      <motion.button
+                        onClick={() => navigate('/ai-agents')}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
+                          active ? 'text-brand-navy-dark' : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
+                        }`}
+                      >
+                        {active && (
+                          <motion.div
+                            layoutId="activeTabPill"
+                            className="absolute inset-0 rounded-xl bg-gradient-to-r from-brand-gold to-brand-gold-dark shadow-[0_0_20px_rgba(212,175,55,0.4)]"
+                            transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                          />
+                        )}
+                        <span className="relative z-10 flex items-center gap-1.5">
+                          {tab.icon}
+                          <span>{tab.label}</span>
+                          <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${agentsDropdownOpen ? 'rotate-180' : ''}`} />
+                        </span>
+                      </motion.button>
+
+                      {/* Dropdown Menu for AI Agents */}
+                      <AnimatePresence>
+                        {agentsDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute left-1/2 -translate-x-1/2 mt-2 w-[440px] rounded-3xl border border-brand-gold/30 bg-brand-navy-dark/95 p-4 shadow-2xl backdrop-blur-2xl z-50 text-left"
+                          >
+                            <div className="grid grid-cols-2 gap-3 mb-3">
+                              
+                              {/* Open Source Column */}
+                              <div className="space-y-2.5 p-3 rounded-2xl bg-brand-navy-deep/70 border border-cyan-500/20">
+                                <button
+                                  onClick={() => {
+                                    setAgentsDropdownOpen(false);
+                                    navigate('/ai-agents?type=open-source');
+                                  }}
+                                  className="w-full flex items-center justify-between text-left group/os cursor-pointer"
+                                >
+                                  <span className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-300 group-hover/os:text-cyan-200">
+                                    <Terminal className="w-3.5 h-3.5 text-cyan-400" />
+                                    Open Source
+                                  </span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono font-bold">
+                                    2
+                                  </span>
+                                </button>
+
+                                <div className="space-y-1.5 pt-1">
+                                  {/* OpenClaw Item */}
+                                  <button
+                                    onClick={() => {
+                                      setAgentsDropdownOpen(false);
+                                      navigate('/ai-agents?type=open-source');
+                                    }}
+                                    className="w-full flex items-center gap-2.5 p-2 rounded-xl hover:bg-cyan-950/40 border border-transparent hover:border-cyan-500/30 transition-all text-left cursor-pointer group"
+                                  >
+                                    <OpenClawLogo className="w-7 h-7 shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="text-xs font-bold text-slate-200 group-hover:text-cyan-300 truncate">OpenClaw</div>
+                                      <div className="text-[10px] text-slate-400 truncate">Local & Messengers</div>
+                                    </div>
+                                  </button>
+
+                                  {/* Hermes Agent Item */}
+                                  <button
+                                    onClick={() => {
+                                      setAgentsDropdownOpen(false);
+                                      navigate('/ai-agents?type=open-source');
+                                    }}
+                                    className="w-full flex items-center gap-2.5 p-2 rounded-xl hover:bg-emerald-950/40 border border-transparent hover:border-emerald-500/30 transition-all text-left cursor-pointer group"
+                                  >
+                                    <HermesAgentLogo className="w-7 h-7 shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="text-xs font-bold text-slate-200 group-hover:text-emerald-300 truncate">Hermes Agent</div>
+                                      <div className="text-[10px] text-slate-400 truncate">Self-Improving AI</div>
+                                    </div>
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Managed Cloud Column */}
+                              <div className="space-y-2.5 p-3 rounded-2xl bg-brand-navy-deep/70 border border-purple-500/20">
+                                <button
+                                  onClick={() => {
+                                    setAgentsDropdownOpen(false);
+                                    navigate('/ai-agents?type=managed-cloud');
+                                  }}
+                                  className="w-full flex items-center justify-between text-left group/mc cursor-pointer"
+                                >
+                                  <span className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-purple-300 group-hover/mc:text-purple-200">
+                                    <Cloud className="w-3.5 h-3.5 text-purple-400" />
+                                    Managed Cloud
+                                  </span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono font-bold">
+                                    3
+                                  </span>
+                                </button>
+
+                                <div className="space-y-1.5 pt-1">
+                                  {/* Dots Item */}
+                                  <button
+                                    onClick={() => {
+                                      setAgentsDropdownOpen(false);
+                                      navigate('/ai-agents?type=managed-cloud');
+                                    }}
+                                    className="w-full flex items-center gap-2.5 p-2 rounded-xl hover:bg-emerald-950/40 border border-transparent hover:border-emerald-500/30 transition-all text-left cursor-pointer group"
+                                  >
+                                    <DotsLogo className="w-7 h-7 shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="text-xs font-bold text-slate-200 group-hover:text-emerald-300 truncate">Dots</div>
+                                      <div className="text-[10px] text-slate-400 truncate">OpenAI Coworker</div>
+                                    </div>
+                                  </button>
+
+                                  {/* Grok Bots Item */}
+                                  <button
+                                    onClick={() => {
+                                      setAgentsDropdownOpen(false);
+                                      navigate('/ai-agents?type=managed-cloud');
+                                    }}
+                                    className="w-full flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-950/40 border border-transparent hover:border-amber-500/30 transition-all text-left cursor-pointer group"
+                                  >
+                                    <GrokBotsLogo className="w-7 h-7 shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="text-xs font-bold text-slate-200 group-hover:text-amber-300 truncate">Grok Bots</div>
+                                      <div className="text-[10px] text-slate-400 truncate">xAI Workspaces</div>
+                                    </div>
+                                  </button>
+
+                                  {/* Muse Item */}
+                                  <button
+                                    onClick={() => {
+                                      setAgentsDropdownOpen(false);
+                                      navigate('/ai-agents?type=managed-cloud');
+                                    }}
+                                    className="w-full flex items-center gap-2.5 p-2 rounded-xl hover:bg-purple-950/40 border border-transparent hover:border-purple-500/30 transition-all text-left cursor-pointer group"
+                                  >
+                                    <MuseLogo className="w-7 h-7 shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="text-xs font-bold text-slate-200 group-hover:text-purple-300 truncate">Muse</div>
+                                      <div className="text-[10px] text-slate-400 truncate">Meta Life-Admin</div>
+                                    </div>
+                                  </button>
+                                </div>
+                              </div>
+
+                            </div>
+
+                            {/* View All Agents Footer Link */}
+                            <button
+                              onClick={() => {
+                                setAgentsDropdownOpen(false);
+                                navigate('/ai-agents');
+                              }}
+                              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-gradient-to-r from-brand-gold/15 to-brand-gold/25 hover:from-brand-gold/30 hover:to-brand-gold/40 border border-brand-gold/30 text-brand-gold-bright text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+                              <span>Explore All 5 AI Agents</span>
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
                 return (
                   <motion.button
                     key={tab.id}
                     onClick={() => navigate(tab.path)}
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
+                    className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
                       active ? 'text-brand-navy-dark' : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
                     }`}
                   >
@@ -182,7 +415,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Hallmark Theme Switcher */}
               <HallmarkThemeSwitcher />
 
-              {/* Quick Admin Access Button (strictly visible only when signed in) */}
+              {/* Quick Admin Access Button */}
               {user && (
                 <button
                   onClick={onOpenAdmin}
@@ -261,7 +494,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Mobile Hamburger Toggle */}
-            <div className="flex md:hidden items-center gap-2">
+            <div className="flex lg:hidden items-center gap-2">
               {user && (
                 <button
                   onClick={onOpenAdmin}
@@ -284,14 +517,71 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {isOpen && (
-          <div className="md:hidden bg-brand-navy-dark/95 border-b border-brand-gold/20 p-4 backdrop-blur-2xl animate-in slide-in-from-top duration-250">
+          <div className="lg:hidden bg-brand-navy-dark/95 border-b border-brand-gold/20 p-4 backdrop-blur-2xl animate-in slide-in-from-top duration-250">
             <div className="flex flex-col gap-2">
               <div className="py-2 border-b border-white/10 mb-1 flex items-center justify-between">
                 <span className="text-xs font-semibold text-slate-300">Hallmark Theme</span>
                 <HallmarkThemeSwitcher />
               </div>
+
               {NAV_TABS.map((tab) => {
                 const active = isTabActive(tab.path);
+
+                if (tab.id === 'ai-agents') {
+                  return (
+                    <div key={tab.id} className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={() => {
+                            setIsOpen(false);
+                            navigate('/ai-agents');
+                          }}
+                          className={`flex-1 flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all text-left ${
+                            active
+                              ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-md'
+                              : 'text-slate-200 hover:bg-brand-navy-light/40'
+                          }`}
+                        >
+                          {tab.icon}
+                          <span>{tab.label}</span>
+                        </button>
+                        <button
+                          onClick={() => setMobileAgentsOpen(!mobileAgentsOpen)}
+                          className="p-3 text-slate-400 hover:text-brand-gold"
+                        >
+                          <ChevronDown className={`w-4 h-4 transition-transform ${mobileAgentsOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                      </div>
+
+                      {/* Mobile Accordion Sub-options */}
+                      {mobileAgentsOpen && (
+                        <div className="pl-6 space-y-1 py-1">
+                          <button
+                            onClick={() => {
+                              setIsOpen(false);
+                              navigate('/ai-agents?type=open-source');
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-cyan-300 hover:bg-cyan-950/30 text-left font-medium"
+                          >
+                            <Terminal className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>Open Source (OpenClaw, Hermes)</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setIsOpen(false);
+                              navigate('/ai-agents?type=managed-cloud');
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-purple-300 hover:bg-purple-950/30 text-left font-medium"
+                          >
+                            <Cloud className="w-3.5 h-3.5 text-purple-400" />
+                            <span>Managed Cloud (Dots, Grok, Muse)</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
                 return (
                   <button
                     key={tab.id}

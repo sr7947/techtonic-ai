@@ -9,10 +9,11 @@ import { AdminPanel } from './components/AdminPanel';
 import { LATEST_UPDATES } from './data/content';
 import { supabase } from './lib/supabase';
 
-// 4 Dedicated Tab Pages
+// 5 Dedicated Tab Pages
 import { TrendingPage } from './pages/TrendingPage';
 import { ModelsHubPage } from './pages/ModelsHubPage';
 import { ModelRankingsPage } from './pages/ModelRankingsPage';
+import { AiAgentsPage } from './pages/AiAgentsPage';
 
 interface UserProfile {
   name: string;
@@ -205,15 +206,20 @@ function App() {
               <ModelRankingsPage isAdmin={!!user} />
             )}
 
+            {/* TAB 5: AI Agents (Open Source & Managed Cloud) */}
+            {currentPath.startsWith('/ai-agents') && (
+              <AiAgentsPage />
+            )}
+
             {/* 404 Fallback for Obsolete Routes */}
             {![
               '/', '/latest-updates', '/trending', '/models-hub', '/model-rankings'
-            ].includes(currentPath) && (
+            ].includes(currentPath) && !currentPath.startsWith('/ai-agents') && (
               <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 gap-6 pt-24">
                 <div className="font-display text-8xl font-black text-brand-gold/20">404</div>
                 <h2 className="text-2xl font-bold text-slate-200">Page Redesigned</h2>
                 <p className="text-slate-400 max-w-md text-sm">
-                  WenzdayLab has been redesigned into 4 dedicated tabs: Latest Updates, Trending, Model Hubs, and Model Rankings.
+                  WenzdayLab features 5 dedicated tabs: Latest Updates, Trending, Model Hubs, Model Rankings, and AI Agents.
                 </p>
                 <button
                   onClick={() => navigate('/')}
