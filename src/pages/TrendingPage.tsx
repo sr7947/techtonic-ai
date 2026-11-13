@@ -34,14 +34,16 @@ export const TrendingPage: React.FC = () => {
         const { data, error } = await supabase
           .from('trending_tweets')
           .select('*')
+          .not('tag', 'like', 'DELETED_%')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
 
         if (isMounted) {
-          setTweets(data || []);
+          const cleanTweets = (data || []).filter(t => !t.tag.startsWith('DELETED_'));
+          setTweets(cleanTweets);
           // Default active tab to the first tag found if not set or if current active tab is gone
-          const tags = Array.from(new Set((data || []).map(t => t.tag)));
+          const tags = Array.from(new Set(cleanTweets.map(t => t.tag)));
           if (tags.length > 0) {
             if (!activeTab || !tags.includes(activeTab)) {
               setActiveTab(tags[0]);

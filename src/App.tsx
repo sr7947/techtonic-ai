@@ -71,6 +71,23 @@ function App() {
     }
   }, [user]);
 
+  // Delete article handler for Admin Mode (removes from UI and persists tombstone to database)
+  const handleDeleteArticle = async (id: string, url: string) => {
+    // Optimistic removal from UI state
+    setArticles(prev => prev.filter(a => a.id !== id && a.url !== url));
+    setUpdates(prev => prev.filter(u => u.id !== id && u.url !== url));
+
+    // Persist permanent deletion marker to database
+    try {
+      await supabase.from('trending_tweets').insert([
+        { tag: 'DELETED_ARTICLE', tweet_url: id, created_at: new Date().toISOString() },
+        { tag: 'DELETED_ARTICLE', tweet_url: url, created_at: new Date().toISOString() }
+      ]);
+    } catch (err) {
+      console.warn("Failed to persist deletion marker:", err);
+    }
+  };
+
   // Load data from Supabase if configured
   useEffect(() => {
     const fetchSupabaseData = async () => {
@@ -79,15 +96,27 @@ function App() {
       if (!url || !key) return;
 
       try {
-        // Fetch latest official AI articles from Supabase (up to 200 for rich 7-day view, archive, and company filter fallbacks)
-        const { data: rawArticles, error: errArticles } = await supabase
-          .from('ai_articles')
-          .select('*')
-          .order('published_at', { ascending: false })
-          .limit(200);
+        // Fetch latest official AI articles and pre-existing deletion tombstones in parallel
+        const [rawArticlesRes, deletedMarkersRes] = await Promise.all([
+          supabase
+            .from('ai_articles')
+            .select('*')
+            .order('published_at', { ascending: false })
+            .limit(200),
+          supabase
+            .from('trending_tweets')
+            .select('tweet_url')
+            .eq('tag', 'DELETED_ARTICLE')
+        ]);
 
-        if (rawArticles && !errArticles) {
-          setArticles(rawArticles.map((item: any) => ({
+        const deletedSet = new Set((deletedMarkersRes.data || []).map(d => d.tweet_url));
+
+        if (rawArticlesRes.data && !rawArticlesRes.error) {
+          const visibleArticles = rawArticlesRes.data.filter(
+            (item: any) => !deletedSet.has(item.id) && !deletedSet.has(item.article_url)
+          );
+
+          setArticles(visibleArticles.map((item: any) => ({
             id: item.id,
             title: item.title,
             summary: item.summary,
@@ -147,7 +176,12 @@ function App() {
             {(currentPath === '/' || currentPath === '/latest-updates') && (
               <>
                 <Hero />
-                <UpdatesSection updates={updates} articles={articles} />
+                <UpdatesSection 
+                  updates={updates} 
+                  articles={articles} 
+                  onDeleteArticle={handleDeleteArticle}
+                  isAdmin={!!user}
+                />
               </>
             )}
 

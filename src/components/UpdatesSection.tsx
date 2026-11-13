@@ -11,7 +11,11 @@ import {
   Sparkles,
   ChevronDown,
   Archive,
-  RotateCcw
+  RotateCcw,
+  Trash2,
+  Shield,
+  ShieldCheck,
+  X
 } from 'lucide-react';
 
 interface ArticleItem {
@@ -37,6 +41,8 @@ interface ArticleItem {
 interface UpdatesSectionProps {
   updates?: any[];
   articles?: any[];
+  onDeleteArticle?: (id: string, url: string) => void;
+  isAdmin?: boolean;
 }
 
 const SafeImage: React.FC<{ src: string; alt: string; className: string }> = ({ src, alt, className }) => {
@@ -88,12 +94,43 @@ const SafeImage: React.FC<{ src: string; alt: string; className: string }> = ({ 
 
 export const UpdatesSection: React.FC<UpdatesSectionProps> = ({ 
   updates = [],
-  articles = []
+  articles = [],
+  onDeleteArticle,
+  isAdmin: propsIsAdmin = false
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCompany, setSelectedCompany] = useState<string>('All');
   const [visibleCount, setVisibleCount] = useState<number>(12);
   const [showArchive, setShowArchive] = useState<boolean>(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Admin Mode state (active if passed via props, or toggled on, or admin logged in)
+  const [adminMode, setAdminMode] = useState<boolean>(() => {
+    return propsIsAdmin || localStorage.getItem('wenzdaylab_admin_mode') === 'true' || !!localStorage.getItem('wenzdaylab_user') || !!localStorage.getItem('techtonic_user');
+  });
+
+  const toggleAdminMode = () => {
+    const next = !adminMode;
+    setAdminMode(next);
+    localStorage.setItem('wenzdaylab_admin_mode', next ? 'true' : 'false');
+  };
+
+  const handleDelete = async (article: ArticleItem) => {
+    const confirmed = window.confirm(`Are you sure you want to delete this article from Latest Updates?\n\n"${article.title}"\n\nThis will remove it from the live website.`);
+    if (!confirmed) return;
+
+    setDeletingId(article.id);
+    try {
+      if (onDeleteArticle) {
+        await onDeleteArticle(article.id, article.url);
+      }
+    } catch (err) {
+      console.error("Failed to delete post:", err);
+      alert("Failed to delete post.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // Reset pagination when search query or filter chip changes
   useEffect(() => {
@@ -108,7 +145,11 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
     const unique: ArticleItem[] = [];
 
     for (const item of combined) {
-      const key = (item.url || item.article_url || item.title || '').toLowerCase().trim();
+      // Canonical key: base URL without query params + normalized title
+      const cleanUrl = (item.url || item.article_url || '').toLowerCase().split('?')[0].replace(/\/+$/, '');
+      const cleanTitle = (item.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const key = cleanUrl || cleanTitle;
+
       if (!seen.has(key)) {
         seen.add(key);
         unique.push({
@@ -308,6 +349,19 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
 
         {/* Counter & Mode Indicator */}
         <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={toggleAdminMode}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl border text-xs font-bold transition-all cursor-pointer shadow-lg active:scale-95 ${
+              adminMode
+                ? 'bg-red-500/20 border-red-500/50 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                : 'bg-brand-navy-deep/80 hover:bg-brand-navy-light/60 border-brand-gold/25 text-slate-300 hover:text-brand-gold'
+            }`}
+            title="Toggle Admin Delete Mode"
+          >
+            {adminMode ? <ShieldCheck className="w-3.5 h-3.5 text-red-400" /> : <Shield className="w-3.5 h-3.5 text-brand-gold" />}
+            <span>Admin Mode: {adminMode ? 'ON (Delete Active)' : 'OFF'}</span>
+          </button>
+
           <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-brand-navy-deep/90 border border-brand-gold/20 text-xs font-semibold text-slate-300 backdrop-blur-md shadow-lg">
             <Clock className="w-4 h-4 text-brand-gold" />
             <span>
@@ -440,7 +494,29 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                           </div>
 
                           {/* Recommendation B: Smart Recency Badge & Relative Time Overlay */}
-                          <div className="absolute top-3 right-3 flex items-center gap-1.5" style={{ transform: 'translateZ(25px)' }}>
+                          <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20" style={{ transform: 'translateZ(25px)' }}>
+                            {adminMode && (
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleDelete(article);
+                                }}
+                                disabled={deletingId === article.id}
+                                title="Admin: Delete this post"
+                                className="px-2 py-1 rounded-xl bg-red-600/90 hover:bg-red-500 text-white font-extrabold text-[10px] uppercase tracking-wider backdrop-blur-md shadow-lg transition-all flex items-center gap-1 cursor-pointer active:scale-95 border border-red-400/50"
+                              >
+                                {deletingId === article.id ? (
+                                  <RotateCcw className="w-3 h-3 animate-spin" />
+                                ) : (
+                                  <>
+                                    <Trash2 className="w-3 h-3" />
+                                    <span className="hidden sm:inline">Delete</span>
+                                    <X className="w-3 h-3" />
+                                  </>
+                                )}
+                              </button>
+                            )}
                             {recencyBadge && (
                               <span className={`px-2 py-0.5 rounded-xl border text-[9px] font-extrabold uppercase tracking-wide backdrop-blur-md shadow-md ${recencyBadge.className}`}>
                                 {recencyBadge.label}
@@ -472,8 +548,30 @@ export const UpdatesSection: React.FC<UpdatesSectionProps> = ({
                                 {article.sourceName}
                               </span>
                               
-                              {/* Recency Badge for non-image cards */}
+                              {/* Recency Badge for non-image cards & Admin Delete */}
                               <div className="flex items-center gap-1.5">
+                                {adminMode && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      handleDelete(article);
+                                    }}
+                                    disabled={deletingId === article.id}
+                                    title="Admin: Delete this post"
+                                    className="px-2 py-0.5 rounded-xl bg-red-600/90 hover:bg-red-500 text-white font-extrabold text-[10px] uppercase tracking-wider shadow-sm transition-all flex items-center gap-1 cursor-pointer active:scale-95 border border-red-400/50"
+                                  >
+                                    {deletingId === article.id ? (
+                                      <RotateCcw className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <>
+                                        <Trash2 className="w-3 h-3" />
+                                        <span>Delete</span>
+                                        <X className="w-3 h-3" />
+                                      </>
+                                    )}
+                                  </button>
+                                )}
                                 {recencyBadge && (
                                   <span className={`px-2 py-0.5 rounded-xl border text-[9px] font-extrabold uppercase tracking-wide shadow-sm ${recencyBadge.className}`}>
                                     {recencyBadge.label}
