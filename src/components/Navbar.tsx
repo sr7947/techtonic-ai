@@ -15,7 +15,9 @@ import {
   Cloud,
   ArrowRight,
   Sparkles,
-  Code2
+  Code2,
+  Boxes,
+  Zap
 } from 'lucide-react';
 import { HallmarkThemeSwitcher } from './HallmarkThemeSwitcher';
 import { 
@@ -26,6 +28,7 @@ import {
   MuseLogo 
 } from './AgentLogos';
 import { CodingAgentLogoRenderer } from './CodingAgentLogos';
+import { AgentFrameworkLogoRenderer } from './AgentFrameworkLogos';
 
 interface NavbarProps {
   user: { name: string; email: string; picture: string } | null;
@@ -62,6 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [agentsDropdownOpen, setAgentsDropdownOpen] = useState(false);
   const [mobileAgentsOpen, setMobileAgentsOpen] = useState(false);
   const [developerDropdownOpen, setDeveloperDropdownOpen] = useState(false);
+  const [developerDropdownTab, setDeveloperDropdownTab] = useState<'coding-agents' | 'frameworks'>('coding-agents');
   const [mobileDeveloperOpen, setMobileDeveloperOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -452,132 +456,264 @@ export const Navbar: React.FC<NavbarProps> = ({
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 8, scale: 0.96 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute left-1/2 -translate-x-1/2 mt-2 w-[580px] rounded-3xl border border-brand-gold/30 bg-brand-navy-dark/95 p-4 shadow-2xl backdrop-blur-2xl z-50 text-left"
+                            className="absolute left-1/2 -translate-x-1/2 mt-2 w-[600px] rounded-3xl border border-brand-gold/30 bg-brand-navy-dark/95 p-4 shadow-2xl backdrop-blur-2xl z-50 text-left"
                           >
-                            {/* Header: 1) Coding Agent */}
+                            {/* Option Switcher: 1) Coding Agents vs 2) AI Agent Frameworks */}
                             <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-brand-gold/20">
-                              <div className="flex items-center gap-2">
-                                <Code2 className="w-4 h-4 text-emerald-400" />
-                                <span className="text-xs font-black uppercase tracking-wider text-brand-gold-bright">
-                                  1) Coding Agent
-                                </span>
-                                <span className="text-[10px] text-slate-400 font-medium">
-                                  • Autonomous SWEs & Platforms
-                                </span>
+                              <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-brand-navy-deep/90 border border-brand-gold/20">
+                                <button
+                                  onClick={() => setDeveloperDropdownTab('coding-agents')}
+                                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                                    developerDropdownTab === 'coding-agents'
+                                      ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-md'
+                                      : 'text-slate-300 hover:text-slate-100 hover:bg-white/5'
+                                  }`}
+                                >
+                                  <Code2 className="w-3.5 h-3.5" />
+                                  <span>1) Coding Agent</span>
+                                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/20 font-mono">18</span>
+                                </button>
+                                <button
+                                  onClick={() => setDeveloperDropdownTab('frameworks')}
+                                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                                    developerDropdownTab === 'frameworks'
+                                      ? 'bg-gradient-to-r from-cyan-400 to-blue-600 text-white shadow-md'
+                                      : 'text-slate-300 hover:text-slate-100 hover:bg-white/5'
+                                  }`}
+                                >
+                                  <Boxes className="w-3.5 h-3.5 text-cyan-300" />
+                                  <span>2) AI Agent Frameworks</span>
+                                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/20 font-mono">18</span>
+                                </button>
                               </div>
-                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-mono font-bold">
-                                18 Agents
-                              </span>
+                              <button
+                                onClick={() => {
+                                  setDeveloperDropdownOpen(false);
+                                  navigate(developerDropdownTab === 'coding-agents' ? '/developer-forum?section=coding-agents' : '/developer-forum?section=frameworks');
+                                }}
+                                className="text-[11px] text-brand-gold hover:text-brand-gold-bright flex items-center gap-1 font-bold cursor-pointer"
+                              >
+                                <span>Directory</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </button>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3 mb-3">
-                              {/* Left Column: First-Party Coding Agents */}
-                              <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-blue-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
-                                <button
-                                  onClick={() => {
-                                    setDeveloperDropdownOpen(false);
-                                    navigate('/developer-forum?type=first-party');
-                                  }}
-                                  className="w-full flex items-center justify-between text-left group/fp cursor-pointer pb-1 border-b border-white/5"
-                                >
-                                  <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-blue-300 group-hover/fp:text-blue-200">
-                                    <Code2 className="w-3.5 h-3.5 text-blue-400" />
-                                    First-Party Coding Agents
-                                  </span>
-                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono font-bold">
-                                    9
-                                  </span>
-                                </button>
+                            {/* OPTION 1: CODING AGENTS */}
+                            {developerDropdownTab === 'coding-agents' && (
+                              <div className="grid grid-cols-2 gap-3 mb-3">
+                                {/* Left Column: First-Party Coding Agents */}
+                                <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-blue-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
+                                  <button
+                                    onClick={() => {
+                                      setDeveloperDropdownOpen(false);
+                                      navigate('/developer-forum?section=coding-agents&type=first-party');
+                                    }}
+                                    className="w-full flex items-center justify-between text-left group/fp cursor-pointer pb-1 border-b border-white/5"
+                                  >
+                                    <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-blue-300 group-hover/fp:text-blue-200">
+                                      <Code2 className="w-3.5 h-3.5 text-blue-400" />
+                                      First-Party Coding Agents
+                                    </span>
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono font-bold">
+                                      9
+                                    </span>
+                                  </button>
 
-                                <div className="space-y-1">
-                                  {[
-                                    { id: 'cursor', name: 'Cursor', desc: 'Anysphere AI IDE' },
-                                    { id: 'opencode', name: 'OpenCode', desc: 'Local-first terminal' },
-                                    { id: 'github-copilot', name: 'GitHub Copilot', desc: 'Workspace & Agent mode' },
-                                    { id: 'devin', name: 'Devin', desc: 'Cognition Autonomous SWE' },
-                                    { id: 'windsurf', name: 'Windsurf', desc: 'Codeium Cascade flow' },
-                                    { id: 'cline', name: 'Cline', desc: 'Autonomous VS Code Agent' },
-                                    { id: 'amazon-q-developer', name: 'Amazon Q', desc: 'Enterprise Code Transformer' },
-                                    { id: 'amazon-kiro', name: 'Amazon Kero', desc: 'AWS Spec-Driven IDE' },
-                                    { id: 'replit-agent', name: 'Replit Agent', desc: 'Instant Cloud Deployer' },
-                                  ].map((item) => (
-                                    <button
-                                      key={item.id}
-                                      onClick={() => {
-                                        setDeveloperDropdownOpen(false);
-                                        navigate(`/developer-forum?agent=${item.id}`);
-                                      }}
-                                      className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-blue-950/40 border border-transparent hover:border-blue-500/30 transition-all text-left cursor-pointer group"
-                                    >
-                                      <CodingAgentLogoRenderer agentId={item.id} className="w-6 h-6 shrink-0" />
-                                      <div className="min-w-0 flex-1">
-                                        <div className="text-xs font-bold text-slate-200 group-hover:text-blue-300 truncate">{item.name}</div>
-                                        <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
-                                      </div>
-                                    </button>
-                                  ))}
+                                  <div className="space-y-1">
+                                    {[
+                                      { id: 'cursor', name: 'Cursor', desc: 'Anysphere AI IDE' },
+                                      { id: 'opencode', name: 'OpenCode', desc: 'Local-first terminal' },
+                                      { id: 'github-copilot', name: 'GitHub Copilot', desc: 'Workspace & Agent mode' },
+                                      { id: 'devin', name: 'Devin', desc: 'Cognition Autonomous SWE' },
+                                      { id: 'windsurf', name: 'Windsurf', desc: 'Codeium Cascade flow' },
+                                      { id: 'cline', name: 'Cline', desc: 'Autonomous VS Code Agent' },
+                                      { id: 'amazon-q-developer', name: 'Amazon Q', desc: 'Enterprise Code Transformer' },
+                                      { id: 'amazon-kiro', name: 'Amazon Kero', desc: 'AWS Spec-Driven IDE' },
+                                      { id: 'replit-agent', name: 'Replit Agent', desc: 'Instant Cloud Deployer' },
+                                    ].map((item) => (
+                                      <button
+                                        key={item.id}
+                                        onClick={() => {
+                                          setDeveloperDropdownOpen(false);
+                                          navigate(`/developer-forum?section=coding-agents&agent=${item.id}`);
+                                        }}
+                                        className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-blue-950/40 border border-transparent hover:border-blue-500/30 transition-all text-left cursor-pointer group"
+                                      >
+                                        <CodingAgentLogoRenderer agentId={item.id} className="w-6 h-6 shrink-0" />
+                                        <div className="min-w-0 flex-1">
+                                          <div className="text-xs font-bold text-slate-200 group-hover:text-blue-300 truncate">{item.name}</div>
+                                          <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
+                                        </div>
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Right Column: Independent AI Coding Platform */}
+                                <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-emerald-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
+                                  <button
+                                    onClick={() => {
+                                      setDeveloperDropdownOpen(false);
+                                      navigate('/developer-forum?section=coding-agents&type=independent');
+                                    }}
+                                    className="w-full flex items-center justify-between text-left group/ind cursor-pointer pb-1 border-b border-white/5"
+                                  >
+                                    <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-300 group-hover/ind:text-emerald-200">
+                                      <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                                      Independent AI Platform
+                                    </span>
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold">
+                                      9
+                                    </span>
+                                  </button>
+
+                                  <div className="space-y-1">
+                                    {[
+                                      { id: 'google-antigravity', name: 'Google Antigravity', desc: 'Swarms & MCP native' },
+                                      { id: 'codex', name: 'OpenAI Codex', desc: 'Canvas & reasoning' },
+                                      { id: 'claude-code', name: 'Claude Code', desc: 'Anthropic CLI agent' },
+                                      { id: 'grok-build', name: 'Grok Build', desc: 'xAI Grok 3 reasoning' },
+                                      { id: 'muse-code', name: 'Muse Code', desc: 'Meta Llama suite' },
+                                      { id: 'qwen-code', name: 'Qwen Code', desc: 'Alibaba 2.5 Coder' },
+                                      { id: 'aider', name: 'Aider', desc: 'Terminal pair programmer' },
+                                      { id: 'continue-dev', name: 'Continue.dev', desc: 'Open-source autopilot' },
+                                      { id: 'zed-ai', name: 'Zed AI', desc: 'Rust 120 FPS editor' },
+                                    ].map((item) => (
+                                      <button
+                                        key={item.id}
+                                        onClick={() => {
+                                          setDeveloperDropdownOpen(false);
+                                          navigate(`/developer-forum?section=coding-agents&agent=${item.id}`);
+                                        }}
+                                        className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-emerald-950/40 border border-transparent hover:border-emerald-500/30 transition-all text-left cursor-pointer group"
+                                      >
+                                        <CodingAgentLogoRenderer agentId={item.id} className="w-6 h-6 shrink-0" />
+                                        <div className="min-w-0 flex-1">
+                                          <div className="text-xs font-bold text-slate-200 group-hover:text-emerald-300 truncate">{item.name}</div>
+                                          <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
+                                        </div>
+                                      </button>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
+                            )}
 
-                              {/* Right Column: Independent AI Coding Platform */}
-                              <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-emerald-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
-                                <button
-                                  onClick={() => {
-                                    setDeveloperDropdownOpen(false);
-                                    navigate('/developer-forum?type=independent');
-                                  }}
-                                  className="w-full flex items-center justify-between text-left group/ind cursor-pointer pb-1 border-b border-white/5"
-                                >
-                                  <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-300 group-hover/ind:text-emerald-200">
-                                    <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-                                    Independent AI Platform
-                                  </span>
-                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold">
-                                    9
-                                  </span>
-                                </button>
+                            {/* OPTION 2: AI AGENT FRAMEWORKS */}
+                            {developerDropdownTab === 'frameworks' && (
+                              <div className="grid grid-cols-2 gap-3 mb-3">
+                                {/* Left Column: Frontier & Multi-Agent Frameworks */}
+                                <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-cyan-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
+                                  <button
+                                    onClick={() => {
+                                      setDeveloperDropdownOpen(false);
+                                      navigate('/developer-forum?section=frameworks&type=frontier-sdk');
+                                    }}
+                                    className="w-full flex items-center justify-between text-left group/fs cursor-pointer pb-1 border-b border-white/5"
+                                  >
+                                    <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-cyan-300 group-hover/fs:text-cyan-200">
+                                      <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                                      Frontier & Multi-Agent SDKs
+                                    </span>
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono font-bold">
+                                      9
+                                    </span>
+                                  </button>
 
-                                <div className="space-y-1">
-                                  {[
-                                    { id: 'google-antigravity', name: 'Google Antigravity', desc: 'Swarms & MCP native' },
-                                    { id: 'codex', name: 'OpenAI Codex', desc: 'Canvas & reasoning' },
-                                    { id: 'claude-code', name: 'Claude Code', desc: 'Anthropic CLI agent' },
-                                    { id: 'grok-build', name: 'Grok Build', desc: 'xAI Grok 3 reasoning' },
-                                    { id: 'muse-code', name: 'Muse Code', desc: 'Meta Llama suite' },
-                                    { id: 'qwen-code', name: 'Qwen Code', desc: 'Alibaba 2.5 Coder' },
-                                    { id: 'aider', name: 'Aider', desc: 'Terminal pair programmer' },
-                                    { id: 'continue-dev', name: 'Continue.dev', desc: 'Open-source autopilot' },
-                                    { id: 'zed-ai', name: 'Zed AI', desc: 'Rust 120 FPS editor' },
-                                  ].map((item) => (
-                                    <button
-                                      key={item.id}
-                                      onClick={() => {
-                                        setDeveloperDropdownOpen(false);
-                                        navigate(`/developer-forum?agent=${item.id}`);
-                                      }}
-                                      className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-emerald-950/40 border border-transparent hover:border-emerald-500/30 transition-all text-left cursor-pointer group"
-                                    >
-                                      <CodingAgentLogoRenderer agentId={item.id} className="w-6 h-6 shrink-0" />
-                                      <div className="min-w-0 flex-1">
-                                        <div className="text-xs font-bold text-slate-200 group-hover:text-emerald-300 truncate">{item.name}</div>
-                                        <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
-                                      </div>
-                                    </button>
-                                  ))}
+                                  <div className="space-y-1">
+                                    {[
+                                      { id: 'openai-agents-sdk', name: 'OpenAI Agents SDK', desc: 'Handoffs & guardrails' },
+                                      { id: 'google-adk', name: 'Google ADK', desc: 'Gemini & Cloud Run lifecycle' },
+                                      { id: 'microsoft-agent-framework', name: 'Microsoft Agent Framework', desc: 'Semantic Kernel + AutoGen' },
+                                      { id: 'langgraph', name: 'LangGraph', desc: 'Cyclical state graphs' },
+                                      { id: 'langchain', name: 'LangChain', desc: 'Universal LCEL ecosystem' },
+                                      { id: 'aws-strands', name: 'AWS Strands', desc: 'Bedrock model-driven SDK' },
+                                      { id: 'claude-agent-sdk', name: 'Claude Agent SDK', desc: 'Extended thinking & MCP' },
+                                      { id: 'crewai', name: 'CrewAI', desc: 'Role-playing crews & memory' },
+                                      { id: 'autogen-ag2', name: 'AutoGen / AG2', desc: 'Conversational code swarms' },
+                                    ].map((item) => (
+                                      <button
+                                        key={item.id}
+                                        onClick={() => {
+                                          setDeveloperDropdownOpen(false);
+                                          navigate(`/developer-forum?section=frameworks&framework=${item.id}`);
+                                        }}
+                                        className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-cyan-950/40 border border-transparent hover:border-cyan-500/30 transition-all text-left cursor-pointer group"
+                                      >
+                                        <AgentFrameworkLogoRenderer frameworkId={item.id} className="w-6 h-6 shrink-0" />
+                                        <div className="min-w-0 flex-1">
+                                          <div className="text-xs font-bold text-slate-200 group-hover:text-cyan-300 truncate">{item.name}</div>
+                                          <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
+                                        </div>
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Right Column: Type-Safe, Fullstack & JVM Frameworks */}
+                                <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-purple-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
+                                  <button
+                                    onClick={() => {
+                                      setDeveloperDropdownOpen(false);
+                                      navigate('/developer-forum?section=frameworks&type=python-first');
+                                    }}
+                                    className="w-full flex items-center justify-between text-left group/ts cursor-pointer pb-1 border-b border-white/5"
+                                  >
+                                    <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-purple-300 group-hover/ts:text-purple-200">
+                                      <Zap className="w-3.5 h-3.5 text-purple-400" />
+                                      Type-Safe, Web & JVM
+                                    </span>
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono font-bold">
+                                      9
+                                    </span>
+                                  </button>
+
+                                  <div className="space-y-1">
+                                    {[
+                                      { id: 'pydanticai', name: 'PydanticAI', desc: 'Type-safe dependency injection' },
+                                      { id: 'mastra', name: 'Mastra', desc: 'TypeScript workflows & evals' },
+                                      { id: 'vercel-ai-sdk', name: 'Vercel AI SDK', desc: 'Streaming UI & maxSteps' },
+                                      { id: 'eve', name: 'Eve', desc: 'Filesystem-first durable runtime' },
+                                      { id: 'llamaindex-workflows', name: 'LlamaIndex Workflows', desc: 'Event-driven async RAG' },
+                                      { id: 'smolagents', name: 'Smolagents', desc: 'Hugging Face code actions' },
+                                      { id: 'agno', name: 'Agno', desc: 'Fast multimodal + SQLite' },
+                                      { id: 'spring-ai', name: 'Spring AI', desc: 'Enterprise Java / Spring Boot' },
+                                      { id: 'dspy', name: 'DSPy', desc: 'Stanford prompt optimization' },
+                                    ].map((item) => (
+                                      <button
+                                        key={item.id}
+                                        onClick={() => {
+                                          setDeveloperDropdownOpen(false);
+                                          navigate(`/developer-forum?section=frameworks&framework=${item.id}`);
+                                        }}
+                                        className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-purple-950/40 border border-transparent hover:border-purple-500/30 transition-all text-left cursor-pointer group"
+                                      >
+                                        <AgentFrameworkLogoRenderer frameworkId={item.id} className="w-6 h-6 shrink-0" />
+                                        <div className="min-w-0 flex-1">
+                                          <div className="text-xs font-bold text-slate-200 group-hover:text-purple-300 truncate">{item.name}</div>
+                                          <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
+                                        </div>
+                                      </button>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            )}
 
-                            {/* View All Agents Footer Link */}
+                            {/* Dynamic Footer Link */}
                             <button
                               onClick={() => {
                                 setDeveloperDropdownOpen(false);
-                                navigate('/developer-forum');
+                                navigate(developerDropdownTab === 'coding-agents' ? '/developer-forum?section=coding-agents' : '/developer-forum?section=frameworks');
                               }}
                               className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-gradient-to-r from-brand-gold/15 to-brand-gold/25 hover:from-brand-gold/30 hover:to-brand-gold/40 border border-brand-gold/30 text-brand-gold-bright text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
                             >
                               <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-                              <span>Explore All 18 Coding Agents in Developer Forum</span>
+                              <span>
+                                {developerDropdownTab === 'coding-agents' 
+                                  ? 'Explore All 18 Coding Agents in Developer Forum' 
+                                  : 'Explore All 18 AI Agent Frameworks in Developer Forum'}
+                              </span>
                               <ArrowRight className="w-3.5 h-3.5" />
                             </button>
                           </motion.div>
@@ -814,27 +950,80 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                       {/* Mobile Accordion Sub-options */}
                       {mobileDeveloperOpen && (
-                        <div className="pl-6 space-y-1 py-1">
+                        <div className="pl-6 space-y-1.5 py-1">
                           <button
                             onClick={() => {
                               setIsOpen(false);
-                              navigate('/developer-forum?type=first-party');
+                              navigate('/developer-forum?section=coding-agents');
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-blue-300 hover:bg-blue-950/30 text-left font-medium"
+                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-brand-gold-bright bg-brand-gold/10 border border-brand-gold/20 text-left font-bold"
                           >
-                            <Code2 className="w-3.5 h-3.5 text-blue-400" />
-                            <span>First-Party Agents (Cursor, Copilot, Devin, Kero)</span>
+                            <span className="flex items-center gap-2">
+                              <Code2 className="w-3.5 h-3.5 text-brand-gold" />
+                              <span>1) Coding Agents</span>
+                            </span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-navy-dark font-mono">18</span>
                           </button>
+
+                          <div className="pl-3 space-y-1">
+                            <button
+                              onClick={() => {
+                                setIsOpen(false);
+                                navigate('/developer-forum?section=coding-agents&type=first-party');
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] text-blue-300 hover:bg-blue-950/30 text-left font-medium"
+                            >
+                              <Code2 className="w-3 h-3 text-blue-400" />
+                              <span>First-Party (Cursor, Devin, Copilot)</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                setIsOpen(false);
+                                navigate('/developer-forum?section=coding-agents&type=independent');
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] text-emerald-300 hover:bg-emerald-950/30 text-left font-medium"
+                            >
+                              <Terminal className="w-3 h-3 text-emerald-400" />
+                              <span>Independent (Antigravity, Codex, Aider)</span>
+                            </button>
+                          </div>
+
                           <button
                             onClick={() => {
                               setIsOpen(false);
-                              navigate('/developer-forum?type=independent');
+                              navigate('/developer-forum?section=frameworks');
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-emerald-300 hover:bg-emerald-950/30 text-left font-medium"
+                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-cyan-300 bg-cyan-950/30 border border-cyan-500/20 text-left font-bold mt-2"
                           >
-                            <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>Independent Platforms (Antigravity, Codex, Claude)</span>
+                            <span className="flex items-center gap-2">
+                              <Boxes className="w-3.5 h-3.5 text-cyan-400" />
+                              <span>2) AI Agent Frameworks</span>
+                            </span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-navy-dark font-mono">18</span>
                           </button>
+
+                          <div className="pl-3 space-y-1">
+                            <button
+                              onClick={() => {
+                                setIsOpen(false);
+                                navigate('/developer-forum?section=frameworks&type=frontier-sdk');
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] text-cyan-300 hover:bg-cyan-950/30 text-left font-medium"
+                            >
+                              <Sparkles className="w-3 h-3 text-cyan-400" />
+                              <span>Frontier SDKs (OpenAI, Google ADK, MAF, Strands)</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                setIsOpen(false);
+                                navigate('/developer-forum?section=frameworks&type=multi-agent-orchestrator');
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] text-purple-300 hover:bg-purple-950/30 text-left font-medium"
+                            >
+                              <Zap className="w-3 h-3 text-purple-400" />
+                              <span>Orchestrators (LangGraph, CrewAI, PydanticAI, Vercel)</span>
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>
