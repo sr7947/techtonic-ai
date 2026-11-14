@@ -9,11 +9,12 @@ import { AdminPanel } from './components/AdminPanel';
 import { LATEST_UPDATES } from './data/content';
 import { supabase } from './lib/supabase';
 
-// 6 Dedicated Tab Pages
+// Dedicated Tab Pages
 import { TrendingPage } from './pages/TrendingPage';
 import { ModelsHubPage } from './pages/ModelsHubPage';
 import { ModelRankingsPage } from './pages/ModelRankingsPage';
 import { AiAgentsPage } from './pages/AiAgentsPage';
+import { DeveloperForumPage } from './pages/DeveloperForumPage';
 import { DevLabPage } from './pages/DevLabPage';
 
 interface UserProfile {
@@ -212,7 +213,12 @@ function App() {
               <AiAgentsPage />
             )}
 
-            {/* TAB 6: Dev Lab (3D Massive Motion Sphere & Theme Sandbox) */}
+            {/* TAB 6: Developer Forum (Coding Agents & AI Platforms) */}
+            {currentPath.startsWith('/developer-forum') && (
+              <DeveloperForumPage />
+            )}
+
+            {/* TAB 7: Dev Lab (3D Massive Motion Sphere & Theme Sandbox) */}
             {currentPath === '/dev-lab' && (
               <DevLabPage />
             )}
@@ -220,7 +226,7 @@ function App() {
             {/* 404 Fallback for Obsolete Routes */}
             {![
               '/', '/latest-updates', '/trending', '/models-hub', '/model-rankings', '/dev-lab'
-            ].includes(currentPath) && !currentPath.startsWith('/ai-agents') && (
+            ].includes(currentPath) && !currentPath.startsWith('/ai-agents') && !currentPath.startsWith('/developer-forum') && (
               <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 gap-6 pt-24">
                 <div className="font-display text-8xl font-black text-brand-gold/20">404</div>
                 <h2 className="text-2xl font-bold text-slate-200">Page Redesigned</h2>

@@ -14,7 +14,8 @@ import {
   Terminal,
   Cloud,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Code2
 } from 'lucide-react';
 import { HallmarkThemeSwitcher } from './HallmarkThemeSwitcher';
 import { 
@@ -24,6 +25,7 @@ import {
   GrokBotsLogo, 
   MuseLogo 
 } from './AgentLogos';
+import { CodingAgentLogoRenderer } from './CodingAgentLogos';
 
 interface NavbarProps {
   user: { name: string; email: string; picture: string } | null;
@@ -59,10 +61,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [agentsDropdownOpen, setAgentsDropdownOpen] = useState(false);
   const [mobileAgentsOpen, setMobileAgentsOpen] = useState(false);
+  const [developerDropdownOpen, setDeveloperDropdownOpen] = useState(false);
+  const [mobileDeveloperOpen, setMobileDeveloperOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const agentsNavRef = useRef<HTMLDivElement>(null);
+  const developerNavRef = useRef<HTMLDivElement>(null);
   const hoverTimeoutRef = useRef<any>(null);
+  const hoverDeveloperTimeoutRef = useRef<any>(null);
 
   const googleAccounts = [
     {
@@ -85,6 +91,9 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       if (agentsNavRef.current && !agentsNavRef.current.contains(e.target as Node)) {
         setAgentsDropdownOpen(false);
+      }
+      if (developerNavRef.current && !developerNavRef.current.contains(e.target as Node)) {
+        setDeveloperDropdownOpen(false);
       }
     };
     window.addEventListener('click', handleOutsideClick);
@@ -120,7 +129,18 @@ export const Navbar: React.FC<NavbarProps> = ({
     }, 200);
   };
 
-  // 5 Core Navigation Tabs
+  const handleMouseEnterDeveloper = () => {
+    if (hoverDeveloperTimeoutRef.current) clearTimeout(hoverDeveloperTimeoutRef.current);
+    setDeveloperDropdownOpen(true);
+  };
+
+  const handleMouseLeaveDeveloper = () => {
+    hoverDeveloperTimeoutRef.current = setTimeout(() => {
+      setDeveloperDropdownOpen(false);
+    }, 200);
+  };
+
+  // 6 Core Navigation Tabs
   const NAV_TABS = [
     {
       id: 'latest-updates',
@@ -152,6 +172,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       path: '/ai-agents',
       icon: <Bot className="w-4 h-4 text-cyan-400" />,
       hasDropdown: true
+    },
+    {
+      id: 'developer-forum',
+      label: 'Developer Forum',
+      path: '/developer-forum',
+      icon: <Code2 className="w-4 h-4 text-emerald-400" />,
+      hasDropdown: true
     }
   ];
 
@@ -161,6 +188,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
     if (tabPath === '/ai-agents') {
       return currentPath.startsWith('/ai-agents');
+    }
+    if (tabPath === '/developer-forum') {
+      return currentPath.startsWith('/developer-forum');
     }
     return currentPath === tabPath;
   };
@@ -383,6 +413,180 @@ export const Navbar: React.FC<NavbarProps> = ({
                   );
                 }
 
+                if (tab.id === 'developer-forum') {
+                  return (
+                    <div 
+                      key={tab.id}
+                      ref={developerNavRef}
+                      onMouseEnter={handleMouseEnterDeveloper}
+                      onMouseLeave={handleMouseLeaveDeveloper}
+                      className="relative"
+                    >
+                      <motion.button
+                        onClick={() => navigate('/developer-forum')}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        className={`relative flex items-center gap-1 xl:gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
+                          active ? 'text-brand-navy-dark' : 'text-slate-300 hover:text-slate-100 hover:bg-brand-navy-light/40'
+                        }`}
+                      >
+                        {active && (
+                          <motion.div
+                            layoutId="activeTabPill"
+                            className="absolute inset-0 rounded-xl bg-gradient-to-r from-brand-gold to-brand-gold-dark shadow-[0_0_20px_rgba(212,175,55,0.4)]"
+                            transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                          />
+                        )}
+                        <span className="relative z-10 flex items-center gap-1 xl:gap-1.5">
+                          {tab.icon}
+                          <span className="whitespace-nowrap">{tab.label}</span>
+                          <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${developerDropdownOpen ? 'rotate-180' : ''}`} />
+                        </span>
+                      </motion.button>
+
+                      {/* Dropdown Menu for Developer Forum */}
+                      <AnimatePresence>
+                        {developerDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute left-1/2 -translate-x-1/2 mt-2 w-[580px] rounded-3xl border border-brand-gold/30 bg-brand-navy-dark/95 p-4 shadow-2xl backdrop-blur-2xl z-50 text-left"
+                          >
+                            {/* Header: 1) Coding Agent */}
+                            <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-brand-gold/20">
+                              <div className="flex items-center gap-2">
+                                <Code2 className="w-4 h-4 text-emerald-400" />
+                                <span className="text-xs font-black uppercase tracking-wider text-brand-gold-bright">
+                                  1) Coding Agent
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-medium">
+                                  • Autonomous SWEs & Platforms
+                                </span>
+                              </div>
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-mono font-bold">
+                                18 Agents
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 mb-3">
+                              {/* Left Column: First-Party Coding Agents */}
+                              <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-blue-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
+                                <button
+                                  onClick={() => {
+                                    setDeveloperDropdownOpen(false);
+                                    navigate('/developer-forum?type=first-party');
+                                  }}
+                                  className="w-full flex items-center justify-between text-left group/fp cursor-pointer pb-1 border-b border-white/5"
+                                >
+                                  <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-blue-300 group-hover/fp:text-blue-200">
+                                    <Code2 className="w-3.5 h-3.5 text-blue-400" />
+                                    First-Party Coding Agents
+                                  </span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono font-bold">
+                                    9
+                                  </span>
+                                </button>
+
+                                <div className="space-y-1">
+                                  {[
+                                    { id: 'cursor', name: 'Cursor', desc: 'Anysphere AI IDE' },
+                                    { id: 'opencode', name: 'OpenCode', desc: 'Local-first terminal' },
+                                    { id: 'github-copilot', name: 'GitHub Copilot', desc: 'Workspace & Agent mode' },
+                                    { id: 'devin', name: 'Devin', desc: 'Cognition Autonomous SWE' },
+                                    { id: 'windsurf', name: 'Windsurf', desc: 'Codeium Cascade flow' },
+                                    { id: 'cline', name: 'Cline', desc: 'Autonomous VS Code Agent' },
+                                    { id: 'amazon-q-developer', name: 'Amazon Q', desc: 'Enterprise Code Transformer' },
+                                    { id: 'amazon-kiro', name: 'Amazon Kero', desc: 'AWS Spec-Driven IDE' },
+                                    { id: 'replit-agent', name: 'Replit Agent', desc: 'Instant Cloud Deployer' },
+                                  ].map((item) => (
+                                    <button
+                                      key={item.id}
+                                      onClick={() => {
+                                        setDeveloperDropdownOpen(false);
+                                        navigate(`/developer-forum?agent=${item.id}`);
+                                      }}
+                                      className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-blue-950/40 border border-transparent hover:border-blue-500/30 transition-all text-left cursor-pointer group"
+                                    >
+                                      <CodingAgentLogoRenderer agentId={item.id} className="w-6 h-6 shrink-0" />
+                                      <div className="min-w-0 flex-1">
+                                        <div className="text-xs font-bold text-slate-200 group-hover:text-blue-300 truncate">{item.name}</div>
+                                        <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
+                                      </div>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Right Column: Independent AI Coding Platform */}
+                              <div className="space-y-2 p-2.5 rounded-2xl bg-brand-navy-deep/70 border border-emerald-500/20 max-h-[300px] overflow-y-auto scrollbar-thin">
+                                <button
+                                  onClick={() => {
+                                    setDeveloperDropdownOpen(false);
+                                    navigate('/developer-forum?type=independent');
+                                  }}
+                                  className="w-full flex items-center justify-between text-left group/ind cursor-pointer pb-1 border-b border-white/5"
+                                >
+                                  <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-300 group-hover/ind:text-emerald-200">
+                                    <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                                    Independent AI Platform
+                                  </span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold">
+                                    9
+                                  </span>
+                                </button>
+
+                                <div className="space-y-1">
+                                  {[
+                                    { id: 'google-antigravity', name: 'Google Antigravity', desc: 'Swarms & MCP native' },
+                                    { id: 'codex', name: 'OpenAI Codex', desc: 'Canvas & reasoning' },
+                                    { id: 'claude-code', name: 'Claude Code', desc: 'Anthropic CLI agent' },
+                                    { id: 'grok-build', name: 'Grok Build', desc: 'xAI Grok 3 reasoning' },
+                                    { id: 'muse-code', name: 'Muse Code', desc: 'Meta Llama suite' },
+                                    { id: 'qwen-code', name: 'Qwen Code', desc: 'Alibaba 2.5 Coder' },
+                                    { id: 'aider', name: 'Aider', desc: 'Terminal pair programmer' },
+                                    { id: 'continue-dev', name: 'Continue.dev', desc: 'Open-source autopilot' },
+                                    { id: 'zed-ai', name: 'Zed AI', desc: 'Rust 120 FPS editor' },
+                                  ].map((item) => (
+                                    <button
+                                      key={item.id}
+                                      onClick={() => {
+                                        setDeveloperDropdownOpen(false);
+                                        navigate(`/developer-forum?agent=${item.id}`);
+                                      }}
+                                      className="w-full flex items-center gap-2 p-1.5 rounded-xl hover:bg-emerald-950/40 border border-transparent hover:border-emerald-500/30 transition-all text-left cursor-pointer group"
+                                    >
+                                      <CodingAgentLogoRenderer agentId={item.id} className="w-6 h-6 shrink-0" />
+                                      <div className="min-w-0 flex-1">
+                                        <div className="text-xs font-bold text-slate-200 group-hover:text-emerald-300 truncate">{item.name}</div>
+                                        <div className="text-[10px] text-slate-400 truncate">{item.desc}</div>
+                                      </div>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* View All Agents Footer Link */}
+                            <button
+                              onClick={() => {
+                                setDeveloperDropdownOpen(false);
+                                navigate('/developer-forum');
+                              }}
+                              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-gradient-to-r from-brand-gold/15 to-brand-gold/25 hover:from-brand-gold/30 hover:to-brand-gold/40 border border-brand-gold/30 text-brand-gold-bright text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+                              <span>Explore All 18 Coding Agents in Developer Forum</span>
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
                 return (
                   <motion.button
                     key={tab.id}
@@ -575,6 +779,61 @@ export const Navbar: React.FC<NavbarProps> = ({
                           >
                             <Cloud className="w-3.5 h-3.5 text-purple-400" />
                             <span>Managed Cloud (Dots, Grok, Muse)</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                if (tab.id === 'developer-forum') {
+                  return (
+                    <div key={tab.id} className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={() => {
+                            setIsOpen(false);
+                            navigate('/developer-forum');
+                          }}
+                          className={`flex-1 flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all text-left ${
+                            active
+                              ? 'bg-gradient-to-r from-brand-gold to-brand-gold-dark text-brand-navy-dark shadow-md'
+                              : 'text-slate-200 hover:bg-brand-navy-light/40'
+                          }`}
+                        >
+                          {tab.icon}
+                          <span>{tab.label}</span>
+                        </button>
+                        <button
+                          onClick={() => setMobileDeveloperOpen(!mobileDeveloperOpen)}
+                          className="p-3 text-slate-400 hover:text-brand-gold"
+                        >
+                          <ChevronDown className={`w-4 h-4 transition-transform ${mobileDeveloperOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                      </div>
+
+                      {/* Mobile Accordion Sub-options */}
+                      {mobileDeveloperOpen && (
+                        <div className="pl-6 space-y-1 py-1">
+                          <button
+                            onClick={() => {
+                              setIsOpen(false);
+                              navigate('/developer-forum?type=first-party');
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-blue-300 hover:bg-blue-950/30 text-left font-medium"
+                          >
+                            <Code2 className="w-3.5 h-3.5 text-blue-400" />
+                            <span>First-Party Agents (Cursor, Copilot, Devin, Kero)</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setIsOpen(false);
+                              navigate('/developer-forum?type=independent');
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-emerald-300 hover:bg-emerald-950/30 text-left font-medium"
+                          >
+                            <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Independent Platforms (Antigravity, Codex, Claude)</span>
                           </button>
                         </div>
                       )}
