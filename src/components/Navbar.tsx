@@ -221,8 +221,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="font-display text-base sm:text-lg xl:text-xl font-extrabold tracking-wider text-slate-100 group-hover:text-brand-gold transition-colors whitespace-nowrap">
                   WENZDAY<span className="gold-gradient-text">LAB</span>
                 </span>
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.22em] text-slate-400 font-semibold group-hover:text-brand-gold/80 transition-colors whitespace-nowrap">
-                  Frontier Intelligence
+                <span className="text-[8px] sm:text-[9px] tracking-[0.16em] text-slate-400 font-semibold group-hover:text-brand-gold/80 transition-colors whitespace-nowrap">
+                  AI, As It Breaks.
                 </span>
               </div>
             </button>

@@ -69,12 +69,12 @@ export const Hero: React.FC = () => {
 
             {/* Main Headline */}
             <h1 
-              aria-label="Building the world's most capable AI platform & autonomous future"
+              aria-label="Building the world's most capable AI Newledge platform & autonomous future"
               className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white uppercase leading-[1.06]"
             >
               Building the world's most <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200">
-                capable AI platform
+                capable AI Newledge platform
               </span>.
             </h1>
 
